@@ -1,0 +1,26 @@
+{
+  "name": "api_makand",
+  "version": "1.0.0",
+  "description": "nada de descripción manito",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kron0zzz/Api_makand.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/kron0zzz/Api_makand/issues"
+  },
+  "homepage": "https://github.com/kron0zzz/Api_makand#readme",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "pg": "^8.20.0"
+  }
+}
