@@ -1,7 +1,7 @@
 import express from "express";
 
 import supplierRoutes from "../infrastructure/routes/supplierRoutes.js";    //agregar rutas
-
+import customerRoutes from "../infrastructure/routes/CustomerRoutes.js";
 const app = express();
 
 app.use(express.json());
@@ -13,5 +13,5 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/suppliers", supplierRoutes);      //usar rutas
-
+app.use("/api/customers", customerRoutes);
 export default app;
