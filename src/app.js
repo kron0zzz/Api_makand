@@ -1,20 +1,12 @@
 import dotenv from "dotenv";
 dotenv.config();
-import express from "express";
+
 import "./config/database.js";
-import router from "./infrastructure/routes/supplierRoutes.js";
 
-const app = express();
+import app from "./interfaces/server.js";
 
-app.use(express.json());
-app.get("/", (req, res) => {
-  res.json({
-    message: "API Makand funcionando"
-  });
-});
+const PORT = process.env.PORT || 3000;
 
-app.use("/suppliers", router);
-
-app.listen(3000, () => {
-  console.log("Servidor corriendo en puerto 3000");
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en puerto ${PORT}`);
 });

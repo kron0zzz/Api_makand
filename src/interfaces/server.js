@@ -1,14 +1,17 @@
 import express from "express";
-import purchaseRoutes from "../infrastucture/routes/purchaseRoutes.js";
-import userRoutes from "../infrastucture/routes/userRoutes.js"
-import customerRoutes from "../infrastucture/routes/customerRoutes.js"
+
+import supplierRoutes from "../infrastructure/routes/supplierRoutes.js";    //agregar rutas
 
 const app = express();
 
 app.use(express.json());
 
-app.use("/api/", purchaseRoutes);
-app.use("/api/", userRoutes);
-app.use("/api/", customerRoutes);
+app.get("/", (req, res) => {
+  res.json({
+    message: "API Makand funcionando"
+  });
+});
+
+app.use("/api/suppliers", supplierRoutes);      //usar rutas
 
 export default app;
