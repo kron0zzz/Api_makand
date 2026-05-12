@@ -1,6 +1,7 @@
 import express from "express";
 
-import supplierRoutes from "../infrastructure/routes/supplierRoutes.js";    //agregar rutas
+import supplierRoutes from "../infrastructure/routes/supplierRoutes.js";
+import vehicleRoutes from "../infrastructure/routes/vehicleRoutes.js";
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.get("/", (req, res) => {
   });
 });
 
-app.use("/api/suppliers", supplierRoutes);      //usar rutas
+app.use("/api/suppliers", supplierRoutes);
+app.use("/api/vehicles", vehicleRoutes);
 
 export default app;

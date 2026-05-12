@@ -1,13 +1,14 @@
+import dotenv from "dotenv";
 import pkg from "pg";
+
+dotenv.config();
 
 const { Pool } = pkg;
 
 const pool = new Pool({
-  user: "postgres",
-  host: "localhost",
-  database: "MakandDB",
-  password: "123456",
-  port: 5432,
+  connectionString:
+    process.env.DATABASE_URL ||
+    `postgresql://postgres:123456@localhost:5432/${process.env.DB_NAME || "makand"}`,
 });
 
 pool.connect()
