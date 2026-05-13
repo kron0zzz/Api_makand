@@ -79,4 +79,23 @@ export default class SupplierRepository {
 
     return result.rows[0];
   }
+
+
+
+  async findTableData() {
+
+    const query = `
+      SELECT
+        supplier_id,
+        document_number,
+        supplier_name,
+        supplier_city,
+        supplier_status
+      FROM suppliers
+    `;
+
+    const result = await pool.query(query);
+
+    return result.rows;
+  }
 }

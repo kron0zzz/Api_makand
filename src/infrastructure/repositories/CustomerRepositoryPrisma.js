@@ -238,4 +238,24 @@ export default class CustomerRepositoryPrisma {
     );
     return result.rows[0];
   }
+
+
+  async findTableData() {
+
+    const query = `
+      SELECT
+        client_id,
+        client_document_number,
+        client_first_name,
+        client_last_name,
+        client_status
+      FROM clients
+    `;
+
+    const result = await pool.query(query);
+
+    return result.rows;
+  }
+
+
 }

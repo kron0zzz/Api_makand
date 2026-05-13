@@ -8,8 +8,8 @@ const { Pool } = pkg;
 const pool = new Pool({
   user: "postgres",
   host: "localhost",
-  database: "makand_db",
-  password: "Mrpostgres",
+  database: "MakandDB",
+  password: "123456",
   port: 5432,
 });
 

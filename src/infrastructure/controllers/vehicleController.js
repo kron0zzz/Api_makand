@@ -3,6 +3,7 @@ import GetVehicles from "../../application/use-cases/vehicles/GetVehicles.js";
 import GetVehicleById from "../../application/use-cases/vehicles/GetVehicleById.js";
 import UpdateVehicle from "../../application/use-cases/vehicles/UpdateVehicle.js";
 import DeleteVehicle from "../../application/use-cases/vehicles/DeleteVehicle.js";
+import GetVehiclesTable from "../../application/use-cases/vehicles/GetVehiclesTable.js";
 
 import VehicleRepository from "../repositories/VehicleRepository.js";
 
@@ -124,6 +125,24 @@ export const deleteVehicle = async (req, res) => {
     }
 
     res.status(204).send();
+  } catch (err) {
+    res.status(500).json({
+      error: err.message
+    });
+  }
+};
+
+
+
+export const getVehiclesTable = async (req, res) => {
+  try {
+    const getVehiclesTable =
+      new GetVehiclesTable(vehicleRepository);
+
+    const vehicles = await getVehiclesTable.execute();
+
+    res.status(200).json(vehicles);
+
   } catch (err) {
     res.status(500).json({
       error: err.message

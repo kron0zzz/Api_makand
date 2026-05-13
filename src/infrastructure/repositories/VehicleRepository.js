@@ -57,4 +57,23 @@ export default class VehicleRepository {
 
     return result.rows[0];
   }
+
+
+
+  async findTableData() {
+
+    const query = `
+      SELECT
+        vehicle_id,
+        license_plate,
+        vehicle_brand,
+        vehicle_model,
+        vehicle_status
+      FROM vehicles
+    `;
+
+    const result = await pool.query(query);
+
+    return result.rows;
+  }
 }

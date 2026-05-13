@@ -3,6 +3,7 @@ import GetSuppliers from "../../application/use-cases/suppliers/GetSuppliers.js"
 import GetSupplierById from "../../application/use-cases/suppliers/GetSupplierById.js";
 import UpdateSupplier from "../../application/use-cases/suppliers/UpdateSupplier.js";
 import DeleteSupplier from "../../application/use-cases/suppliers/DeleteSupplier.js";
+import GetSuppliersTable from "../../application/use-cases/suppliers/GetSuppliersTable.js"
 
 import SupplierRepositoryPrisma from "../repositories/SupplierRepositoryPrisma.js";
 
@@ -109,6 +110,23 @@ export const deleteSupplier = async (req, res) => {
       });
     }
 
+    res.status(500).json({
+      error: err.message
+    });
+  }
+};
+
+
+export const getSuppliersTable = async (req, res) => {
+  try {
+    const getSuppliersTable =
+      new GetSuppliersTable(supplierRepository);
+
+    const suppliers = await getSuppliersTable.execute();
+
+    res.status(200).json(suppliers);
+
+  } catch (err) {
     res.status(500).json({
       error: err.message
     });

@@ -3,6 +3,7 @@ import GetCustomers from "../../application/use-cases/customers/GetCustomers.js"
 import GetCustomerById from "../../application/use-cases/customers/GetCustomerById.js";
 import UpdateCustomer from "../../application/use-cases/customers/UpdateCustomer.js";
 import DeleteCustomer from "../../application/use-cases/customers/DeleteCustomer.js";
+import GetCustomersTable from "../../application/use-cases/customers/GetCustomersTable.js"
 
 import CustomerRepositoryPrisma from "../repositories/CustomerRepositoryPrisma.js";
 const customerRepository = new CustomerRepositoryPrisma();
@@ -94,6 +95,24 @@ export const deleteCustomer = async (req, res) => {
       });
     }
 
+    res.status(500).json({
+      error: err.message
+    });
+  }
+};
+
+
+
+export const getCustomersTable = async (req, res) => {
+  try {
+    const getCustomersTable =
+      new GetCustomersTable(customerRepository);
+
+    const customers = await getCustomersTable.execute();
+
+    res.status(200).json(customers);
+
+  } catch (err) {
     res.status(500).json({
       error: err.message
     });
