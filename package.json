@@ -4,8 +4,10 @@
   "description": "nada de descripción manito",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "test": "echo \"Error: no test specified\" && exit 1",
+  "dev": "node app.js",
+  "start": "node app.js"
+},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kron0zzz/Api_makand.git"
@@ -20,6 +22,7 @@
   "homepage": "https://github.com/kron0zzz/Api_makand#readme",
   "dependencies": {
     "@prisma/client": "^7.8.0",
+    "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "pg": "^8.20.0"
