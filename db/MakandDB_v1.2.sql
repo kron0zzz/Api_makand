@@ -1,5 +1,3 @@
-
-
 -- =========================================
 -- Tablas maestras
 -- =========================================
@@ -72,19 +70,19 @@ CREATE TABLE vehicles (
     capacity_kg DECIMAL(8,2) NOT NULL
 );
 
--- Clientes (clients)
-CREATE TABLE clients (
-    client_id SERIAL PRIMARY KEY,
-    client_document_type VARCHAR(20) NOT NULL,
-    client_document_number VARCHAR(20) NOT NULL UNIQUE,
-    client_status BOOLEAN NOT NULL,
-    client_first_name VARCHAR(70) NOT NULL,
-    client_last_name VARCHAR(70) NOT NULL,
-    client_address VARCHAR(100),
-    client_phone VARCHAR(20) NOT NULL,
-    client_email VARCHAR(100),
+-- Clientes (customers)
+CREATE TABLE customers (
+    customer_id SERIAL PRIMARY KEY,
+    customer_document_type VARCHAR(20) NOT NULL,
+    customer_document_number VARCHAR(20) NOT NULL UNIQUE,
+    customer_status BOOLEAN NOT NULL,
+    customer_first_name VARCHAR(70) NOT NULL,
+    customer_last_name VARCHAR(70) NOT NULL,
+    customer_address VARCHAR(100),
+    customer_phone VARCHAR(20) NOT NULL,
+    customer_email VARCHAR(100),
     organization_type VARCHAR(20) NOT NULL
-);
+	);
 
 
 
@@ -150,15 +148,15 @@ CREATE TABLE role_permissions (
 CREATE TABLE projects (
     project_id SERIAL PRIMARY KEY,
     project_status BOOLEAN NOT NULL,
-    client_id INT NOT NULL,
+    customer_id INT NOT NULL,
     project_name VARCHAR(50) NOT NULL,
     project_address VARCHAR(100),
     project_phone VARCHAR(20) NOT NULL,
     project_city VARCHAR(100) NOT NULL,
 
-    CONSTRAINT fk_project_client
-        FOREIGN KEY (client_id)
-        REFERENCES clients(client_id)
+    CONSTRAINT fk_project_customer
+        FOREIGN KEY (customer_id)
+        REFERENCES customers(customer_id)
 );
 
 -- Maquinaria (machinery)
@@ -330,3 +328,6 @@ CREATE TABLE vehicle_charges (
         FOREIGN KEY (additional_charge_id)
         REFERENCES additional_charges(additional_charge_id)
 );
+
+
+SELECT * FROM [Su tabla];
