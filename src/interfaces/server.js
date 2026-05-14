@@ -1,13 +1,12 @@
 import express from "express";
-import cors from "cors";
+import cors from "cors"; // 1. IMPORTA CORS
 
 import supplierRoutes from "../infrastructure/routes/supplierRoutes.js";    //agregar rutas
 import vehicleRoutes from "../infrastructure/routes/vehicleRoutes.js";
 import customerRoutes from "../infrastructure/routes/CustomerRoutes.js";
 
 const app = express();
-
-app.use(cors());
+app.use(cors()); //2. ACTIVA CORS antes de las rutas
 app.use(express.json());
 
 app.get("/", (req, res) => {
