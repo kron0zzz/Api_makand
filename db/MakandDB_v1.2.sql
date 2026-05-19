@@ -341,7 +341,7 @@ INSERT INTO roles (role_name, role_status) VALUES ('Asesor', true);
 
 
 -- order status
-INSERT INTO order_satus (order_status_name) VALUES ('Creado');
-INSERT INTO order_satus (order_status_name) VALUES ('En proceso');
-INSERT INTO order_satus (order_status_name) VALUES ('Cancelado'); 
-INSERT INTO order_satus (order_status_name) VALUES ('Cerrado');
+INSERT INTO order_status (order_status_name) VALUES ('Creado');
+INSERT INTO order_status (order_status_name) VALUES ('En proceso');
+INSERT INTO order_status (order_status_name) VALUES ('Cancelado'); 
+INSERT INTO order_status (order_status_name) VALUES ('Cerrado');
