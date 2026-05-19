@@ -47,7 +47,7 @@ git clone https://github.com/kron0zzz/Api_makand.git
 ```
 
 ---
-# Base de datos
+## 3. Base de datos
 
 Se debe crear la base de datos en PgAdmin con todas sus tablas y estructura (En este repositorio hay un script con la estructura de la DB). 
 
@@ -55,7 +55,7 @@ Se debe crear la base de datos en PgAdmin con todas sus tablas y estructura (En 
 
 
 ---
-# Variables de entorno
+### Variables de entorno
 
 Se debe ejecutar el siguiente archivo desde cmd e ingresar los datos para crear el .env:
 
