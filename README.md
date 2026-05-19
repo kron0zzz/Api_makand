@@ -54,7 +54,6 @@ Se debe crear la base de datos en PgAdmin con todas sus tablas y estructura (En 
 **Como aclaración, cuando entras a PgAdmin e ingresas la contraseña, automáticamente se levanta el servicio de postgres**
 
 
----
 ### Variables de entorno
 
 Se debe ejecutar el siguiente archivo desde cmd e ingresar los datos para crear el .env:
