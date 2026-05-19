@@ -44,7 +44,6 @@ git clone https://github.com/kron0zzz/Api_makand.git
 
 ```bash
 - npm install
-- npm install pg dotenv
 ```
 
 ---
@@ -58,18 +57,13 @@ Se debe crear la base de datos en PgAdmin con todas sus tablas y estructura (En 
 ---
 # Variables de entorno
 
-Crear un archivo `.env` en la raíz del proyecto.
+Se debe ejecutar el siguiente archivo desde cmd e ingresar los datos para crear el .env:
 
-## Contenido del .env
-
-```env
-DATABASE_URL=postgresql://postgres:TU_CONTRASEÑA@localhost:5432/NOMBRE_DE_LA_DB
-PORT=3000
-NODE_ENV=development
+```bash
+setDb.bat
 ```
 
-> Actualmente la conexión está configurada manualmente en `database.js`.
-> El uso completo de `.env` será implementado más adelante.
+
 
 
 ---
