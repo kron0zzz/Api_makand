@@ -113,10 +113,11 @@ CREATE TABLE employees (
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
     user_email VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    user_status BOOLEAN NOT NULL,
+    user_password VARCHAR(255) NOT NULL,
+    user_status BOOLEAN NOT NULL DEFAULT true,
     role_id SMALLINT NOT NULL,
     employee_id INT NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_user_role
         FOREIGN KEY (role_id)
@@ -345,3 +346,29 @@ INSERT INTO order_status (order_status_name) VALUES ('Creado');
 INSERT INTO order_status (order_status_name) VALUES ('En proceso');
 INSERT INTO order_status (order_status_name) VALUES ('Cancelado'); 
 INSERT INTO order_status (order_status_name) VALUES ('Cerrado');
+
+
+
+--employee prueba
+INSERT INTO employees (
+    employee_document_type,
+    employee_document_number,
+    employee_status,
+    employee_first_name,
+    employee_last_name,
+    employee_email,
+    employee_phone,
+    employee_eps,
+    position_id
+)
+VALUES (
+    'CC',
+    '1025647253',
+    TRUE,
+    'Juan Diego',
+    'Rios Restrepo',
+    'juanriosr7526@makandsmr.com',
+    '3052264211',
+    'Sura',
+    2
+);
