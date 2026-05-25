@@ -348,6 +348,9 @@ INSERT INTO order_status (order_status_name) VALUES ('Cancelado');
 INSERT INTO order_status (order_status_name) VALUES ('Cerrado');
 
 
+--positions
+INSERT INTO positions (position_name) VALUES ('Desarrollador');
+
 
 --employee prueba
 INSERT INTO employees (
@@ -370,5 +373,5 @@ VALUES (
     'juanriosr7526@makandsmr.com',
     '3052264211',
     'Sura',
-    2
+    1
 );
