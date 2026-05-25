@@ -375,3 +375,57 @@ VALUES (
     'Sura',
     1
 );
+
+
+
+
+INSERT INTO employees (
+    employee_document_type,
+    employee_document_number,
+    employee_status,
+    employee_first_name,
+    employee_last_name,
+    employee_email,
+    employee_phone,
+    employee_eps,
+    position_id
+)
+VALUES (
+    'CC',
+    '1020114536',
+    TRUE,
+    'Sara Camila',
+    'Ortiz Higuita',
+    'sara@makandsmr.com',
+    '3054081703',
+    'Sura',
+    1
+);
+
+
+
+
+
+INSERT INTO employees (
+    employee_document_type,
+    employee_document_number,
+    employee_status,
+    employee_first_name,
+    employee_last_name,
+    employee_email,
+    employee_phone,
+    employee_eps,
+    position_id
+)
+VALUES (
+    'CC',
+    '1020114536',
+    TRUE,
+    'Mariana',
+    'Figueroa Cardona',
+    'mariana@makandsmr.com',
+    '3117384156',
+    'Sura',
+    1
+);
+
