@@ -8,6 +8,8 @@ import positionRoutes from "../infrastructure/routes/positionRoutes.js"
 import machineryStatusRoutes from "../infrastructure/routes/machineryStatusRoutes.js";
 import machineryCategoryRoutes from "../infrastructure/routes/machineryCategoryRoutes.js";
 import machineryRoutes from "../infrastructure/routes/machineryRoutes.js";
+import userRoutes from "../infrastructure/routes/userRoutes.js"
+import authRoutes from "../infrastructure/routes/authRoutes.js"
 
 const app = express();
 app.use(cors()); //2. ACTIVA CORS antes de las rutas
@@ -26,6 +28,8 @@ app.use("/api/positions", positionRoutes);
 app.use("/api/machine-statuses", machineryStatusRoutes);
 app.use("/api/machine-categories", machineryCategoryRoutes); 
 app.use("/api/machines", machineryRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/auth", authRoutes);
 export default app;
 
 
