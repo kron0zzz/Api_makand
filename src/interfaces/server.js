@@ -10,6 +10,7 @@ import machineryCategoryRoutes from "../infrastructure/routes/machineryCategoryR
 import machineryRoutes from "../infrastructure/routes/machineryRoutes.js";
 import userRoutes from "../infrastructure/routes/userRoutes.js"
 import authRoutes from "../infrastructure/routes/authRoutes.js"
+import employeeRoutes from "../infrastructure/routes/employeeRoutes.js";
 
 const app = express();
 app.use(cors()); //2. ACTIVA CORS antes de las rutas
@@ -30,6 +31,7 @@ app.use("/api/machine-categories", machineryCategoryRoutes);
 app.use("/api/machines", machineryRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/employees", employeeRoutes);
 export default app;
 
 
