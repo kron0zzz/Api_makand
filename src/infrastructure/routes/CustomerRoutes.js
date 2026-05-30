@@ -36,14 +36,10 @@ import {
 
 const router = Router();
 
-// 1. LAS RUTAS ESTÁTICAS PRIMERO
-router.get("/table", getCustomersTable); 
 
-// 2. RUTAS DE COLECCIÓN
+router.get("/table", getCustomersTable); 
 router.post("/", createCustomer);       
 router.get("/", getCustomers);          
-
-// 3. RUTAS DINÁMICAS (CON PARÁMETROS) AL FINAL
 router.get("/:id", getCustomerById);    
 router.put("/:id", updateCustomer);   
 router.delete("/:id", deleteCustomer);

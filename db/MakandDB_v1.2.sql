@@ -113,10 +113,11 @@ CREATE TABLE employees (
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
     user_email VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    user_status BOOLEAN NOT NULL,
+    user_password VARCHAR(255) NOT NULL,
+    user_status BOOLEAN NOT NULL DEFAULT true,
     role_id SMALLINT NOT NULL,
     employee_id INT NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_user_role
         FOREIGN KEY (role_id)
@@ -330,4 +331,106 @@ CREATE TABLE vehicle_charges (
 );
 
 
-SELECT * FROM [Su tabla];
+-- =========================================
+-- Datos quemados de algunas tablas
+-- =========================================
+
+-- roles
+INSERT INTO roles (role_name, role_status) VALUES ('Adminstrador', true);
+INSERT INTO roles (role_name, role_status) VALUES ('Asesor', true);
+
+
+
+-- order status
+INSERT INTO order_status (order_status_name) VALUES ('Creado');
+INSERT INTO order_status (order_status_name) VALUES ('En proceso');
+INSERT INTO order_status (order_status_name) VALUES ('Cancelado'); 
+INSERT INTO order_status (order_status_name) VALUES ('Cerrado');
+
+
+--positions
+INSERT INTO positions (position_name) VALUES ('Desarrollador');
+
+
+--employee prueba
+INSERT INTO employees (
+    employee_document_type,
+    employee_document_number,
+    employee_status,
+    employee_first_name,
+    employee_last_name,
+    employee_email,
+    employee_phone,
+    employee_eps,
+    position_id
+)
+VALUES (
+    'CC',
+    '1025647253',
+    TRUE,
+    'Juan Diego',
+    'Rios Restrepo',
+    'juanriosr7526@makandsmr.com',
+    '3052264211',
+    'Sura',
+    1
+);
+
+
+
+
+INSERT INTO employees (
+    employee_document_type,
+    employee_document_number,
+    employee_status,
+    employee_first_name,
+    employee_last_name,
+    employee_email,
+    employee_phone,
+    employee_eps,
+    position_id
+)
+VALUES (
+    'CC',
+    '1020114536',
+    TRUE,
+    'Sara Camila',
+    'Ortiz Higuita',
+    'sara@makandsmr.com',
+    '3054081703',
+    'Sura',
+    1
+);
+
+
+
+
+
+INSERT INTO employees (
+    employee_document_type,
+    employee_document_number,
+    employee_status,
+    employee_first_name,
+    employee_last_name,
+    employee_email,
+    employee_phone,
+    employee_eps,
+    position_id
+)
+VALUES (
+    'CC',
+    '103213213',
+    TRUE,
+    'Mariana',
+    'Figueroa Cardona',
+    'mariana@makandsmr.com',
+    '3117384156',
+    'Sura',
+    1
+);
+
+
+INSERT INTO users (user_email, user_password, user_status, role_id, employee_id) VALUES ('sara@gmail.com', '$2b$10$ODpcGe.lD8NqIsVFIWL1OufTzmPuICg8HzMU9ax4ROPePZLU4cLim', true, 1,2);
+INSERT INTO users (user_email, user_password, user_status, role_id, employee_id) VALUES ('rios@gmail.com', '$2b$10$tvhRa6clQU/a93QkRtllYO8l7CJBpOj3g12AfPk0VVXyG34rJEcAu', true, 1,1);
+
+
