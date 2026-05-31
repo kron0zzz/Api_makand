@@ -24,6 +24,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/suppliers", supplierRoutes);  //usar rutasapp.use("/api/customers", customerRoutes);
+app.use("/api/customers", customerRoutes);
 app.use("/api/vehicles", vehicleRoutes);
 app.use("/api/charge-types", chargeTypeRoutes);
 app.use("/api/projects", projectRoutes);
