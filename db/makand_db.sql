@@ -432,5 +432,6 @@ VALUES (
 
 INSERT INTO users (user_email, user_password, user_status, role_id, employee_id) VALUES ('sara@gmail.com', '$2b$10$ODpcGe.lD8NqIsVFIWL1OufTzmPuICg8HzMU9ax4ROPePZLU4cLim', true, 1,2);
 INSERT INTO users (user_email, user_password, user_status, role_id, employee_id) VALUES ('rios@gmail.com', '$2b$10$tvhRa6clQU/a93QkRtllYO8l7CJBpOj3g12AfPk0VVXyG34rJEcAu', true, 1,1);
+INSERT INTO users (user_email, user_password, user_status, role_id, employee_id) VALUES ('mariana@gmail.com', '$2b$10$1Sct7Aomfd.CT053zqvEU.GQAB3LHvOmxAcnekXK1Jq5epws1YaYO', true, 1,3);
 
 
