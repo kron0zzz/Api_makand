@@ -15,13 +15,11 @@ export const createEmployee = async (req, res) => {
     const employee = await createEmployeeUseCase.execute(req.body);
     res.status(201).json(employee);
   } catch (err) {
-    // Código 23505 = Restricción UNIQUE violada en PostgreSQL (Documento o Email duplicado)
     if (err.code === "23505") {
       return res.status(400).json({
         error: "El número de documento o correo electrónico ya está registrado."
       });
     }
-    // Código 23503 = Restricción de Llave Foránea violada (Si el position_id no existe en positions)
     if (err.code === "23503") {
       return res.status(400).json({
         error: "El cargo (position_id) especificado no existe."
@@ -44,7 +42,10 @@ export const getEmployees = async (req, res) => {
 export const getEmployeeById = async (req, res) => {
   try {
     const getEmployeeByIdUseCase = new GetEmployeeById(employeeRepository);
-    const employee = await getEmployeeByIdUseCase.execute(req.params.id);
+    
+    // Convertimos el ID a número entero
+    const employeeId = parseInt(req.params.id, 10);
+    const employee = await getEmployeeByIdUseCase.execute(employeeId);
 
     if (!employee) {
       return res.status(404).json({
@@ -61,7 +62,11 @@ export const getEmployeeById = async (req, res) => {
 export const updateEmployee = async (req, res) => {
   try {
     const updateEmployeeUseCase = new UpdateEmployee(employeeRepository);
-    const updatedEmployee = await updateEmployeeUseCase.execute(req.params.id, req.body);
+    
+    // ¡AQUÍ ESTABA EL DETALLE! Convertimos el ID de la URL a entero
+    const employeeId = parseInt(req.params.id, 10);
+    
+    const updatedEmployee = await updateEmployeeUseCase.execute(employeeId, req.body);
 
     if (!updatedEmployee) {
       return res.status(404).json({
@@ -88,7 +93,10 @@ export const updateEmployee = async (req, res) => {
 export const deleteEmployee = async (req, res) => {
   try {
     const deleteEmployeeUseCase = new DeleteEmployee(employeeRepository);
-    const deletedEmployee = await deleteEmployeeUseCase.execute(req.params.id);
+    
+    // Convertimos el ID a número entero
+    const employeeId = parseInt(req.params.id, 10);
+    const deletedEmployee = await deleteEmployeeUseCase.execute(employeeId);
 
     if (!deletedEmployee) {
       return res.status(404).json({
