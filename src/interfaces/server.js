@@ -12,7 +12,7 @@ import userRoutes from "../infrastructure/routes/userRoutes.js"
 import authRoutes from "../infrastructure/routes/authRoutes.js"
 import employeeRoutes from "../infrastructure/routes/employeeRoutes.js";
 import purchaseInvoiceRoutes from "../infrastructure/routes/purchaseInvoiceRoutes.js";
-
+import subRentalRoutes from "../infrastructure/routes/subRentalRoutes.js";
 
 const app = express();
 
@@ -41,6 +41,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/employees", employeeRoutes);
 app.use("/api/purchase-invoices", purchaseInvoiceRoutes);
+app.use("/api/sub-rentals", subRentalRoutes);
 
 export default app;
 
