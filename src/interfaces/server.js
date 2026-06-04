@@ -15,7 +15,13 @@ import purchaseInvoiceRoutes from "../infrastructure/routes/purchaseInvoiceRoute
 
 
 const app = express();
-app.use(cors()); //2. ACTIVA CORS antes de las rutas
+
+// Aumenta el límite de tamaño permitido para peticiones HTTP. 
+// Es necesario para soportar el envío de imágenes de facturas convertidas a Base64 desde el formulario.
+// app.use(express.json({ limit: '50mb' }));
+// app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
+app.use(cors()); 
 app.use(express.json());
 
 app.get("/", (req, res) => {
