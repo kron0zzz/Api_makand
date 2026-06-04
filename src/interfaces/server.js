@@ -1,5 +1,9 @@
 import express from "express";
+<<<<<<< Updated upstream
 import cors from "cors";
+=======
+import cors from "cors"; 
+>>>>>>> Stashed changes
 
 import supplierRoutes from "../infrastructure/routes/supplierRoutes.js";
 import vehicleRoutes from "../infrastructure/routes/vehicleRoutes.js";
@@ -13,6 +17,12 @@ import machineryRoutes from "../infrastructure/routes/machineryRoutes.js";
 import userRoutes from "../infrastructure/routes/userRoutes.js"
 import authRoutes from "../infrastructure/routes/authRoutes.js"
 import employeeRoutes from "../infrastructure/routes/employeeRoutes.js";
+<<<<<<< Updated upstream
+=======
+import purchaseInvoiceRoutes from "../infrastructure/routes/purchaseInvoiceRoutes.js";
+
+
+>>>>>>> Stashed changes
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -35,6 +45,8 @@ app.use("/api/machines", machineryRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/employees", employeeRoutes);
+app.use("/api/purchase-invoices", purchaseInvoiceRoutes);
+
 export default app;
 
 
