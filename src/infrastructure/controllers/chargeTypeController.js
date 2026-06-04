@@ -1,0 +1,88 @@
+import CreateChargeType from "../../application/use-cases/chargeTypes/CreateChargeType.js";
+import GetChargeTypes from "../../application/use-cases/chargeTypes/GetChargeTypes.js";
+import GetChargeTypesTable from "../../application/use-cases/chargeTypes/GetChargeTypesTable.js";
+import GetChargeTypeById from "../../application/use-cases/chargeTypes/GetChargeTypeById.js";
+import UpdateChargeType from "../../application/use-cases/chargeTypes/UpdateChargeType.js";
+import DeleteChargeType from "../../application/use-cases/chargeTypes/DeleteChargeType.js";
+
+import ChargeTypeRepositoryPrisma from "../repositories/ChargeTypeRepositoryPrisma.js";
+
+const chargeTypeRepository = new ChargeTypeRepositoryPrisma();
+
+export const createChargeType = async (req, res) => {
+  try {
+    const createChargeTypeUseCase = new CreateChargeType(chargeTypeRepository);
+    const chargeType = await createChargeTypeUseCase.execute(req.body);
+    res.status(201).json(chargeType);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const getChargeTypes = async (req, res) => {
+  try {
+    const getChargeTypesUseCase = new GetChargeTypes(chargeTypeRepository);
+    const chargeTypes = await getChargeTypesUseCase.execute();
+    res.status(200).json(chargeTypes);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const getChargeTypeById = async (req, res) => {
+  try {
+    const getChargeTypeByIdUseCase = new GetChargeTypeById(chargeTypeRepository);
+    const chargeType = await getChargeTypeByIdUseCase.execute(req.params.id);
+
+    if (!chargeType) {
+      return res.status(404).json({ error: "Tipo de cobro no encontrado" });
+    }
+
+    res.status(200).json(chargeType);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const updateChargeType = async (req, res) => {
+  try {
+    const updateChargeTypeUseCase = new UpdateChargeType(chargeTypeRepository);
+    const updatedChargeType = await updateChargeTypeUseCase.execute(
+      req.params.id,
+      req.body
+    );
+
+    if (!updatedChargeType) {
+      return res.status(404).json({ error: "No se encontró el tipo de cobro para actualizar" });
+    }
+
+    res.status(200).json(updatedChargeType);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const deleteChargeType = async (req, res) => {
+  try {
+    const deleteChargeTypeUseCase = new DeleteChargeType(chargeTypeRepository);
+    const deletedChargeType = await deleteChargeTypeUseCase.execute(req.params.id);
+
+    if (!deletedChargeType) {
+      return res.status(404).json({ error: "No se encontró el tipo de cobro para eliminar" });
+    }
+
+    res.status(204).send();
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const getChargeTypesTable = async (req, res) => {
+  try {
+    const getChargeTypesTableUseCase = new GetChargeTypesTable(chargeTypeRepository);
+    const chargeTypes = await getChargeTypesTableUseCase.execute();
+    res.status(200).json(chargeTypes);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
