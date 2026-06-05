@@ -3,7 +3,7 @@ import pool from "../../config/database.js";
 
 export default class PurchaseInvoiceRepository {
   async create(invoiceData) {
-    const { supplier_id, purchase_date, machinery_name, invoice_photo } = invoiceData;
+    const { supplier_id, purchase_date, invoice_photo } = invoiceData;
 
     // Convertimos la foto de Base64 a un Buffer para la columna BYTEA de PostgreSQL
     const photoBuffer = invoice_photo 
@@ -11,11 +11,11 @@ export default class PurchaseInvoiceRepository {
       : null;
 
     const query = `
-      INSERT INTO purchase_invoices (supplier_id, purchase_date, machinery_name, invoice_photo)
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO purchase_invoices (supplier_id, purchase_date, invoice_photo)
+      VALUES ($1, $2, $3)
       RETURNING *
     `;
-    const values = [supplier_id, purchase_date || new Date(), machinery_name, photoBuffer];
+    const values = [supplier_id, purchase_date || new Date(), photoBuffer];
     const result = await pool.query(query, values);
     return result.rows[0];
   }
@@ -31,7 +31,6 @@ export default class PurchaseInvoiceRepository {
         pi.invoice_id, 
         pi.supplier_id, 
         pi.purchase_date, 
-        pi.machinery_name, 
         pi.invoice_photo,
         s.supplier_name AS supplier_name
       FROM purchase_invoices pi
@@ -85,7 +84,6 @@ export default class PurchaseInvoiceRepository {
       SELECT 
         pi.invoice_id,
         pi.purchase_date,
-        pi.machinery_name,
         s.supplier_name AS supplier_name
       FROM purchase_invoices pi
       INNER JOIN suppliers s ON pi.supplier_id = s.supplier_id
