@@ -68,6 +68,8 @@ export default class SubRentalRepository {
     const query = `
       SELECT 
         sr.sub_rental_id,
+        sr.machinery_id,     
+        sr.supplier_id,     
         sr.supplier_cost,
         sr.sub_rental_status,
         m.machinery_name AS machinery_name,
