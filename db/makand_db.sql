@@ -197,7 +197,7 @@ CREATE TABLE maintenances (
 );
 
 -- Subalquileres (sub_rentals)
-CREATE TABLE sub_rentals (
+CREATE TABLE sub_rentals ( 
     sub_rental_id SERIAL PRIMARY KEY,
     machinery_id INT NOT NULL,
     supplier_id INT NOT NULL,
