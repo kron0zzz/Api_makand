@@ -14,6 +14,7 @@ import userRoutes from "../infrastructure/routes/userRoutes.js"
 import authRoutes from "../infrastructure/routes/authRoutes.js"
 import employeeRoutes from "../infrastructure/routes/employeeRoutes.js";
 import orderRoutes from "../infrastructure/routes/orderRoutes.js"
+import order_detailRoutes from "../infrastructure/routes/order_detailRoutes.js"
 
 const app = express();
 app.use(cors());
@@ -38,6 +39,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/employees", employeeRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/order_details", order_detailRoutes);
 export default app;
 
 
