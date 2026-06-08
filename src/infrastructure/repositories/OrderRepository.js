@@ -41,6 +41,77 @@ export default class OrderRepository {
   }
 
 
+
+
+
+  async findFullById(id) {
+
+    const query = `
+      SELECT
+        o.*,
+
+        os.order_status_name,
+
+        p.project_name,
+        p.project_address,
+        p.project_phone,
+        p.project_city,
+
+        c.customer_id,
+        c.customer_first_name,
+        c.customer_last_name,
+        c.customer_phone,
+
+        u.user_email
+
+      FROM orders o
+
+      INNER JOIN order_status os
+        ON o.order_status_id =
+          os.order_status_id
+
+      INNER JOIN projects p
+        ON o.project_id =
+          p.project_id
+
+      INNER JOIN customers c
+        ON p.customer_id =
+          c.customer_id
+
+      INNER JOIN users u
+        ON o.user_id =
+          u.user_id
+
+      WHERE o.order_id = $1
+    `;
+
+    const result =
+      await pool.query(query, [id]);
+
+    return result.rows[0];
+  }
+
+
+
+
+  async findDetailsByOrderId(id) {
+
+    const query = `
+      SELECT
+        od.*
+      FROM order_details od
+      WHERE od.order_id = $1
+    `;
+
+    const result =
+      await pool.query(query, [id]);
+
+    return result.rows;
+  }
+
+
+
+
   
   async update(id, orderData) {
 

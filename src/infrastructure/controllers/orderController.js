@@ -5,6 +5,7 @@ import UpdateOrder from "../../application/use-cases/orders/UpdateOrder.js";
 import DeleteOrder from "../../application/use-cases/orders/DeleteOrder.js";
 import GetOrdersTable from "../../application/use-cases/orders/GetOrdersTable.js";
 import CreateCompleteOrder from "../../application/use-cases/orders/CreateCompleteOrder.js";
+import GetOrderFull from "../../application/use-cases/orders/GetOrderFull.js"
 
 import OrderDetailRepository from "../repositories/Order_detailRepository.js";
 import MachineryRepository from "../repositories/MachineryRepository.js";
@@ -157,6 +158,45 @@ export const createCompleteOrder = async (req, res) => {
       );
 
     res.status(201).json(order);
+
+  } catch (err) {
+
+    res.status(500).json({
+      error: err.message
+    });
+
+  }
+
+};
+
+
+
+
+
+export const getOrderFull = async (req, res) => {
+
+  try {
+
+    const getOrderFull =
+      new GetOrderFull(
+        orderRepository
+      );
+
+    const order =
+      await getOrderFull.execute(
+        req.params.id
+      );
+
+    if (!order) {
+
+      return res.status(404).json({
+        error:
+          "Pedido no encontrado"
+      });
+
+    }
+
+    res.status(200).json(order);
 
   } catch (err) {
 
