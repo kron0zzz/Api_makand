@@ -43,13 +43,24 @@ export default class MachineryRepository {
   }
 
   // 3. Buscar una maquinaria específica por su ID
-  async findById(id) {
-    const result = await pool.query(
-      "SELECT * FROM machinery WHERE machinery_id = $1",
-      [id]
-    );
+  async findById(
+    id,
+    client = pool
+  ) {
+
+    const result =
+      await client.query(
+        `
+        SELECT *
+        FROM machinery
+        WHERE machinery_id = $1
+        `,
+        [id]
+      );
+
     return result.rows[0];
-  }
+
+  } 
 
   // 4. Traer los datos combinados (con INNER JOIN) especiales para tu tabla del Frontend
   async findTableData() {
@@ -125,4 +136,53 @@ export default class MachineryRepository {
     );
     return result.rows[0];
   }
+
+
+
+  async discountStock(
+    machineryId,
+    quantity,
+    client = pool
+  ) {
+
+    const query = `
+      UPDATE machinery
+      SET stock_quantity =
+          stock_quantity - $1
+      WHERE machinery_id = $2
+      RETURNING *
+    `;
+
+    const result =
+      await client.query(
+        query,
+        [quantity, machineryId]
+      );
+
+    return result.rows[0];
+}
+
+
+
+  async setOccupied(
+    machineryId,
+    client = pool
+  ) {
+
+    const query = `
+      UPDATE machinery
+      SET status_id = 3
+      WHERE machinery_id = $1
+      RETURNING *
+    `;
+
+    const result =
+      await client.query(
+        query,
+        [machineryId]
+      );
+
+    return result.rows[0];
+  }
+
 }

@@ -2,7 +2,7 @@ import pool from "../../config/database.js";
 
 export default class Order_detailRepository {
 
-  async create(order_detailData) {
+  async create(order_detailData,client = pool) {
 
     const { order_id, machinery_id, machinery_name_snapshot, quantity_to_dispatch, rental_unit_price, subtotal_weight_kg} = order_detailData;
 
@@ -14,7 +14,7 @@ export default class Order_detailRepository {
 
     const values = [ order_id, machinery_id, machinery_name_snapshot, quantity_to_dispatch, rental_unit_price, subtotal_weight_kg];
 
-    const result = await pool.query(query, values);
+    const result = await client.query(query, values);
 
     return result.rows[0];
   }

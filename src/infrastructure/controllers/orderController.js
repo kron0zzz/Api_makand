@@ -4,10 +4,16 @@ import GetOrderById from "../../application/use-cases/orders/GetOrderById.js";
 import UpdateOrder from "../../application/use-cases/orders/UpdateOrder.js";
 import DeleteOrder from "../../application/use-cases/orders/DeleteOrder.js";
 import GetOrdersTable from "../../application/use-cases/orders/GetOrdersTable.js";
+import CreateCompleteOrder from "../../application/use-cases/orders/CreateCompleteOrder.js";
+
+import OrderDetailRepository from "../repositories/Order_detailRepository.js";
+import MachineryRepository from "../repositories/MachineryRepository.js";
 
 import OrderRepository from "../repositories/OrderRepository.js";
 
 const orderRepository = new OrderRepository();
+const orderDetailRepository = new OrderDetailRepository();
+const machineryRepository = new MachineryRepository();
 
 export const createOrder = async (req, res) => {
   try {
@@ -130,4 +136,34 @@ export const getOrdersTable = async (req, res) => {
       error: err.message
     });
   }
+};
+
+
+
+export const createCompleteOrder = async (req, res) => {
+
+  try {
+
+    const createCompleteOrder =
+      new CreateCompleteOrder(
+        orderRepository,
+        orderDetailRepository,
+        machineryRepository
+      );
+
+    const order =
+      await createCompleteOrder.execute(
+        req.body
+      );
+
+    res.status(201).json(order);
+
+  } catch (err) {
+
+    res.status(500).json({
+      error: err.message
+    });
+
+  }
+
 };
