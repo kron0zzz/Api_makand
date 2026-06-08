@@ -53,10 +53,15 @@ export default class EmployeeRepository {
   }
 
   async findById(id) {
-    const result = await pool.query(
-      "SELECT * FROM employees WHERE employee_id = $1",
-      [id]
-    );
+    const query = `
+      SELECT 
+        e.*, 
+        p.position_name AS position_name
+      FROM employees e
+      INNER JOIN positions p ON e.position_id = p.position_id
+      WHERE e.employee_id = $1
+    `;
+    const result = await pool.query(query, [id]);
     return result.rows[0];
   }
 

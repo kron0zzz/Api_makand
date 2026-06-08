@@ -1,11 +1,9 @@
 import express from "express";
-import cors from "cors";
+import cors from "cors"; 
 
-import supplierRoutes from "../infrastructure/routes/supplierRoutes.js";
+import supplierRoutes from "../infrastructure/routes/supplierRoutes.js";    //agregar rutas
 import vehicleRoutes from "../infrastructure/routes/vehicleRoutes.js";
-import customerRoutes from "../infrastructure/routes/CustomerRoutes.js";
-import chargeTypeRoutes from "../infrastructure/routes/chargeTypeRoutes.js";
-import projectRoutes from "../infrastructure/routes/projectRoutes.js";
+import customerRoutes from "../infrastructure/routes/customerRoutes.js";
 import positionRoutes from "../infrastructure/routes/positionRoutes.js"
 import machineryStatusRoutes from "../infrastructure/routes/machineryStatusRoutes.js";
 import machineryCategoryRoutes from "../infrastructure/routes/machineryCategoryRoutes.js";
@@ -15,9 +13,17 @@ import authRoutes from "../infrastructure/routes/authRoutes.js"
 import employeeRoutes from "../infrastructure/routes/employeeRoutes.js";
 import orderRoutes from "../infrastructure/routes/orderRoutes.js"
 import order_detailRoutes from "../infrastructure/routes/order_detailRoutes.js"
+import purchaseInvoiceRoutes from "../infrastructure/routes/purchaseInvoiceRoutes.js";
+import subRentalRoutes from "../infrastructure/routes/subRentalRoutes.js";
 
 const app = express();
-app.use(cors());
+
+// Aumenta el límite de tamaño permitido para peticiones HTTP. 
+// Es necesario para soportar el envío de imágenes de facturas convertidas a Base64 desde el formulario.
+// app.use(express.json({ limit: '50mb' }));
+// app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
+app.use(cors()); 
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -26,11 +32,9 @@ app.get("/", (req, res) => {
   });
 });
 
-app.use("/api/suppliers", supplierRoutes);  //usar rutasapp.use("/api/customers", customerRoutes);
+app.use("/api/suppliers", supplierRoutes);  //usar rutas
 app.use("/api/customers", customerRoutes);
 app.use("/api/vehicles", vehicleRoutes);
-app.use("/api/charge-types", chargeTypeRoutes);
-app.use("/api/projects", projectRoutes);
 app.use("/api/positions", positionRoutes);
 app.use("/api/machine-statuses", machineryStatusRoutes);
 app.use("/api/machine-categories", machineryCategoryRoutes); 
@@ -40,6 +44,9 @@ app.use("/api/auth", authRoutes);
 app.use("/api/employees", employeeRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/order_details", order_detailRoutes);
+app.use("/api/purchase-invoices", purchaseInvoiceRoutes);
+app.use("/api/sub-rentals", subRentalRoutes);
+
 export default app;
 
 

@@ -197,7 +197,7 @@ CREATE TABLE maintenances (
 );
 
 -- Subalquileres (sub_rentals)
-CREATE TABLE sub_rentals (
+CREATE TABLE sub_rentals ( 
     sub_rental_id SERIAL PRIMARY KEY,
     machinery_id INT NOT NULL,
     supplier_id INT NOT NULL,
@@ -218,7 +218,6 @@ CREATE TABLE purchase_invoices (
     invoice_id SERIAL PRIMARY KEY,
     supplier_id INT NOT NULL,
     purchase_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    machinery_name VARCHAR(100) NOT NULL,
     invoice_photo BYTEA,
 
     CONSTRAINT fk_invoice_supplier
