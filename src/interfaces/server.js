@@ -15,6 +15,7 @@ import orderRoutes from "../infrastructure/routes/orderRoutes.js"
 import order_detailRoutes from "../infrastructure/routes/order_detailRoutes.js"
 import purchaseInvoiceRoutes from "../infrastructure/routes/purchaseInvoiceRoutes.js";
 import subRentalRoutes from "../infrastructure/routes/subRentalRoutes.js";
+import projectRoutes from "../infrastructure/routes/projectRoutes.js"
 
 const app = express();
 
@@ -46,6 +47,7 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/order_details", order_detailRoutes);
 app.use("/api/purchase-invoices", purchaseInvoiceRoutes);
 app.use("/api/sub-rentals", subRentalRoutes);
+app.use("/api/projects", projectRoutes);
 
 export default app;
 

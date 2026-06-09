@@ -154,11 +154,34 @@ export default class OrderRepository {
 
     const query = `
       SELECT
-        order_id,
-        order_creation_date,
-        project_id,
-        order_status_id
-      FROM orders
+        o.order_id,
+        o.order_creation_date,
+        o.discount_amount,
+
+        p.project_name,
+
+        c.customer_first_name,
+        c.customer_last_name,
+
+        os.order_status_name,
+
+        u.user_email
+
+      FROM orders o
+
+      INNER JOIN projects p
+        ON o.project_id = p.project_id
+
+      INNER JOIN customers c
+        ON p.customer_id = c.customer_id
+
+      INNER JOIN order_status os
+        ON o.order_status_id = os.order_status_id
+
+      INNER JOIN users u
+        ON o.user_id = u.user_id
+
+      ORDER BY o.order_id DESC
     `;
 
     const result = await pool.query(query);
