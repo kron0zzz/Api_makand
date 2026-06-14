@@ -22,7 +22,8 @@ export const createOrder = async (req, res) => {
       new CreateOrder(orderRepository);
 
     const order = await createOrder.execute(
-      req.body
+      req.body,
+      req.user
     );
 
     res.status(201).json(order);
@@ -154,7 +155,8 @@ export const createCompleteOrder = async (req, res) => {
 
     const order =
       await createCompleteOrder.execute(
-        req.body
+        req.body,
+        req.user
       );
 
     res.status(201).json(order);

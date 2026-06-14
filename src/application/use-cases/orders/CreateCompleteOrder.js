@@ -12,7 +12,7 @@ export default class CreateCompleteOrder {
     this.machineryRepository = machineryRepository;
   }
 
-  async execute(data) {
+  async execute(data, user) {
 
     const client = await pool.connect();
 
@@ -24,6 +24,14 @@ export default class CreateCompleteOrder {
         details,
         ...orderData
       } = data;
+
+      const finalOrderData = {
+        ...orderData,
+
+        user_id: user.user_id,
+
+        order_status_id: 1
+      };
 
       // Validar stock
 
@@ -56,7 +64,7 @@ export default class CreateCompleteOrder {
 
       const order =
         await this.orderRepository.create(
-          orderData,
+          finalOrderData,
           client
         );
 
@@ -64,21 +72,34 @@ export default class CreateCompleteOrder {
 
       for (const item of details) {
 
-        await this.orderDetailRepository.create(
-          {
-            order_id: order.order_id,
-            machinery_id: item.machinery_id,
-            machinery_name_snapshot:
-              item.machinery_name_snapshot,
-            quantity_to_dispatch:
-              item.quantity_to_dispatch,
-            rental_unit_price:
-              item.rental_unit_price,
-            subtotal_weight_kg:
-              item.subtotal_weight_kg
-          },
-          client
-        );
+
+        const machinery =
+          await this.machineryRepository.findById(
+            item.machinery_id,
+            client
+          );
+
+         await this.orderDetailRepository.create(
+            {
+              order_id: order.order_id,
+
+              machinery_id: item.machinery_id,
+
+              machinery_name_snapshot:
+                machinery.machinery_name,
+
+              quantity_to_dispatch:
+                item.quantity_to_dispatch,
+
+              rental_unit_price:
+                item.rental_unit_price,
+
+              subtotal_weight_kg:
+                Number(machinery.weight_kg) *
+                Number(item.quantity_to_dispatch)
+            },
+            client
+          );
 
 
 

@@ -4,17 +4,39 @@ export default class OrderRepository {
 
   async create(orderData, client = pool) {
 
-    const { order_closing_date, project_id, order_status_id, user_id, discount_amount, order_description} = orderData;
+    const {
+      order_creation_date,
+      project_id,
+      order_status_id,
+      user_id,
+      discount_amount,
+      order_description
+    } = orderData;
 
     const query = `
-      INSERT INTO orders ( project_id, order_status_id, user_id, discount_amount, order_description)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO orders (
+        order_creation_date,
+        project_id,
+        order_status_id,
+        user_id,
+        discount_amount,
+        order_description
+      )
+      VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *
     `;
 
-    const values = [ project_id, order_status_id, user_id, discount_amount, order_description];
+    const values = [
+      order_creation_date || new Date(),
+      project_id,
+      order_status_id,
+      user_id,
+      discount_amount,
+      order_description
+    ];
 
-    const result = await client.query(query, values);
+    const result =
+      await client.query(query, values);
 
     return result.rows[0];
   }
@@ -115,21 +137,38 @@ export default class OrderRepository {
   
   async update(id, orderData) {
 
-    const { project_id, order_status_id, user_id, discount_amount, order_description } = orderData;
+    const {
+      order_creation_date,
+      project_id,
+      order_status_id,
+      user_id,
+      discount_amount,
+      order_description
+    } = orderData;
 
     const query = `
       UPDATE orders
-      SET  
-      project_id = $1,
-      order_status_id = $2,
-      user_id = $3, 
-      discount_amount = $4, 
-      order_description = $5 
-      WHERE order_id = $6
+      SET
+        order_creation_date = $1,
+        project_id = $2,
+        order_status_id = $3,
+        user_id = $4,
+        discount_amount = $5,
+        order_description = $6
+      WHERE order_id = $7
       RETURNING *
     `;
 
-    const values = [ project_id, order_status_id, user_id, discount_amount, order_description, id];
+    const values = [
+      order_creation_date,
+      project_id,
+      order_status_id,
+      user_id,
+      discount_amount,
+      order_description,
+      id
+    ];
+
 
     const result =
       await pool.query(query, values);
@@ -154,11 +193,32 @@ export default class OrderRepository {
 
     const query = `
       SELECT
-        order_id,
-        order_creation_date,
-        project_id,
-        order_status_id
-      FROM orders
+        o.order_id,
+        o.order_creation_date,
+
+        p.project_name,
+
+        CONCAT(
+          c.customer_first_name,
+          ' ',
+          c.customer_last_name
+        ) AS customer_name,
+
+        os.order_status_name
+
+      FROM orders o
+
+      INNER JOIN projects p
+        ON o.project_id = p.project_id
+
+      INNER JOIN customers c
+        ON p.customer_id = c.customer_id
+
+      INNER JOIN order_status os
+        ON o.order_status_id =
+          os.order_status_id
+
+      ORDER BY o.order_id DESC
     `;
 
     const result = await pool.query(query);
