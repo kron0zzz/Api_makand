@@ -1,0 +1,97 @@
+import pool from "../../config/database.js";
+
+export default class PaymentRepository {
+
+  async create(paymentData) {
+
+    const { order_id, payment_amount, payment_method, payment_date, is_cancelled } = paymentData;
+
+    const query = `
+      INSERT INTO payments (order_id, payment_amount, payment_method, payment_date, is_cancelled)
+      VALUES ($1, $2, $3, $4, $5)
+      RETURNING *
+    `;
+
+    const values = [order_id, payment_amount, payment_method, payment_date, is_cancelled];
+
+    const result = await pool.query(query, values);
+
+    return result.rows[0];
+  }
+
+
+  async findAll() {
+
+    const result =
+      await pool.query("SELECT * FROM payments");
+
+    return result.rows;
+  }
+
+
+
+  async findById(id) {
+
+    const result = await pool.query(
+      "SELECT * FROM payments WHERE payment_id = $1",
+      [id]
+    );
+
+    return result.rows[0];
+  }
+
+
+  
+  async update(id, paymentData) {
+
+    const { order_id, payment_amount, payment_method, payment_date, is_cancelled } = paymentData;
+
+    const query = `
+      UPDATE payments
+      SET order_id = $1, 
+      payment_amount = $2,
+      payment_method = $3, 
+      payment_date = $4, 
+      is_cancelled = $5
+      WHERE payment_id = $6
+      RETURNING *
+    `;
+
+    const values = [ order_id, payment_amount, payment_method, payment_date, is_cancelled, id];
+
+    const result =
+      await pool.query(query, values);
+
+    return result.rows[0];
+  }
+
+  
+  async delete(id) {
+
+    const result = await pool.query(
+      "DELETE FROM payments WHERE payment_id = $1 RETURNING *",
+      [id]
+    );
+
+    return result.rows[0];
+  }
+
+
+
+  async findTableData() {
+
+    const query = `
+      SELECT
+        payment_id,
+        order_id, 
+        payment_amount, 
+        payment_method, 
+        payment_date
+      FROM payments
+    `;
+
+    const result = await pool.query(query);
+
+    return result.rows;
+  }
+}
