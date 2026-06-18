@@ -17,6 +17,8 @@ import purchaseInvoiceRoutes from "../infrastructure/routes/purchaseInvoiceRoute
 import subRentalRoutes from "../infrastructure/routes/subRentalRoutes.js";
 import projectRoutes from "../infrastructure/routes/projectRoutes.js"
 import paymentRoutes from "../infrastructure/routes/paymentRoutes.js"
+import maintenanceRoutes from "../infrastructure/routes/maintenanceRoutes.js"
+import orderStatusRoutes from "../infrastructure/routes/orderStatusRoutes.js"
 
 const app = express();
 
@@ -50,6 +52,8 @@ app.use("/api/purchase-invoices", purchaseInvoiceRoutes);
 app.use("/api/sub-rentals", subRentalRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/payments", paymentRoutes);
+app.use("/api/maintenances", maintenanceRoutes);
+app.use("/api/order-status", orderStatusRoutes);
 
 export default app;
 
