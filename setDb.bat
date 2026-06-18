@@ -7,9 +7,9 @@ echo ==========================
 
 echo.
 
-set /p DB_USER=Ingrese el usuario de PostgreSQL (enter para "postgres"): 
-set /p DB_PASSWORD=Ingrese la contraseña de PostgreSQL: 
-set /p DB_NAME=Ingrese el nombre de la base de datos: 
+set /p DB_USER=[+] Ingrese el usuario de PostgreSQL (enter para "postgres"): 
+set /p DB_PASSWORD=[+] Ingrese la contraseña de PostgreSQL: 
+set /p DB_NAME=[+] Ingrese el nombre de la base de datos: 
 
 if "%DB_PORT%"=="" set DB_PORT=5432
 if "%DB_USER%"=="" set DB_USER=postgres
@@ -25,14 +25,8 @@ echo JWT_SECRET=cambiar_makand_secret_key
 
 
 echo.
-echo Archivo .env creado correctamente.
+echo [+] Archivo .env creado correctamente.
 echo.
-
-echo.
-echo ------------------Asi se ve el archivo-----------------------
-type .env
-echo -------------------------------------------------------------
-echo. 
 
 
 echo.
