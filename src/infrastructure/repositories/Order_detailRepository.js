@@ -30,14 +30,23 @@ export default class Order_detailRepository {
 
 
 
-  async findById(id) {
+  async findById(
+    id,
+    client = pool
+  ) {
 
-    const result = await pool.query(
-      "SELECT * FROM order_details WHERE order_detail_id = $1",
-      [id]
-    );
+    const result =
+      await client.query(
+        `
+        SELECT *
+        FROM order_details
+        WHERE order_detail_id = $1
+        `,
+        [id]
+      );
 
     return result.rows[0];
+
   }
 
 

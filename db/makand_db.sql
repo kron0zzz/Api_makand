@@ -235,6 +235,7 @@ CREATE TABLE orders (
     user_id INT NOT NULL,
     discount_amount DECIMAL(9,2) DEFAULT 0.00,
     order_description VARCHAR(500),
+    last_cut_date TIMESTAMP, 
 
     CONSTRAINT fk_order_project
         FOREIGN KEY (project_id)
@@ -269,6 +270,23 @@ CREATE TABLE order_details (
         FOREIGN KEY (machinery_id)
         REFERENCES machinery(machinery_id)
 );
+
+-- Cortes (rental_cuts)
+CREATE TABLE rental_cuts (
+    
+    cut_id SERIAL PRIMARY KEY,
+    order_id INT NOT NULL,
+    cut_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    period_start_date TIMESTAMP NOT NULL,
+    period_end_date TIMESTAMP NOT NULL,
+    cut_amount DECIMAL(12,2) NOT NULL,
+    cut_notes VARCHAR(500),
+
+    CONSTRAINT fk_rental_cut_order
+        FOREIGN KEY (order_id)
+        REFERENCES orders(order_id)
+);
+
 
 -- Devoluciones (returns)
 CREATE TABLE returns (
@@ -434,3 +452,16 @@ INSERT INTO users (user_email, user_password, user_status, role_id, employee_id)
 INSERT INTO users (user_email, user_password, user_status, role_id, employee_id) VALUES ('mariana@gmail.com', '$2b$10$1Sct7Aomfd.CT053zqvEU.GQAB3LHvOmxAcnekXK1Jq5epws1YaYO', true, 1,3);
 
 
+
+
+
+-- INDICES----
+
+CREATE INDEX idx_rental_cuts_order
+ON rental_cuts(order_id);
+
+CREATE INDEX idx_payments_order
+ON payments(order_id);
+
+CREATE INDEX idx_returns_order_detail
+ON returns(order_detail_id);

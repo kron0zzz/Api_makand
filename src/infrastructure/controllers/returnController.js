@@ -5,14 +5,18 @@ import UpdateReturn from "../../application/use-cases/returns/UpdateReturn.js";
 import DeleteReturn from "../../application/use-cases/returns/DeleteReturn.js";
 import GetReturnsTable from "../../application/use-cases/returns/GetReturnsTable.js";
 
-import ReturnRepositoryPrisma from "../repositories/ReturnRepository.js";
+import ReturnRepository from "../repositories/ReturnRepository.js";
+import Order_detailRepository from "../repositories/Order_detailRepository.js";
+import MachineryRepository from "../repositories/MachineryRepository.js";
 
-const returnRepository = new ReturnRepositoryPrisma();
+const returnRepository = new ReturnRepository();
+const orderDetailRepository = new Order_detailRepository();
+const machineryRepository = new MachineryRepository();
 
 export const createReturn = async (req, res) => {
   try {
     const createReturn =
-      new CreateReturn(returnRepository);
+      new CreateReturn(returnRepository, orderDetailRepository, machineryRepository);
 
     const returnData = await createReturn.execute(
       req.body

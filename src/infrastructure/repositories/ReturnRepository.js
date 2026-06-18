@@ -93,4 +93,32 @@ export default class ReturnRepository {
 
     return result.rows;
   }
+
+
+  async getReturnedQuantity(
+    orderDetailId,
+    client = pool
+  ) {
+
+    const query = `
+      SELECT
+        COALESCE(
+          SUM(returned_quantity),
+          0
+        ) AS total_returned
+      FROM returns
+      WHERE order_detail_id = $1
+    `;
+
+    const result =
+      await client.query(
+        query,
+        [orderDetailId]
+      );
+
+    return Number(
+      result.rows[0].total_returned
+    );
+
+  }
 }

@@ -160,7 +160,32 @@ export default class MachineryRepository {
       );
 
     return result.rows[0];
-}
+  }
+
+
+  async increaseStock(
+    machineryId,
+    quantity,
+    client = pool
+  ) {
+
+    const query = `
+      UPDATE machinery
+      SET stock_quantity =
+          stock_quantity + $1
+      WHERE machinery_id = $2
+      RETURNING *
+    `;
+
+    const result =
+      await client.query(
+        query,
+        [quantity, machineryId]
+      );
+
+    return result.rows[0];
+
+  }
 
 
 
@@ -184,5 +209,53 @@ export default class MachineryRepository {
 
     return result.rows[0];
   }
+
+
+  
+  async setAvailable(
+    machineryId,
+    client = pool
+  ) {
+
+    const query = `
+      UPDATE machinery
+      SET status_id = 1
+      WHERE machinery_id = $1
+      RETURNING *
+    `;
+
+    const result =
+      await client.query(
+        query,
+        [machineryId]
+      );
+
+    return result.rows[0];
+
+  }
+
+
+  async setMaintenance(
+    machineryId,
+    client = pool
+  ) {
+
+    const query = `
+      UPDATE machinery
+      SET status_id = 2
+      WHERE machinery_id = $1
+      RETURNING *
+    `;
+
+    const result =
+      await client.query(
+        query,
+        [machineryId]
+      );
+
+    return result.rows[0];
+
+  }
+
 
 }
