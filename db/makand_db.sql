@@ -368,6 +368,12 @@ INSERT INTO order_status (order_status_name) VALUES ('Cerrado');
 --positions
 INSERT INTO positions (position_name) VALUES ('Desarrollador');
 
+-- machinery_status
+INSERT INTO machinery_status (status_name) VALUES ('Disponible');
+INSERT INTO machinery_status (status_name) VALUES ('En mantenimiento');
+INSERT INTO machinery_status (status_name) VALUES ('Ocupada');
+INSERT INTO machinery_status (status_name) VALUES ('No disponible');
+
 
 --employee prueba
 INSERT INTO employees (

@@ -50,13 +50,18 @@ export default class CreateReturn {
       detail.quantity_to_dispatch -
       totalReturned;
 
-    if (
-      returned_quantity >
-      remaining
-    ) {
+    if (returned_quantity > remaining) {
 
       throw new Error(
         `Solo quedan ${remaining} unidades por devolver`
+      );
+
+    }
+
+    if (returned_quantity <= 0) {
+
+      throw new Error(
+        "La cantidad devuelta debe ser mayor a 0"
       );
 
     }
@@ -79,7 +84,7 @@ export default class CreateReturn {
 
     if (maquinaria.stock_quantity > 0){
 
-      if (maquinaria.is_motorized == true){
+      if (maquinaria.is_motorized){
         await this.machineryRepository
         .setMaintenance(
           detail.machinery_id
