@@ -110,4 +110,17 @@ export default class UserRepository {
     return result.rows[0];
 
   }
+
+  async findPermissionsByRoleId(role_id) {
+    const query = `
+      SELECT p.permission_name 
+      FROM permissions p
+      INNER JOIN role_permissions rp ON p.permission_id = rp.permission_id
+      WHERE rp.role_id = $1
+    `;
+    const result = await pool.query(query, [role_id]);
+    
+    // Mapeamos para devolver un array limpio de strings: ['Crear Usuarios', 'Ver Maquinaria']
+    return result.rows.map(row => row.permission_name);
+  }
 }
