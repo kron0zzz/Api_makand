@@ -20,6 +20,7 @@ import returnRoutes from "../infrastructure/routes/returnRoutes.js"
 import paymentRoutes from "../infrastructure/routes/paymentRoutes.js"
 import maintenanceRoutes from "../infrastructure/routes/maintenanceRoutes.js"
 import orderStatusRoutes from "../infrastructure/routes/orderStatusRoutes.js"
+import rentalCutRoutes from "../infrastructure/routes/rentalCutRoutes.js"
 
 const app = express();
 
@@ -56,6 +57,7 @@ app.use("/api/returns", returnRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/maintenances", maintenanceRoutes);
 app.use("/api/order-status", orderStatusRoutes);
+app.use("/api/rental-cuts", rentalCutRoutes);
 
 export default app;
 

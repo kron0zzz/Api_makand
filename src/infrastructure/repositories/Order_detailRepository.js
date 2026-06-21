@@ -103,4 +103,25 @@ export default class Order_detailRepository {
 
     return result.rows;
   }
+
+
+  async findByOrderId(
+    orderId
+  ) {
+
+    const query = `
+      SELECT *
+      FROM order_details
+      WHERE order_id = $1
+    `;
+
+    const result =
+      await pool.query(
+        query,
+        [orderId]
+      );
+
+    return result.rows;
+
+  }
 }

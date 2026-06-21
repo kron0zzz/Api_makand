@@ -225,4 +225,32 @@ export default class OrderRepository {
 
     return result.rows;
   }
+
+
+
+
+  async updateLastCutDate(
+  orderId,
+  lastCutDate
+) {
+
+  const query = `
+    UPDATE orders
+    SET last_cut_date = $1
+    WHERE order_id = $2
+    RETURNING *
+  `;
+
+  const result =
+    await pool.query(
+      query,
+      [
+        lastCutDate,
+        orderId
+      ]
+    );
+
+  return result.rows[0];
+
+}
 }
