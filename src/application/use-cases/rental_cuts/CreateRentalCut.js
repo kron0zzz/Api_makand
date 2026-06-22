@@ -25,7 +25,8 @@ export default class CreateRentalCut {
 
     const {
       order_id,
-      cut_notes
+      cut_notes,
+      period_end_date
     } = data;
 
 
@@ -57,7 +58,19 @@ export default class CreateRentalCut {
       order.order_creation_date;
 
     const periodEndDate =
-      new Date();
+      new Date(period_end_date);
+
+
+    if (
+      periodEndDate <=
+      new Date(periodStartDate)
+    ) {
+
+      throw new Error(
+        "La fecha final debe ser mayor que la fecha inicial del corte"
+      );
+
+    }
 
 
 
@@ -109,34 +122,132 @@ export default class CreateRentalCut {
 
     for (const detail of details) {
 
-      const returnedQuantity =
+      const returns =
         await this.returnRepository
-          .getReturnedQuantity(
+          .findByOrderDetailId(
             detail.order_detail_id
           );
 
-      const activeQuantity =
-        detail.quantity_to_dispatch -
-        returnedQuantity;
+      let currentQuantity =
+        detail.quantity_to_dispatch;
 
-      if (
-        activeQuantity <= 0
-      ) {
-        continue;
+      let currentDate =
+        new Date(
+          periodStartDate
+        );
+
+      let detailTotal = 0;
+
+
+
+      for (const item of returns) {
+
+        const returnDate =
+          new Date(
+            item.return_date
+          );
+
+        if (
+          returnDate <
+          periodStartDate
+        ) {
+
+          currentQuantity -=
+            item.returned_quantity;
+
+          continue;
+
+        }
+
+        if (
+          returnDate >
+          periodEndDate
+        ) {
+
+          break;
+
+        }
+
+        const tramoDias =
+          Math.ceil(
+            (
+              returnDate -
+              currentDate
+            ) /
+            millisecondsPerDay
+          );
+
+          console.log(
+  "TRAMO",
+  {
+    maquinaria:
+      detail.machinery_name_snapshot,
+    currentDate,
+    returnDate,
+    tramoDias,
+    currentQuantity,
+    precio:
+      detail.rental_unit_price
+  }
+);
+
+
+
+
+
+        if (
+          tramoDias > 0 &&
+          currentQuantity > 0
+        ) {
+
+          detailTotal +=
+            currentQuantity *
+            Number(
+              detail.rental_unit_price
+            ) *
+            tramoDias;
+
+        }
+
+        currentQuantity -=
+          item.returned_quantity;
+
+        currentDate =
+          returnDate;
+
       }
 
-      const subtotal =
-        activeQuantity *
-        Number(
-          detail.rental_unit_price
-        ) *
-        days;
+
+
+      const remainingDays =
+        Math.ceil(
+          (
+            periodEndDate -
+            currentDate
+          ) /
+          millisecondsPerDay
+        );
+
+      if (
+        remainingDays > 0 &&
+        currentQuantity > 0
+      ) {
+
+        detailTotal +=
+          currentQuantity *
+          Number(
+            detail.rental_unit_price
+          ) *
+          remainingDays;
+
+      }
+
+
 
       totalCutAmount +=
-        subtotal;
+        detailTotal;
 
     }
-
 
 
     // =====================

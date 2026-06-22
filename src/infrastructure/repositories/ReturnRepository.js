@@ -121,4 +121,28 @@ export default class ReturnRepository {
     );
 
   }
+
+
+
+
+  async findByOrderDetailId(
+    orderDetailId
+  ) {
+
+    const query = `
+      SELECT *
+      FROM returns
+      WHERE order_detail_id = $1
+      ORDER BY return_date ASC
+    `;
+
+    const result =
+      await pool.query(
+        query,
+        [orderDetailId]
+      );
+
+    return result.rows;
+
+  }
 }
