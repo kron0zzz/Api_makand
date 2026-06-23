@@ -169,28 +169,13 @@ export default class CreateRentalCut {
         }
 
         const tramoDias =
-          Math.ceil(
+          Math.round(
             (
               returnDate -
               currentDate
             ) /
             millisecondsPerDay
           );
-
-          console.log(
-  "TRAMO",
-  {
-    maquinaria:
-      detail.machinery_name_snapshot,
-    currentDate,
-    returnDate,
-    tramoDias,
-    currentQuantity,
-    precio:
-      detail.rental_unit_price
-  }
-);
-
 
 
 
