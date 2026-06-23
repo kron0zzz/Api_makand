@@ -1,5 +1,7 @@
-// src/infrastructure/routes/purchaseInvoiceRoutes.js
 import { Router } from "express";
+import authMiddleware from "../../middlewares/authMiddleware.js";
+import authorize from "../../middlewares/authorize.js";
+
 import { 
   createPurchaseInvoice, 
   getPurchaseInvoices, 
@@ -8,18 +10,17 @@ import {
   deletePurchaseInvoice, 
   getPurchaseInvoicesTable 
 } from "../controllers/purchaseInvoiceController.js";
-import authMiddleware from "../../middlewares/authMiddleware.js";
 
 const router = Router();
 
 // Protegemos el endpoint con tu middleware de autenticación
 router.use(authMiddleware);
 
-router.get("/table", getPurchaseInvoicesTable);
-router.post("/", createPurchaseInvoice);
-router.get("/", getPurchaseInvoices);
-router.get("/:id", getPurchaseInvoiceById);
-router.put("/:id", updatePurchaseInvoice);
-router.delete("/:id", deletePurchaseInvoice);
+router.get("/table", authMiddleware, authorize('Listar Facturas de Compra'), getPurchaseInvoicesTable);
+router.post("/", authMiddleware, authorize('Crear Factura de Compra'), createPurchaseInvoice);
+router.get("/", authMiddleware, authorize('Listar Facturas de Compra'), getPurchaseInvoices);
+router.get("/:id", authMiddleware, authorize('Ver Detalle de Factura de Compra'), getPurchaseInvoiceById);
+router.put("/:id", authMiddleware, authorize('Editar Factura de Compra'), updatePurchaseInvoice);
+router.delete("/:id", authMiddleware, authorize('Eliminar Factura de Compra'), deletePurchaseInvoice);
 
 export default router;

@@ -27,6 +27,8 @@ const authMiddleware = (req, res, next) => {
     // Guardar datos usuario
     req.user = decoded;
 
+    console.log("Datos del usuario en el token:", req.user);
+
     next();
 
   } catch (err) {

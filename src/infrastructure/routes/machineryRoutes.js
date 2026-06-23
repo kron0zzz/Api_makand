@@ -1,4 +1,7 @@
 import { Router } from "express";
+import authMiddleware from "../../middlewares/authMiddleware.js";
+import authorize from "../../middlewares/authorize.js";
+
 import { 
   createMachinery, 
   getMachineries, 
@@ -10,11 +13,12 @@ import {
 
 const router = Router();
 
-router.post("/", createMachinery);
-router.get("/", getMachineries);
-router.get("/table", getMachineriesTable); 
-router.get("/:id", getMachineryById);
-router.put("/:id", updateMachinery);
-router.delete("/:id", deleteMachinery);
+
+router.get("/table", authMiddleware, authorize('Listar Maquinaria'), getMachineriesTable); 
+router.get("/", authMiddleware, authorize('Listar Maquinaria'), getMachineries);
+router.post("/", authMiddleware, authorize('Crear Maquinaria'), createMachinery);
+router.get("/:id", authMiddleware, authorize('Ver Detalle Maquinaria'), getMachineryById);
+router.put("/:id", authMiddleware, authorize('Editar Maquinaria'), updateMachinery);
+router.delete("/:id", authMiddleware, authorize('Eliminar Maquinaria'), deleteMachinery);
 
 export default router;

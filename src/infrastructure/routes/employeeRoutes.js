@@ -1,4 +1,6 @@
 import { Router } from "express";
+import authMiddleware from "../../middlewares/authMiddleware.js";
+import authorize from "../../middlewares/authorize.js";
 import { 
   createEmployee, 
   getEmployees, 
@@ -9,12 +11,11 @@ import {
 } from "../controllers/employeeController.js";
 
 const router = Router();
-
-router.post("/", createEmployee);
-router.get("/", getEmployees);
-router.get("/table", getEmployeesTable);
-router.get("/:id", getEmployeeById);
-router.put("/:id", updateEmployee);
-router.delete("/:id", deleteEmployee);
+router.post("/", authMiddleware, authorize('Crear Empleado'), createEmployee);
+router.get("/", authMiddleware, authorize('Listar Empleados'), getEmployees);
+router.get("/table", authMiddleware, authorize('Listar Empleados'), getEmployeesTable);
+router.get("/:id", authMiddleware, authorize('Ver Detalle Empleado'), getEmployeeById);
+router.put("/:id", authMiddleware, authorize('Editar Empleado'), updateEmployee);
+router.delete("/:id", authMiddleware, authorize('Eliminar Empleado'), deleteEmployee);
 
 export default router;

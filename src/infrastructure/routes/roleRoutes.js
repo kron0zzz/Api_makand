@@ -1,4 +1,6 @@
 import { Router } from "express";
+import authMiddleware from "../../middlewares/authMiddleware.js";
+import authorize from "../../middlewares/authorize.js";
 import { 
   createRole, 
   getRoles, 
@@ -10,16 +12,11 @@ import {
 
 const router = Router();
 
-// 1. LAS RUTAS ESTÁTICAS PRIMERO
-router.get("/table", getRolesTable); 
-
-// 2. RUTAS DE COLECCIÓN
-router.post("/", createRole);       
-router.get("/", getRoles);          
-
-// 3. RUTAS DINÁMICAS (CON PARÁMETROS) AL FINAL
-router.get("/:id", getRoleById);    
-router.put("/:id", updateRole);   
-router.delete("/:id", deleteRole);
+router.post("/", authMiddleware, authorize('Crear Roles'), createRole); 
+router.delete("/:id", authMiddleware, authorize('Eliminar Roles'), deleteRole);
+router.put("/:id", authMiddleware, authorize('Editar Roles'), updateRole);
+router.get("/table", authMiddleware, authorize('Listar Roles'), getRolesTable); 
+router.get("/", authMiddleware, authorize('Listar Roles'), getRoles);
+router.get("/:id", authMiddleware, authorize('Ver Detalle de Rol'), getRoleById);
 
 export default router;
