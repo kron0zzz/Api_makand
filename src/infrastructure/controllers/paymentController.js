@@ -6,13 +6,17 @@ import DeletePayment from "../../application/use-cases/payments/DeletePayment.js
 import GetPaymentsTable from "../../application/use-cases/payments/GetPaymentsTable.js";
 
 import PaymentRepositoryPrisma from "../repositories/PaymentRepository.js";
+import OrderRepository from "../repositories/OrderRepository.js"
+import RentalCutRepository from "../repositories/RentalCutRepository.js"
 
 const paymentRepository = new PaymentRepositoryPrisma();
+const orderRepository = new OrderRepository();
+const rentalCutRepository = new RentalCutRepository();
 
 export const createPayment = async (req, res) => {
   try {
     const createPayment =
-      new CreatePayment(paymentRepository);
+      new CreatePayment(paymentRepository, orderRepository, rentalCutRepository);
 
     const payment = await createPayment.execute(
       req.body

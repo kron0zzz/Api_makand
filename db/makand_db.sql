@@ -323,7 +323,7 @@ CREATE TABLE payments (
     payment_id SERIAL PRIMARY KEY,
     order_id INT NOT NULL,
     payment_amount DECIMAL(9,2) NOT NULL CHECK (payment_amount > 0),
-    payment_method VARCHAR(30) NOT NULL,
+    payment_in_cash BOOLEAN NOT NULL,
     payment_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     is_cancelled BOOLEAN NOT NULL DEFAULT FALSE,
 
