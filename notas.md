@@ -29,3 +29,7 @@
 - cuando se intente borrar y haya un pago o un corte, no solo debería aparecer un mensaje de que no se puede, sino que debería decir también el por qué
 - para el front, ese descuento está muy raro
 - en los detalles debe aparecer el peso total
+
+### payments
+
+- cuando se cree el último pago y el saldo pendiente sea 0 va a cambiar el estado de pedido a "pagado"? ahora que lo pienso, creo que no es buena idea, porque si el cliente es cumplido con los cortes y los paga de una, constantemente ese saldo pendinte va a ser 0.
