@@ -35,29 +35,34 @@ export default class GetOrderBalance {
 
     const totalCuts =
       await this.rentalCutRepository
-        .getTotalCutAmount(
-          orderId
-        );
+        .getTotalCutAmount(orderId);
 
     const totalPaid =
       await this.paymentRepository
-        .getTotalPaid(
-          orderId
-        );
+        .getTotalPaid(orderId);
+
+    const discount =
+      Number(order.discount_amount);
+
+    const totalToCharge =
+      totalCuts - discount;
+
+    const pendingBalance =
+      totalToCharge - totalPaid;
 
     return {
 
-      order_id:
-        Number(orderId),
+      order_id: Number(orderId),
 
-      total_cuts:
-        totalCuts,
+      total_cuts: totalCuts,
 
-      total_paid:
-        totalPaid,
+      discount_amount: discount,
 
-      pending_balance:
-        totalCuts - totalPaid
+      total_to_charge: totalToCharge,
+
+      total_paid: totalPaid,
+
+      pending_balance: pendingBalance
 
     };
 

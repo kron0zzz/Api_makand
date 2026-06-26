@@ -4,15 +4,15 @@ export default class PaymentRepository {
 
   async create(paymentData) {
 
-    const { order_id, payment_amount, payment_method, payment_date, is_cancelled } = paymentData;
+    const { order_id, payment_amount, payment_in_cash, payment_date} = paymentData;
 
     const query = `
-      INSERT INTO payments (order_id, payment_amount, payment_in_cash, payment_date, is_cancelled)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO payments (order_id, payment_amount, payment_in_cash, payment_date)
+      VALUES ($1, $2, $3, $4)
       RETURNING *
     `;
 
-    const values = [order_id, payment_amount, payment_method, payment_date, is_cancelled];
+    const values = [order_id, payment_amount, payment_in_cash, payment_date];
 
     const result = await pool.query(query, values);
 
@@ -44,7 +44,7 @@ export default class PaymentRepository {
   
   async update(id, paymentData) {
 
-    const { order_id, payment_amount, payment_method, payment_date, is_cancelled } = paymentData;
+    const { order_id, payment_amount, payment_in_cash, payment_date, is_cancelled } = paymentData;
 
     const query = `
       UPDATE payments
@@ -57,7 +57,7 @@ export default class PaymentRepository {
       RETURNING *
     `;
 
-    const values = [ order_id, payment_amount, payment_method, payment_date, is_cancelled, id];
+    const values = [ order_id, payment_amount, payment_in_cash, payment_date, is_cancelled, id];
 
     const result =
       await pool.query(query, values);
