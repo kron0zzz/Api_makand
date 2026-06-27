@@ -100,6 +100,14 @@ export default class CreateReturn {
 
     }
 
+    if (remaining - returned_quantity == 0){
+      await this.orderDetailRepository
+      .setReturned(
+        order_detail_id
+      );
+
+    }
+
     return nuevaDevolucion;
 
   }

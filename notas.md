@@ -8,7 +8,7 @@
 
 ### returns
 
-- luego también deberemos poner en el detalle de pedido lo de que se vea el estado del detalle pedido, si ya fue devuelto o q
+- (listo en el back)luego también deberemos poner en el detalle de pedido lo de que se vea el estado del detalle pedido, si ya fue devuelto o q
 - también después de q todo sea devuelto, el estado del pedido debe cambiar a un nuevo estado "devuelto"??? o mejor se cambia a cerrado una vez pagado?
 - realmente es necesario las notas de devolución?
 
@@ -26,7 +26,7 @@
 
 ### orders
 
-- cuando se intente borrar y haya un pago o un corte, no solo debería aparecer un mensaje de que no se puede, sino que debería decir también el por qué
+- (no va a haber borrar sino anular) cuando se intente borrar y haya un pago o un corte, no solo debería aparecer un mensaje de que no se puede, sino que debería decir también el por qué
 - para el front, ese descuento está muy raro
 - en los detalles debe aparecer el peso total
 

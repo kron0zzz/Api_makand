@@ -124,4 +124,28 @@ export default class Order_detailRepository {
     return result.rows;
 
   }
+
+
+
+  async setReturned(
+    order_detail_id,
+    client = pool
+  ) {
+
+    const query = `
+      UPDATE order_details
+      SET machinery_rental_status = false
+      WHERE order_detail_id = $1
+      RETURNING *
+    `;
+
+    const result =
+      await client.query(
+        query,
+        [order_detail_id]
+      );
+
+    return result.rows[0];
+  }
+
 }
