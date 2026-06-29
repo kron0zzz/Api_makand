@@ -4,15 +4,15 @@ export default class RentalCutRepository {
 
   async create(rentalCutData) {
 
-    const { order_id, period_start_date, period_end_date, cut_amount, cut_notes } = rentalCutData;
+    const { order_id, period_start_date, period_end_date, cut_amount} = rentalCutData;
 
     const query = `
-      INSERT INTO rental_cuts (order_id, period_start_date, period_end_date, cut_amount, cut_notes)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO rental_cuts (order_id, period_start_date, period_end_date, cut_amount)
+      VALUES ($1, $2, $3, $4)
       RETURNING *
     `;
 
-    const values = [order_id, period_start_date, period_end_date, cut_amount, cut_notes];
+    const values = [order_id, period_start_date, period_end_date, cut_amount];
 
     const result = await pool.query(query, values);
 
@@ -44,20 +44,19 @@ export default class RentalCutRepository {
   
   async update(id, rentalCutData) {
 
-    const { order_id, period_start_date, period_end_date, cut_amount, cut_notes } = rentalCutData;
+    const { order_id, period_start_date, period_end_date, cut_amount} = rentalCutData;
 
     const query = `
       UPDATE rental_cuts
       SET order_id = $1, 
       period_start_date = $2,
       period_end_date = $3, 
-      cut_amount = $4, 
-      cut_notes = $5
-      WHERE cut_id = $6
+      cut_amount = $4
+      WHERE cut_id = $5
       RETURNING *
     `;
 
-    const values = [ order_id, period_start_date, period_end_date, cut_amount, cut_notes, id];
+    const values = [ order_id, period_start_date, period_end_date, cut_amount, id];
 
     const result =
       await pool.query(query, values);

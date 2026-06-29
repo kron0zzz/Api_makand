@@ -4,15 +4,15 @@ export default class ReturnRepository {
 
   async create(returnData) {
 
-    const { return_date, returned_quantity, return_notes, order_detail_id } = returnData;
+    const { return_date, returned_quantity, order_detail_id } = returnData;
 
     const query = `
-      INSERT INTO returns (return_date, returned_quantity, return_notes, order_detail_id)
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO returns (return_date, returned_quantity, order_detail_id)
+      VALUES ($1, $2, $3)
       RETURNING *
     `;
 
-    const values = [return_date, returned_quantity, return_notes, order_detail_id];
+    const values = [return_date, returned_quantity, order_detail_id];
 
     const result = await pool.query(query, values);
 
@@ -44,19 +44,18 @@ export default class ReturnRepository {
   
   async update(id, returnData) {
 
-    const { return_date, returned_quantity, return_notes, order_detail_id } = returnData;
+    const { return_date, returned_quantity, order_detail_id } = returnData;
 
     const query = `
       UPDATE returns
       SET return_date = $1, 
       returned_quantity = $2,
-      return_notes = $3, 
-      order_detail_id = $4
-      WHERE return_id = $5
+      order_detail_id = $3
+      WHERE return_id = $4
       RETURNING *
     `;
 
-    const values = [ return_date, returned_quantity, return_notes, order_detail_id, id];
+    const values = [ return_date, returned_quantity, order_detail_id, id];
 
     const result =
       await pool.query(query, values);
@@ -84,7 +83,6 @@ export default class ReturnRepository {
         return_id,
         return_date, 
         returned_quantity, 
-        return_notes, 
         order_detail_id
       FROM returns
     `;

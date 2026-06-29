@@ -280,7 +280,6 @@ CREATE TABLE rental_cuts (
     period_start_date TIMESTAMP NOT NULL,
     period_end_date TIMESTAMP NOT NULL,
     cut_amount DECIMAL(12,2) NOT NULL,
-    cut_notes VARCHAR(500),
 
     CONSTRAINT fk_rental_cut_order
         FOREIGN KEY (order_id)
@@ -293,7 +292,6 @@ CREATE TABLE returns (
     return_id BIGSERIAL PRIMARY KEY,
     return_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     returned_quantity INT NOT NULL CHECK (returned_quantity > 0),
-    return_notes VARCHAR(500),
     order_detail_id BIGINT NOT NULL,
 
     CONSTRAINT fk_return_order_detail
