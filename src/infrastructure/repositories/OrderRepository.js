@@ -230,27 +230,85 @@ export default class OrderRepository {
 
 
   async updateLastCutDate(
-  orderId,
-  lastCutDate
-) {
+    orderId,
+    lastCutDate
+  ) {
 
-  const query = `
-    UPDATE orders
-    SET last_cut_date = $1
-    WHERE order_id = $2
-    RETURNING *
-  `;
+    const query = `
+      UPDATE orders
+      SET last_cut_date = $1
+      WHERE order_id = $2
+      RETURNING *
+    `;
 
-  const result =
-    await pool.query(
-      query,
-      [
-        lastCutDate,
-        orderId
-      ]
-    );
+    const result =
+      await pool.query(
+        query,
+        [
+          lastCutDate,
+          orderId
+        ]
+      );
 
-  return result.rows[0];
+    return result.rows[0];
 
-}
+  }
+
+
+
+  async findWorkspaceData(orderId) {
+
+    const query = `
+      SELECT
+
+        od.order_detail_id,
+        od.order_id,
+        od.machinery_id,
+        od.machinery_name_snapshot,
+        od.quantity_to_dispatch,
+        od.rental_unit_price,
+        od.machinery_rental_status,
+        od.subtotal_weight_kg,
+
+        COALESCE(
+
+          (
+            SELECT json_agg(
+
+              json_build_object(
+
+                'return_id', r.return_id,
+                'return_date', r.return_date,
+                'returned_quantity', r.returned_quantity
+
+              )
+
+              ORDER BY r.return_date DESC
+
+            )
+
+            FROM returns r
+
+            WHERE r.order_detail_id =
+              od.order_detail_id
+
+          ),
+
+          '[]'::json
+
+        ) AS returns
+
+      FROM order_details od
+
+      WHERE od.order_id = $1
+
+      ORDER BY od.order_detail_id;
+    `;
+
+    const result =
+      await pool.query(query, [orderId]);
+
+    return result.rows;
+
+  }
 }
