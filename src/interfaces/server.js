@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors"; 
-
+import chargeTypeRoutes from "../infrastructure/routes/chargeTypeRoutes.js";
 import supplierRoutes from "../infrastructure/routes/supplierRoutes.js";    //agregar rutas
 import vehicleRoutes from "../infrastructure/routes/vehicleRoutes.js";
 import customerRoutes from "../infrastructure/routes/customerRoutes.js";
@@ -23,11 +23,6 @@ import orderStatusRoutes from "../infrastructure/routes/orderStatusRoutes.js"
 import roleRoutes from "../infrastructure/routes/roleRoutes.js";
 
 const app = express();
-
-// Aumenta el límite de tamaño permitido para peticiones HTTP. 
-// Es necesario para soportar el envío de imágenes de facturas convertidas a Base64 desde el formulario.
-// app.use(express.json({ limit: '50mb' }));
-// app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 app.use(cors()); 
 app.use(express.json());
@@ -58,6 +53,7 @@ app.use("/api/payments", paymentRoutes);
 app.use("/api/maintenances", maintenanceRoutes);
 app.use("/api/order-status", orderStatusRoutes);
 app.use("/api/roles", roleRoutes);
+app.use("/api/charge-types", chargeTypeRoutes);
 
 export default app;
 
