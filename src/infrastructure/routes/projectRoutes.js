@@ -12,9 +12,9 @@ import {
 
 const router = Router();
 
-router.get("/table", authMiddleware, authorize('Listar Proyectos'), getProjectsTable);
+router.get("/table", authMiddleware, authorize('Listar Proyecto'), getProjectsTable);
 router.post("/", authMiddleware, authorize('Crear Proyecto'), createProject);
-router.get("/", authMiddleware, authorize('Listar Proyectos'), getProjects);
+router.get("/", authMiddleware, authorize('Listar Proyecto'), getProjects);
 router.get("/:id", authMiddleware, authorize('Ver Detalle de Proyecto'), getProjectById);
 router.put("/:id", authMiddleware, authorize('Editar Proyecto'), updateProject);
 router.delete("/:id", authMiddleware, authorize('Eliminar Proyecto'), deleteProject);

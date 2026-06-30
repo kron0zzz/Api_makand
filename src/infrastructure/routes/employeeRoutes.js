@@ -12,9 +12,9 @@ import {
 
 const router = Router();
 router.post("/", authMiddleware, authorize('Crear Empleado'), createEmployee);
-router.get("/", authMiddleware, authorize('Listar Empleados'), getEmployees);
-router.get("/table", authMiddleware, authorize('Listar Empleados'), getEmployeesTable);
-router.get("/:id", authMiddleware, authorize('Ver Detalle Empleado'), getEmployeeById);
+router.get("/", authMiddleware, authorize('Listar Empleado'), getEmployees);
+router.get("/table", authMiddleware, authorize('Listar Empleado'), getEmployeesTable);
+router.get("/:id", authMiddleware, authorize('Ver Detalle de Empleado'), getEmployeeById);
 router.put("/:id", authMiddleware, authorize('Editar Empleado'), updateEmployee);
 router.delete("/:id", authMiddleware, authorize('Eliminar Empleado'), deleteEmployee);
 

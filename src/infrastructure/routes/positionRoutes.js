@@ -4,11 +4,11 @@ import authMiddleware from "../../middlewares/authMiddleware.js";
 import authorize from "../../middlewares/authorize.js";
 const router = Router();
 
-router.post("/", authMiddleware, authorize('Crear Posición'), createPosition);
-router.get("/", authMiddleware, authorize('Listar Posiciones'), getPositions);
-router.get("/:id", authMiddleware, authorize('Ver Detalle de Posición'), getPositionById);
-router.put("/:id", authMiddleware, authorize('Editar Posición'), updatePosition);
-router.delete("/:id", authMiddleware, authorize('Eliminar Posición'), deletePosition);
+router.post("/", authMiddleware, authorize('Crear Cargo'), createPosition);
+router.get("/", authMiddleware, authorize('Listar Cargo'), getPositions);
+router.get("/:id", authMiddleware, authorize('Ver Detalle de Cargo'), getPositionById);
+router.put("/:id", authMiddleware, authorize('Editar Cargo'), updatePosition);
+router.delete("/:id", authMiddleware, authorize('Eliminar Cargo'), deletePosition);
 
 
 export default router;

@@ -13,10 +13,10 @@ import {
 const router = Router();
 
 
-router.get("/table", authMiddleware, authorize('Listar Categorías de Maquinaria'), getMachineryCategoriesTable); 
+router.get("/table", authMiddleware, authorize('Listar Categoría de Maquinaria'), getMachineryCategoriesTable); 
 router.post("/", authMiddleware, authorize('Crear Categoría de Maquinaria'), createMachineryCategory);       
-router.get("/", authMiddleware, authorize('Listar Categorías de Maquinaria'), getMachineryCategories);          
-router.get("/:id", authMiddleware, authorize('Ver Detalle Categoría de Maquinaria'), getMachineryCategoryById);    
+router.get("/", authMiddleware, authorize('Listar Categoría de Maquinaria'), getMachineryCategories);          
+router.get("/:id", authMiddleware, authorize('Ver Detalle de Categoría de Maquinaria'), getMachineryCategoryById);    
 router.put("/:id", authMiddleware, authorize('Editar Categoría de Maquinaria'), updateMachineryCategory);   
 router.delete("/:id", authMiddleware, authorize('Eliminar Categoría de Maquinaria'), deleteMachineryCategory);
 

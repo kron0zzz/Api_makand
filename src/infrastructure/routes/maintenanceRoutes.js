@@ -12,10 +12,10 @@ import {
 
 const router = Router();
 
-router.get("/table", authMiddleware, authorize('Listar Mantenimientos'), getMaintenancesTable);
+router.get("/table", authMiddleware, authorize('Listar Mantenimiento'), getMaintenancesTable);
 router.post("/", authMiddleware, authorize('Crear Mantenimiento'), createMaintenance);
-router.get("/", authMiddleware, authorize('Listar Mantenimientos'), getMaintenances);
-router.get("/:id", authMiddleware, authorize('Ver Detalle Mantenimiento'), getMaintenanceById);
+router.get("/", authMiddleware, authorize('Listar Mantenimiento'), getMaintenances);
+router.get("/:id", authMiddleware, authorize('Ver Detalle de Mantenimiento'), getMaintenanceById);
 router.put("/:id", authMiddleware, authorize('Editar Mantenimiento'), updateMaintenance);
 router.delete("/:id", authMiddleware, authorize('Eliminar Mantenimiento'), deleteMaintenance);
 

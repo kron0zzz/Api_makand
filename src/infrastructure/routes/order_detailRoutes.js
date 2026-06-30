@@ -8,8 +8,8 @@ const router = Router();
 router.use(authMiddleware)
 
 router.post("/", authMiddleware, authorize('Crear Detalle de Orden'), createOrder_detail);
-router.get("/", authMiddleware, authorize('Listar Detalles de Orden'), getOrder_details);
-router.get("/table", authMiddleware, authorize('Listar Detalles de Orden en Tabla'), getOrder_detailsTable);
+router.get("/", authMiddleware, authorize('Listar Detalle de Orden'), getOrder_details);
+router.get("/table", authMiddleware, authorize('Listar Detalle de Orden en Tabla'), getOrder_detailsTable);
 router.get("/:id", authMiddleware, authorize('Ver Detalle de Orden'), getOrder_detailById);
 router.put("/:id", authMiddleware, authorize('Editar Detalle de Orden'), updateOrder_detail);
 router.delete("/:id", authMiddleware, authorize('Eliminar Detalle de Orden'), deleteOrder_detail);

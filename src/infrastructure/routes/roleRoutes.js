@@ -12,11 +12,11 @@ import {
 
 const router = Router();
 
-router.post("/", authMiddleware, authorize('Crear Roles'), createRole); 
+router.post("/", authMiddleware, authorize('Crear Rol'), createRole); 
 router.delete("/:id", authMiddleware, authorize('Eliminar Roles'), deleteRole);
 router.put("/:id", authMiddleware, authorize('Editar Roles'), updateRole);
-router.get("/table", authMiddleware, authorize('Listar Roles'), getRolesTable); 
-router.get("/", authMiddleware, authorize('Listar Roles'), getRoles);
+router.get("/table", authMiddleware, authorize('Listar Rol'), getRolesTable); 
+router.get("/", authMiddleware, authorize('Listar Rol'), getRoles);
 router.get("/:id", authMiddleware, authorize('Ver Detalle de Rol'), getRoleById);
 
 export default router;

@@ -14,10 +14,9 @@ const router = Router();
 
 // 2. PROTEGE LAS RUTAS
 // Usamos authMiddleware para verificar sesión y authorize para verificar permisos
-router.get("/table", authMiddleware, authorize('Listar Tipos de Cargo'), getChargeTypesTable); 
-router.get("/", authMiddleware, authorize('Listar Tipos de Cargo'), getChargeTypes);
-router.post("/", authMiddleware, authorize('Crear Tipos de Cargo'), createChargeType);
-router.get("/:id", authMiddleware, authorize('Ver Detalle Tipos de Cargo'), getChargeTypeById);
-router.put("/:id", authMiddleware, authorize('Editar Tipos de Cargo'), updateChargeType);
-router.delete("/:id", authMiddleware, authorize('Eliminar Tipos de Cargo'), deleteChargeType);
-export default router;
+router.get("/table", authMiddleware, authorize('Listar Tipo de Cargo'), getChargeTypesTable); 
+router.get("/", authMiddleware, authorize('Listar Tipo de Cargo'), getChargeTypes);
+router.post("/", authMiddleware, authorize('Crear Tipo de Cargo'), createChargeType);
+router.get("/:id", authMiddleware, authorize('Ver Detalle de Tipo de Cargo'), getChargeTypeById);
+router.put("/:id", authMiddleware, authorize('Editar Tipo de Cargo'), updateChargeType);
+router.delete("/:id", authMiddleware, authorize('Eliminar Tipo de Cargo'), deleteChargeType);export default router;

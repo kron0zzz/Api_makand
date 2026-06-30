@@ -17,7 +17,7 @@ const router = Router();
 router.get("/table", authMiddleware, authorize('Listar Maquinaria'), getMachineriesTable); 
 router.get("/", authMiddleware, authorize('Listar Maquinaria'), getMachineries);
 router.post("/", authMiddleware, authorize('Crear Maquinaria'), createMachinery);
-router.get("/:id", authMiddleware, authorize('Ver Detalle Maquinaria'), getMachineryById);
+router.get("/:id", authMiddleware, authorize('Ver Detalle de Maquinaria'), getMachineryById);
 router.put("/:id", authMiddleware, authorize('Editar Maquinaria'), updateMachinery);
 router.delete("/:id", authMiddleware, authorize('Eliminar Maquinaria'), deleteMachinery);
 

@@ -16,9 +16,9 @@ const router = Router();
 // Protegemos el endpoint con tu middleware de autenticación
 router.use(authMiddleware);
 
-router.get("/table", authMiddleware, authorize('Listar Facturas de Compra'), getPurchaseInvoicesTable);
+router.get("/table", authMiddleware, authorize('Listar Factura de Compra'), getPurchaseInvoicesTable);
 router.post("/", authMiddleware, authorize('Crear Factura de Compra'), createPurchaseInvoice);
-router.get("/", authMiddleware, authorize('Listar Facturas de Compra'), getPurchaseInvoices);
+router.get("/", authMiddleware, authorize('Listar Factura de Compra'), getPurchaseInvoices);
 router.get("/:id", authMiddleware, authorize('Ver Detalle de Factura de Compra'), getPurchaseInvoiceById);
 router.put("/:id", authMiddleware, authorize('Editar Factura de Compra'), updatePurchaseInvoice);
 router.delete("/:id", authMiddleware, authorize('Eliminar Factura de Compra'), deletePurchaseInvoice);

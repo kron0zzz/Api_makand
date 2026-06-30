@@ -15,9 +15,9 @@ const router = Router();
 // Protegemos los endpoints con tu middleware de autenticación
 router.use(authMiddleware);
 
-router.get("/table", authMiddleware, authorize('Listar Subalquileres'), getSubRentalsTable);
+router.get("/table", authMiddleware, authorize('Listar Subalquiler'), getSubRentalsTable);
 router.post("/", authMiddleware, authorize('Crear Subalquiler'), createSubRental);
-router.get("/", authMiddleware, authorize('Listar Subalquileres'), getSubRentals);
+router.get("/", authMiddleware, authorize('Listar Subalquiler'), getSubRentals);
 router.get("/:id", authMiddleware, authorize('Ver Detalle de Subalquiler'), getSubRentalById);
 router.put("/:id", authMiddleware, authorize('Editar Subalquiler'), updateSubRental);
 router.delete("/:id", authMiddleware, authorize('Eliminar Subalquiler'), deleteSubRental);

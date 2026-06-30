@@ -12,7 +12,7 @@ import {
 
 const router = Router();
 
-router.get("/table", authMiddleware, authorize('Listar Estados de Orden'), getOrderStatussTable);
+router.get("/table", authMiddleware, authorize('Listar Estado de Orden'), getOrderStatussTable);
 router.post("/", authMiddleware, authorize('Crear Estado de Orden'), createOrderStatus);
 router.get("/", authMiddleware, authorize('Listar Estados de Orden'), getOrderStatuss);
 router.get("/:id", authMiddleware, authorize('Ver Detalle de Estado de Orden'), getOrderStatusById);
