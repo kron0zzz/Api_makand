@@ -13,8 +13,8 @@ import {
 const router = Router();
 
 router.post("/", authMiddleware, authorize('Crear Rol'), createRole); 
-router.delete("/:id", authMiddleware, authorize('Eliminar Roles'), deleteRole);
-router.put("/:id", authMiddleware, authorize('Editar Roles'), updateRole);
+router.delete("/:id", authMiddleware, authorize('Eliminar Rol'), deleteRole);
+router.put("/:id", authMiddleware, authorize('Editar Rol'), updateRole);
 router.get("/table", authMiddleware, authorize('Listar Rol'), getRolesTable); 
 router.get("/", authMiddleware, authorize('Listar Rol'), getRoles);
 router.get("/:id", authMiddleware, authorize('Ver Detalle de Rol'), getRoleById);
