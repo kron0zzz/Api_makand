@@ -5,7 +5,8 @@ import {
   getRentalCutById,
   updateRentalCut,
   deleteRentalCut,
-  getRentalCutsTable
+  getRentalCutsTable,
+  getRentalCutByOrderId
 } from "../controllers/rentalCutController.js";
 
 import authMiddleware from "../../middlewares/authMiddleware.js";
@@ -20,5 +21,6 @@ router.get("/table", getRentalCutsTable);
 router.get("/:id", getRentalCutById);
 router.put("/:id", updateRentalCut);
 router.delete("/:id", deleteRentalCut);
+router.get("/order/:id", getRentalCutByOrderId);
 
 export default router;

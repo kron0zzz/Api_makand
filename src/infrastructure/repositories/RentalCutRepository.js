@@ -122,4 +122,26 @@ export default class RentalCutRepository {
     );
 
   }
+
+
+  async findByOrderId(
+    orderId
+  ) {
+
+    const query = `
+      SELECT *
+      FROM rental_cuts
+      WHERE order_id = $1
+      ORDER BY period_start_date DESC
+    `;
+
+    const result =
+      await pool.query(
+        query,
+        [orderId]
+      );
+
+    return result.rows;
+
+  }
 }

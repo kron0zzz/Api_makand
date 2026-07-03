@@ -4,6 +4,7 @@ import GetRentalCutById from "../../application/use-cases/rental_cuts/GetRentalC
 import UpdateRentalCut from "../../application/use-cases/rental_cuts/UpdateRentalCut.js";
 import DeleteRentalCut from "../../application/use-cases/rental_cuts/DeleteRentalCut.js";
 import GetRentalCutsTable from "../../application/use-cases/rental_cuts/GetRentalCutsTable.js";
+import GetRentalCutByOrderId from "../../application/use-cases/rental_cuts/GetRentalCutByOrderId.js"
 
 import RentalCutRepository from "../repositories/RentalCutRepository.js";
 import OrderRepository from "../repositories/OrderRepository.js";
@@ -130,6 +131,31 @@ export const getRentalCutsTable = async (req, res) => {
     const rentalCuts = await getRentalCutsTable.execute();
 
     res.status(200).json(rentalCuts);
+
+  } catch (err) {
+    res.status(500).json({
+      error: err.message
+    });
+  }
+};
+
+
+
+export const getRentalCutByOrderId = async (req, res) => {
+  try {
+    const getRentalCutByOrderId =
+      new GetRentalCutByOrderId(rentalCutRepository);
+
+    const rentalCutsOrder =
+      await getRentalCutByOrderId.execute(req.params.id);
+
+    if (!rentalCutsOrder) {
+      return res.status(404).json({
+        error: "Corte de alquiler no encontrado"
+      });
+    }
+
+    res.status(200).json(rentalCutsOrder);
 
   } catch (err) {
     res.status(500).json({
