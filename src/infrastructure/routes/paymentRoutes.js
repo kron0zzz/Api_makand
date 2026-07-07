@@ -5,7 +5,8 @@ import {
   getPaymentById,
   updatePayment,
   deletePayment,
-  getPaymentsTable
+  getPaymentsTable,
+  getPaymentsByOrderId
 } from "../controllers/paymentController.js";
 
 import authMiddleware from "../../middlewares/authMiddleware.js";
@@ -20,5 +21,6 @@ router.get("/table", getPaymentsTable);
 router.get("/:id", getPaymentById);
 router.put("/:id", updatePayment);
 router.delete("/:id", deletePayment);
+router.get("/order/:id", getPaymentsByOrderId);
 
 export default router;

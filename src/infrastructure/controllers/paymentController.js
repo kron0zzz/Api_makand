@@ -4,6 +4,7 @@ import GetPaymentById from "../../application/use-cases/payments/GetPaymentById.
 import UpdatePayment from "../../application/use-cases/payments/UpdatePayment.js";
 import DeletePayment from "../../application/use-cases/payments/DeletePayment.js";
 import GetPaymentsTable from "../../application/use-cases/payments/GetPaymentsTable.js";
+import GetPaymentsByOrderId from "../../application/use-cases/payments/GetPaymentsByOrderId.js"
 
 import GetOrderBalance from "../../application/use-cases/orders/GetOrderBalance.js"
 
@@ -142,4 +143,33 @@ export const getPaymentsTable = async (req, res) => {
       error: err.message
     });
   }
+};
+
+
+
+export const getPaymentsByOrderId = async (req, res) => {
+
+  try {
+
+    const getPaymentsByOrderId =
+      new GetPaymentsByOrderId(
+        paymentRepository,
+        rentalCutRepository
+      );
+
+    const paymentsOrder =
+      await getPaymentsByOrderId.execute(req.params.id);
+
+    res.status(200).json(paymentsOrder);
+
+  }
+
+  catch (err) {
+
+    res.status(500).json({
+      error: err.message
+    });
+
+  }
+
 };

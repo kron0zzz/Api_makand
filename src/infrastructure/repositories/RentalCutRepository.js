@@ -144,4 +144,41 @@ export default class RentalCutRepository {
     return result.rows;
 
   }
+
+
+  async getTotalBilled(orderId) {
+
+    const query = `
+
+        SELECT
+
+            COALESCE(
+
+                SUM(cut_amount),
+
+                0
+
+            ) AS total_billed
+
+        FROM rental_cuts
+
+        WHERE order_id = $1;
+
+    `;
+
+    const result = await pool.query(
+
+        query,
+
+        [orderId]
+
+    );
+
+    return Number(
+
+        result.rows[0].total_billed
+
+    );
+
+  }
 }

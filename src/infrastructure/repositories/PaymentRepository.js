@@ -123,4 +123,25 @@ export default class PaymentRepository {
     );
 
   }
+
+
+
+  async findPaymentsByOrderId(orderId) {
+
+    const query = `
+      SELECT *
+      FROM payments
+      WHERE order_id = $1
+      ORDER BY payment_date DESC
+    `;
+
+    const result =
+      await pool.query(
+        query,
+        [orderId]
+      );
+
+    return result.rows;
+
+  }
 }

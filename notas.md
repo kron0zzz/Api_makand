@@ -8,9 +8,8 @@
 
 ### returns
 
-- (listo en el back)luego también deberemos poner en el detalle de pedido lo de que se vea el estado del detalle pedido, si ya fue devuelto o q
+
 - también después de q todo sea devuelto, el estado del pedido debe cambiar a un nuevo estado "devuelto"??? o mejor se cambia a cerrado una vez pagado?
-- realmente es necesario las notas de devolución?
 
 
 ### order status
@@ -21,7 +20,6 @@
 ### rental cuts
 
 - nada por decir mi seño, todo melo (al menos con el create)
-- es muy necesario las notas de cortes?
 - hice un pedido el 1 de mayo e hice el corte un 15, se deberían cobrar 15 o 14 días? porque en este momento se cobran x 14
 
 ### orders
