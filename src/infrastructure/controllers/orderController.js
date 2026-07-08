@@ -6,15 +6,17 @@ import DeleteOrder from "../../application/use-cases/orders/DeleteOrder.js";
 import GetOrdersTable from "../../application/use-cases/orders/GetOrdersTable.js";
 import CreateCompleteOrder from "../../application/use-cases/orders/CreateCompleteOrder.js";
 import GetOrderFull from "../../application/use-cases/orders/GetOrderFull.js"
+import GetOrderWorkspace from "../../application/use-cases/orders/GetOrderWorkspace.js";
 
 import OrderDetailRepository from "../repositories/Order_detailRepository.js";
 import MachineryRepository from "../repositories/MachineryRepository.js";
-
 import OrderRepository from "../repositories/OrderRepository.js";
+
 
 const orderRepository = new OrderRepository();
 const orderDetailRepository = new OrderDetailRepository();
 const machineryRepository = new MachineryRepository();
+const getOrderWorkspaceUseCase = new GetOrderWorkspace(orderRepository);
 
 export const createOrder = async (req, res) => {
   try {
@@ -171,10 +173,6 @@ export const createCompleteOrder = async (req, res) => {
 
 };
 
-
-
-
-
 export const getOrderFull = async (req, res) => {
 
   try {
@@ -208,4 +206,14 @@ export const getOrderFull = async (req, res) => {
 
   }
 
+};
+
+
+export const getOrderWorkspace = async (req, res) => {
+  try {
+    const workspace = await getOrderWorkspaceUseCase.execute(req.params.id);
+    res.status(200).json(workspace);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };

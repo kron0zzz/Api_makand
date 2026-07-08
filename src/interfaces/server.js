@@ -1,39 +1,47 @@
 import express from "express";
 import cors from "cors"; 
+
 import chargeTypeRoutes from "../infrastructure/routes/chargeTypeRoutes.js";
-import supplierRoutes from "../infrastructure/routes/supplierRoutes.js";    //agregar rutas
+import supplierRoutes from "../infrastructure/routes/supplierRoutes.js"; 
 import vehicleRoutes from "../infrastructure/routes/vehicleRoutes.js";
 import customerRoutes from "../infrastructure/routes/customerRoutes.js";
-import positionRoutes from "../infrastructure/routes/positionRoutes.js"
+import positionRoutes from "../infrastructure/routes/positionRoutes.js";
 import machineryStatusRoutes from "../infrastructure/routes/machineryStatusRoutes.js";
 import machineryCategoryRoutes from "../infrastructure/routes/machineryCategoryRoutes.js";
 import machineryRoutes from "../infrastructure/routes/machineryRoutes.js";
-import userRoutes from "../infrastructure/routes/userRoutes.js"
-import authRoutes from "../infrastructure/routes/authRoutes.js"
+import userRoutes from "../infrastructure/routes/userRoutes.js";
+import authRoutes from "../infrastructure/routes/authRoutes.js";
 import employeeRoutes from "../infrastructure/routes/employeeRoutes.js";
-import orderRoutes from "../infrastructure/routes/orderRoutes.js"
-import order_detailRoutes from "../infrastructure/routes/order_detailRoutes.js"
+import orderRoutes from "../infrastructure/routes/orderRoutes.js";
+import order_detailRoutes from "../infrastructure/routes/order_detailRoutes.js";
 import purchaseInvoiceRoutes from "../infrastructure/routes/purchaseInvoiceRoutes.js";
 import subRentalRoutes from "../infrastructure/routes/subRentalRoutes.js";
-import projectRoutes from "../infrastructure/routes/projectRoutes.js"
-import returnRoutes from "../infrastructure/routes/returnRoutes.js"
-import paymentRoutes from "../infrastructure/routes/paymentRoutes.js"
-import maintenanceRoutes from "../infrastructure/routes/maintenanceRoutes.js"
-import orderStatusRoutes from "../infrastructure/routes/orderStatusRoutes.js"
+import projectRoutes from "../infrastructure/routes/projectRoutes.js";
+import returnRoutes from "../infrastructure/routes/returnRoutes.js";
+import paymentRoutes from "../infrastructure/routes/paymentRoutes.js";
+import maintenanceRoutes from "../infrastructure/routes/maintenanceRoutes.js";
+import orderStatusRoutes from "../infrastructure/routes/orderStatusRoutes.js";
 import roleRoutes from "../infrastructure/routes/roleRoutes.js";
+// import rentalCutRoutes from "../infrastructure/routes/rentalCutRoutes.js";
+import rentalCutRoutes from "../infrastructure/routes/rentalCutRoutes.js";
 
 const app = express();
+
+// Configuración de límites
+// app.use(express.json({ limit: '50mb' }));
+// app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 app.use(cors()); 
 app.use(express.json());
 
 app.get("/", (req, res) => {
   res.json({
-    message: "API Makand funcionando"
+    message: "API Makand funcionando (Unificada)"
   });
 });
 
-app.use("/api/suppliers", supplierRoutes);  //usar rutas
+// Registro de rutas
+app.use("/api/suppliers", supplierRoutes);
 app.use("/api/customers", customerRoutes);
 app.use("/api/vehicles", vehicleRoutes);
 app.use("/api/positions", positionRoutes);
@@ -54,10 +62,6 @@ app.use("/api/maintenances", maintenanceRoutes);
 app.use("/api/order-status", orderStatusRoutes);
 app.use("/api/roles", roleRoutes);
 app.use("/api/charge-types", chargeTypeRoutes);
+app.use("/api/rental-cuts", rentalCutRoutes);
 
 export default app;
-
-
-
-
-

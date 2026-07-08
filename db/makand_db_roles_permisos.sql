@@ -867,7 +867,9 @@ INSERT INTO permissions (permission_name) VALUES
 ('Listar Subalquiler'), ('Crear Subalquiler'), ('Ver Detalle de Subalquiler'), ('Editar Subalquiler'), ('Eliminar Subalquiler'),
 ('Listar Proveedor'), ('Crear Proveedor'), ('Ver Detalle de Proveedor'), ('Editar Proveedor'), ('Eliminar Proveedor'),
 ('Listar Usuario'), ('Crear Usuario'), ('Ver Detalle de Usuario'), ('Editar Usuario'), ('Eliminar Usuario'),
-('Listar Vehículo'), ('Crear Vehículo'), ('Ver Detalle de Vehículo'), ('Editar Vehículo'), ('Eliminar Vehículo');
+('Listar Vehículo'), ('Crear Vehículo'), ('Ver Detalle de Vehículo'), ('Editar Vehículo'), ('Eliminar Vehículo'),
+('Crear Corte de Alquiler'), ('Listar Cortes de Alquiler'), ('Listar Cortes de Alquiler en Tabla'), ('Ver Detalle de Corte'), 
+('Listar Cortes por Orden'), ('Editar Corte de Alquiler'), ('Eliminar Corte de Alquiler'), ('Ver Workspace de Orden'), ('Listar Pagos por Orden');
 
 -- 2. Asignación al Administrador (role_id 1 - Acceso Total)
 INSERT INTO role_permissions (role_id, permission_id)
@@ -887,5 +889,8 @@ WHERE permission_name IN (
     'Crear Cliente', 'Listar Cliente', 'Ver Detalle de Cliente',
     'Crear Orden', 'Listar Orden', 'Ver Detalle de Orden',
     'Crear Orden Completa', 'Listar Ordenes en Tabla', 'Ver Detalle Completo de Orden', 
-    'Crear Devolución', 'Listar Devolución', 'Ver Detalle de Devolución'
+    'Crear Devolución', 'Listar Devolución', 'Ver Detalle de Devolución',
+    'Listar Cortes de Alquiler', 'Ver Detalle de Corte', 'Listar Cortes por Orden',
+    'Ver Workspace de Orden', 'Listar Pagos por Orden'
 );
+

@@ -4,28 +4,28 @@ import GetPaymentById from "../../application/use-cases/payments/GetPaymentById.
 import UpdatePayment from "../../application/use-cases/payments/UpdatePayment.js";
 import DeletePayment from "../../application/use-cases/payments/DeletePayment.js";
 import GetPaymentsTable from "../../application/use-cases/payments/GetPaymentsTable.js";
+import GetPaymentsByOrderId from "../../application/use-cases/payments/GetPaymentsByOrderId.js";
+import GetOrderBalance from "../../application/use-cases/orders/GetOrderBalance.js";
 
-import PaymentRepositoryPrisma from "../repositories/PaymentRepository.js";
+import PaymentRepository from "../repositories/PaymentRepository.js";
+import OrderRepository from "../repositories/OrderRepository.js";
+import RentalCutRepository from "../repositories/RentalCutRepository.js";
 
-const paymentRepository = new PaymentRepositoryPrisma();
+const paymentRepository = new PaymentRepository();
+const orderRepository = new OrderRepository();
+const rentalCutRepository = new RentalCutRepository();
+const getOrderBalance = new GetOrderBalance(orderRepository, rentalCutRepository, paymentRepository);
 
 export const createPayment = async (req, res) => {
   try {
-    const createPayment =
-      new CreatePayment(paymentRepository);
-
-    const payment = await createPayment.execute(
-      req.body
-    );
-
+    const createPayment = new CreatePayment(paymentRepository, orderRepository, getOrderBalance);
+    const payment = await createPayment.execute(req.body);
     res.status(201).json(payment);
-
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    res.status(500).json({ error: err.message });
   }
 };
+
 
 export const getPayments = async (req, res) => {
   try {
@@ -129,5 +129,15 @@ export const getPaymentsTable = async (req, res) => {
     res.status(500).json({
       error: err.message
     });
+  }
+};
+
+export const getPaymentsByOrderId = async (req, res) => {
+  try {
+    const getPaymentsByOrderId = new GetPaymentsByOrderId(paymentRepository, rentalCutRepository);
+    const paymentsOrder = await getPaymentsByOrderId.execute(req.params.id);
+    res.status(200).json(paymentsOrder);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };
