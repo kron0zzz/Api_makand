@@ -19,6 +19,7 @@ export const createReturn = async (req, res) => {
     const returnData = await createReturn.execute(req.body);
     res.status(201).json(returnData);
   } catch (err) {
+    console.error("ERROR DETALLADO EN REGISTRO DE DEVOLUCIÓN:", err);
     res.status(500).json({ error: err.message });
   }
 };
