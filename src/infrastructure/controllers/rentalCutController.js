@@ -150,6 +150,7 @@ export const getRentalCutByOrderId = async (req, res) => {
     res.status(200).json(rentalCutsOrder);
 
   } catch (err) {
+    console.error("ERROR DETECTADO EN getRentalCutByOrderId:", err);
     res.status(500).json({
       error: err.message
     });
