@@ -19,9 +19,8 @@ export default class LoginUserUseCase {
       throw new Error("Contraseña incorrecta");
     }
 
-    // --- NUEVO: ESTO ES LO QUE FALTA EN TU RAMA PRINCIPAL ---
     const permissions = await this.userRepository.findPermissionsByRoleId(user.role_id);
-    // --------------------------------------------------------
+    console.log("DEBUG: Permisos obtenidos para el usuario", user.user_id, ":", permissions);
 
     const token = jwt.sign(
       {

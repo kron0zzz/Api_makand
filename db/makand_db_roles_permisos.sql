@@ -846,6 +846,7 @@ VALUES
 ('prueba@gmail.com', '$2b$10$wI5Y5q.Q5G3oW4qM5K.T.uey5.5v2oV5P3aKqYj2gXp9l4XQ4V.q.', true, 2, 4);
 
 -- 5. Permisos (La lista completa)
+-- 1. Insertar todos los permisos necesarios
 INSERT INTO permissions (permission_name) VALUES 
 ('Listar Tipo de Cargo'), ('Crear Tipo de Cargo'), ('Ver Detalle de Tipo de Cargo'), ('Editar Tipo de Cargo'), ('Eliminar Tipo de Cargo'),
 ('Listar Cliente'), ('Crear Cliente'), ('Ver Detalle de Cliente'), ('Editar Cliente'), ('Eliminar Cliente'),
@@ -855,7 +856,7 @@ INSERT INTO permissions (permission_name) VALUES
 ('Listar Maquinaria'), ('Crear Maquinaria'), ('Ver Detalle de Maquinaria'), ('Editar Maquinaria'), ('Eliminar Maquinaria'),
 ('Listar Mantenimiento'), ('Crear Mantenimiento'), ('Ver Detalle de Mantenimiento'), ('Editar Mantenimiento'), ('Eliminar Mantenimiento'),
 ('Listar Detalle de Orden'), ('Crear Detalle de Orden'), ('Ver Detalle de Detalle de Orden'), ('Editar Detalle de Orden'), ('Eliminar Detalle de Orden'),
-('Listar Orden'), ('Crear Orden'), ('Ver Detalle de Orden'), ('Editar Orden'), ('Eliminar Orden'), ('Crear Orden Completa'),
+('Listar Orden'), ('Crear Orden'), ('Listar Ordenes en Tabla'), ('Ver Detalle Completo de Orden'), ('Ver Detalle de Orden'), ('Editar Orden'), ('Eliminar Orden'), ('Crear Orden Completa'),
 ('Listar Estado de Orden'), ('Crear Estado de Orden'), ('Ver Detalle de Estado de Orden'), ('Editar Estado de Orden'), ('Eliminar Estado de Orden'),
 ('Listar Pago'), ('Crear Pago'), ('Ver Detalle de Pago'), ('Editar Pago'), ('Eliminar Pago'),
 ('Listar Cargo'), ('Crear Cargo'), ('Ver Detalle de Cargo'), ('Editar Cargo'), ('Eliminar Cargo'),
@@ -868,14 +869,16 @@ INSERT INTO permissions (permission_name) VALUES
 ('Listar Usuario'), ('Crear Usuario'), ('Ver Detalle de Usuario'), ('Editar Usuario'), ('Eliminar Usuario'),
 ('Listar Vehículo'), ('Crear Vehículo'), ('Ver Detalle de Vehículo'), ('Editar Vehículo'), ('Eliminar Vehículo');
 
--- 6. Asignación final (Corregida con los nombres exactos en singular)
+-- 2. Asignación al Administrador (role_id 1 - Acceso Total)
 INSERT INTO role_permissions (role_id, permission_id)
 SELECT 1, permission_id FROM permissions;
 
+-- 3. Asignación al Asesor (role_id 2 - Permisos específicos)
 INSERT INTO role_permissions (role_id, permission_id)
 SELECT 2, permission_id 
 FROM permissions 
 WHERE permission_name IN (
+    'Listar Proveedor', 'Ver Detalle de Proveedor', 
     'Crear Subalquiler', 'Listar Subalquiler', 'Ver Detalle de Subalquiler',
     'Crear Proyecto', 'Listar Proyecto', 'Ver Detalle de Proyecto',
     'Listar Maquinaria', 'Ver Detalle de Maquinaria',
@@ -883,5 +886,6 @@ WHERE permission_name IN (
     'Listar Vehículo', 'Ver Detalle de Vehículo',
     'Crear Cliente', 'Listar Cliente', 'Ver Detalle de Cliente',
     'Crear Orden', 'Listar Orden', 'Ver Detalle de Orden',
+    'Crear Orden Completa', 'Listar Ordenes en Tabla', 'Ver Detalle Completo de Orden', 
     'Crear Devolución', 'Listar Devolución', 'Ver Detalle de Devolución'
 );

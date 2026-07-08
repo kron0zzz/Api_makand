@@ -69,6 +69,17 @@ export default class SupplierRepository {
     return result.rows[0];
   }
 
+  async updateStatus(id, supplier_status) {
+    const query = `
+      UPDATE suppliers
+      SET supplier_status = $1
+      WHERE supplier_id = $2
+      RETURNING *
+    `;
+    const result = await pool.query(query, [supplier_status, id]);
+    return result.rows[0];
+  }
+
   
   async delete(id) {
 
@@ -99,3 +110,4 @@ export default class SupplierRepository {
     return result.rows;
   }
 }
+

@@ -15,5 +15,4 @@ router.get("/:id", authMiddleware, authorize('Ver Detalle de Proveedor'), getSup
 router.put("/:id", authMiddleware, authorize('Editar Proveedor'), updateSupplier);
 router.delete("/:id", authMiddleware, authorize('Eliminar Proveedor'), deleteSupplier);
 
-
 export default router;
