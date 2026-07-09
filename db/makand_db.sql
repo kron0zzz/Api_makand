@@ -389,7 +389,7 @@ INSERT INTO users (user_email, user_password, user_status, role_id, employee_id)
 VALUES 
 ('rios@gmail.com', '$2b$10$tvhRa6clQU/a93QkRtllYO8l7CJBpOj3g12AfPk0VVXyG34rJEcAu', true, 1, 1),
 ('sara@gmail.com', '$2b$10$ODpcGe.lD8NqIsVFIWL1OufTzmPuICg8HzMU9ax4ROPePZLU4cLim', true, 1, 2),
-('mariana@gmail.com', '$2b$10$1Sct7Aomfd.CT053zqvEU.GQAB3LHvOmxAcnekXK1Jq5epws1YaYO', true, 1, 3),
+('mariana@gmail.com', '$2b$10$sFNSRP7Jud61LREzLSlBG.t40YomUv/a4J1UJp6JOELmcQ.NKCFSC', true, 1, 3),
 ('prueba@gmail.com', '$2b$10$wI5Y5q.Q5G3oW4qM5K.T.uey5.5v2oV5P3aKqYj2gXp9l4XQ4V.q.', true, 2, 4);
 
 
