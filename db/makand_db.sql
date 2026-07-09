@@ -25,7 +25,7 @@ CREATE TABLE roles (
 -- Permisos (permissions)
 CREATE TABLE permissions (
     permission_id SERIAL PRIMARY KEY,
-    permission_name VARCHAR(50) NOT NULL
+    permission_name VARCHAR(50) NOT NULL UNIQUE
 );
 
 -- Estado de pedido (order_status)
@@ -351,8 +351,10 @@ CREATE TABLE vehicle_charges (
 -- =========================================
 
 -- roles
-INSERT INTO roles (role_name, role_status) VALUES ('Adminstrador', true);
-INSERT INTO roles (role_name, role_status) VALUES ('Asesor', true);
+INSERT INTO roles (role_name, role_status)
+VALUES
+('Administrador',true),
+('Asesor',true);
 
 
 
@@ -374,90 +376,77 @@ INSERT INTO machinery_status (status_name) VALUES ('No disponible');
 
 
 --employee prueba
-INSERT INTO employees (
-    employee_document_type,
-    employee_document_number,
-    employee_status,
-    employee_first_name,
-    employee_last_name,
-    employee_email,
-    employee_phone,
-    employee_eps,
-    position_id
-)
-VALUES (
-    'CC',
-    '1025647253',
-    TRUE,
-    'Juan Diego',
-    'Rios Restrepo',
-    'juanriosr7526@makandsmr.com',
-    '3052264211',
-    'Sura',
-    1
+INSERT INTO employees (employee_document_type, employee_document_number, employee_status, employee_first_name, employee_last_name, employee_email, employee_phone, employee_eps, position_id)
+VALUES 
+('CC', '1025647253', TRUE, 'Juan Diego', 'Rios Restrepo', 'juanriosr7526@gmail.com', '3052264211', 'Sura', 1),
+('CC', '1020114536', TRUE, 'Sara Camila', 'Ortiz Higuita', 'sara@gmail.com', '3054081703', 'Sura', 1),
+('CC', '103213213', TRUE, 'Mariana', 'Figueroa Cardona', 'mariana@gmail.com', '3117384156', 'Sura', 1),
+('CC', '999888777', TRUE, 'Usuario', 'Prueba', 'prueba@gmail.com', '3000000000', 'Sura', 1);
+
+
+
+INSERT INTO users (user_email, user_password, user_status, role_id, employee_id) 
+VALUES 
+('rios@gmail.com', '$2b$10$tvhRa6clQU/a93QkRtllYO8l7CJBpOj3g12AfPk0VVXyG34rJEcAu', true, 1, 1),
+('sara@gmail.com', '$2b$10$ODpcGe.lD8NqIsVFIWL1OufTzmPuICg8HzMU9ax4ROPePZLU4cLim', true, 1, 2),
+('mariana@gmail.com', '$2b$10$1Sct7Aomfd.CT053zqvEU.GQAB3LHvOmxAcnekXK1Jq5epws1YaYO', true, 1, 3),
+('prueba@gmail.com', '$2b$10$wI5Y5q.Q5G3oW4qM5K.T.uey5.5v2oV5P3aKqYj2gXp9l4XQ4V.q.', true, 2, 4);
+
+
+
+-- 5. Permisos (La lista completa)
+-- 1. Insertar todos los permisos necesarios
+INSERT INTO permissions (permission_name) VALUES 
+('Listar Tipo de Cargo'), ('Crear Tipo de Cargo'), ('Ver Detalle de Tipo de Cargo'), ('Editar Tipo de Cargo'), ('Eliminar Tipo de Cargo'),
+('Listar Cliente'), ('Crear Cliente'), ('Ver Detalle de Cliente'), ('Editar Cliente'), ('Eliminar Cliente'),
+('Listar Empleado'), ('Crear Empleado'), ('Ver Detalle de Empleado'), ('Editar Empleado'), ('Eliminar Empleado'),
+('Listar Categoría de Maquinaria'), ('Crear Categoría de Maquinaria'), ('Ver Detalle de Categoría de Maquinaria'), ('Editar Categoría de Maquinaria'), ('Eliminar Categoría de Maquinaria'),
+('Listar Estado de Maquinaria'), ('Crear Estado de Maquinaria'), ('Ver Detalle de Estado de Maquinaria'), ('Editar Estado de Maquinaria'), ('Eliminar Estado de Maquinaria'),
+('Listar Maquinaria'), ('Crear Maquinaria'), ('Ver Detalle de Maquinaria'), ('Editar Maquinaria'), ('Eliminar Maquinaria'),
+('Listar Mantenimiento'), ('Crear Mantenimiento'), ('Ver Detalle de Mantenimiento'), ('Editar Mantenimiento'), ('Eliminar Mantenimiento'),
+('Listar Detalle de Orden'), ('Crear Detalle de Orden'), ('Ver Detalle de Detalle de Orden'), ('Editar Detalle de Orden'), ('Eliminar Detalle de Orden'),
+('Listar Orden'), ('Crear Orden'), ('Listar Ordenes en Tabla'), ('Ver Detalle Completo de Orden'), ('Ver Detalle de Orden'), ('Editar Orden'), ('Eliminar Orden'), ('Crear Orden Completa'),
+('Listar Estado de Orden'), ('Crear Estado de Orden'), ('Ver Detalle de Estado de Orden'), ('Editar Estado de Orden'), ('Eliminar Estado de Orden'),
+('Listar Pago'), ('Crear Pago'), ('Ver Detalle de Pago'), ('Editar Pago'), ('Eliminar Pago'),
+('Listar Cargo'), ('Crear Cargo'), ('Ver Detalle de Cargo'), ('Editar Cargo'), ('Eliminar Cargo'),
+('Listar Proyecto'), ('Crear Proyecto'), ('Ver Detalle de Proyecto'), ('Editar Proyecto'), ('Eliminar Proyecto'),
+('Listar Factura de Compra'), ('Crear Factura de Compra'), ('Ver Detalle de Factura de Compra'), ('Editar Factura de Compra'), ('Eliminar Factura de Compra'),
+('Listar Devolución'), ('Crear Devolución'), ('Ver Detalle de Devolución'), ('Editar Devolución'), ('Eliminar Devolución'),
+('Listar Rol'), ('Crear Rol'), ('Ver Detalle de Rol'), ('Editar Rol'), ('Eliminar Rol'),
+('Listar Subalquiler'), ('Crear Subalquiler'), ('Ver Detalle de Subalquiler'), ('Editar Subalquiler'), ('Eliminar Subalquiler'),
+('Listar Proveedor'), ('Crear Proveedor'), ('Ver Detalle de Proveedor'), ('Editar Proveedor'), ('Eliminar Proveedor'),
+('Listar Usuario'), ('Crear Usuario'), ('Ver Detalle de Usuario'), ('Editar Usuario'), ('Eliminar Usuario'),
+('Listar Vehículo'), ('Crear Vehículo'), ('Ver Detalle de Vehículo'), ('Editar Vehículo'), ('Eliminar Vehículo'),
+('Crear Corte de Alquiler'), ('Listar Cortes de Alquiler'), ('Listar Cortes de Alquiler en Tabla'), ('Ver Detalle de Corte'), 
+('Listar Cortes por Orden'), ('Editar Corte de Alquiler'), ('Eliminar Corte de Alquiler'), ('Ver Workspace de Orden'), ('Listar Pagos por Orden');
+
+
+
+
+
+
+-- 2. Asignación al Administrador (role_id 1 - Acceso Total)
+INSERT INTO role_permissions (role_id, permission_id)
+SELECT 1, permission_id FROM permissions;
+
+-- 3. Asignación al Asesor (role_id 2 - Permisos específicos)
+INSERT INTO role_permissions (role_id, permission_id)
+SELECT 2, permission_id 
+FROM permissions 
+WHERE permission_name IN (
+    'Listar Proveedor', 'Ver Detalle de Proveedor', 
+    'Crear Subalquiler', 'Listar Subalquiler', 'Ver Detalle de Subalquiler',
+    'Crear Proyecto', 'Listar Proyecto', 'Ver Detalle de Proyecto',
+    'Listar Maquinaria', 'Ver Detalle de Maquinaria',
+    'Listar Categoría de Maquinaria', 'Listar Estado de Maquinaria',
+    'Listar Vehículo', 'Ver Detalle de Vehículo',
+    'Crear Cliente', 'Listar Cliente', 'Ver Detalle de Cliente',
+    'Crear Orden', 'Listar Orden', 'Ver Detalle de Orden',
+    'Crear Orden Completa', 'Listar Ordenes en Tabla', 'Ver Detalle Completo de Orden', 
+    'Crear Devolución', 'Listar Devolución', 'Ver Detalle de Devolución',
+    'Listar Cortes de Alquiler', 'Ver Detalle de Corte', 'Listar Cortes por Orden',
+    'Ver Workspace de Orden', 'Listar Pagos por Orden'
 );
-
-
-
-
-INSERT INTO employees (
-    employee_document_type,
-    employee_document_number,
-    employee_status,
-    employee_first_name,
-    employee_last_name,
-    employee_email,
-    employee_phone,
-    employee_eps,
-    position_id
-)
-VALUES (
-    'CC',
-    '1020114536',
-    TRUE,
-    'Sara Camila',
-    'Ortiz Higuita',
-    'sara@makandsmr.com',
-    '3054081703',
-    'Sura',
-    1
-);
-
-
-
-
-
-INSERT INTO employees (
-    employee_document_type,
-    employee_document_number,
-    employee_status,
-    employee_first_name,
-    employee_last_name,
-    employee_email,
-    employee_phone,
-    employee_eps,
-    position_id
-)
-VALUES (
-    'CC',
-    '103213213',
-    TRUE,
-    'Mariana',
-    'Figueroa Cardona',
-    'mariana@makandsmr.com',
-    '3117384156',
-    'Sura',
-    1
-);
-
-
-INSERT INTO users (user_email, user_password, user_status, role_id, employee_id) VALUES ('sara@gmail.com', '$2b$10$ODpcGe.lD8NqIsVFIWL1OufTzmPuICg8HzMU9ax4ROPePZLU4cLim', true, 1,2);
-INSERT INTO users (user_email, user_password, user_status, role_id, employee_id) VALUES ('rios@gmail.com', '$2b$10$tvhRa6clQU/a93QkRtllYO8l7CJBpOj3g12AfPk0VVXyG34rJEcAu', true, 1,1);
-INSERT INTO users (user_email, user_password, user_status, role_id, employee_id) VALUES ('mariana@gmail.com', '$2b$10$1Sct7Aomfd.CT053zqvEU.GQAB3LHvOmxAcnekXK1Jq5epws1YaYO', true, 1,3);
-
-
-
-
 
 -- INDICES----
 
