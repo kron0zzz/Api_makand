@@ -235,6 +235,7 @@ CREATE TABLE orders (
     user_id INT NOT NULL,
     discount_amount DECIMAL(9,2) DEFAULT 0.00,
     order_description VARCHAR(500),
+    last_cut_date TIMESTAMP, 
 
     CONSTRAINT fk_order_project
         FOREIGN KEY (project_id)
@@ -270,12 +271,27 @@ CREATE TABLE order_details (
         REFERENCES machinery(machinery_id)
 );
 
+-- Cortes (rental_cuts)
+CREATE TABLE rental_cuts (
+    
+    cut_id SERIAL PRIMARY KEY,
+    order_id INT NOT NULL,
+    cut_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    period_start_date TIMESTAMP NOT NULL,
+    period_end_date TIMESTAMP NOT NULL,
+    cut_amount DECIMAL(12,2) NOT NULL,
+
+    CONSTRAINT fk_rental_cut_order
+        FOREIGN KEY (order_id)
+        REFERENCES orders(order_id)
+);
+
+
 -- Devoluciones (returns)
 CREATE TABLE returns (
     return_id BIGSERIAL PRIMARY KEY,
     return_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     returned_quantity INT NOT NULL CHECK (returned_quantity > 0),
-    return_notes VARCHAR(500),
     order_detail_id BIGINT NOT NULL,
 
     CONSTRAINT fk_return_order_detail
@@ -305,7 +321,7 @@ CREATE TABLE payments (
     payment_id SERIAL PRIMARY KEY,
     order_id INT NOT NULL,
     payment_amount DECIMAL(9,2) NOT NULL CHECK (payment_amount > 0),
-    payment_method VARCHAR(30) NOT NULL,
+    payment_in_cash BOOLEAN NOT NULL,
     payment_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     is_cancelled BOOLEAN NOT NULL DEFAULT FALSE,
 
@@ -349,6 +365,12 @@ INSERT INTO order_status (order_status_name) VALUES ('Cerrado');
 
 --positions
 INSERT INTO positions (position_name) VALUES ('Desarrollador');
+
+-- machinery_status
+INSERT INTO machinery_status (status_name) VALUES ('Disponible');
+INSERT INTO machinery_status (status_name) VALUES ('En mantenimiento');
+INSERT INTO machinery_status (status_name) VALUES ('Ocupada');
+INSERT INTO machinery_status (status_name) VALUES ('No disponible');
 
 
 --employee prueba
@@ -434,3 +456,16 @@ INSERT INTO users (user_email, user_password, user_status, role_id, employee_id)
 INSERT INTO users (user_email, user_password, user_status, role_id, employee_id) VALUES ('mariana@gmail.com', '$2b$10$1Sct7Aomfd.CT053zqvEU.GQAB3LHvOmxAcnekXK1Jq5epws1YaYO', true, 1,3);
 
 
+
+
+
+-- INDICES----
+
+CREATE INDEX idx_rental_cuts_order
+ON rental_cuts(order_id);
+
+CREATE INDEX idx_payments_order
+ON payments(order_id);
+
+CREATE INDEX idx_returns_order_detail
+ON returns(order_detail_id);

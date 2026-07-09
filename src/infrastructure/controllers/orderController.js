@@ -18,6 +18,8 @@ const orderDetailRepository = new OrderDetailRepository();
 const machineryRepository = new MachineryRepository();
 const getOrderWorkspaceUseCase = new GetOrderWorkspace(orderRepository);
 
+const getOrderWorkspaceUseCase = new GetOrderWorkspace(orderRepository);
+
 export const createOrder = async (req, res) => {
   try {
     const createOrder =
@@ -216,4 +218,5 @@ export const getOrderWorkspace = async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+
 };

@@ -123,4 +123,25 @@ export default class UserRepository {
     // Mapeamos para devolver un array limpio de strings: ['Crear Usuarios', 'Ver Maquinaria']
     return result.rows.map(row => row.permission_name);
   }
+
+
+  
+  async findEmployeeEmail(employee_id) {
+    // Apunta exactamente a tu tabla 'employees' y columna 'employee_email'
+    const query = `
+      SELECT employee_email 
+      FROM employees 
+      WHERE employee_id = $1
+    `;
+    const result = await pool.query(query, [employee_id]);
+    
+    // Si no encuentra al empleado, devuelve null
+    if (result.rows.length === 0) {
+      return null;
+    }
+    
+    // ⚠️ CRÍTICO: Debe leer .employee_email en minúsculas y tal cual viene de la BD
+    return result.rows[0].employee_email; 
+
+  }
 }

@@ -105,3 +105,4 @@ GET    localhost:3000/api/suppliers
 Se recomienda usar:
 
 - Postman
+- Thunder Client (instalado en las extensiones de VS Code)
