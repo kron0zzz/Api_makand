@@ -21,10 +21,16 @@ export default class MachineryCategoryRepository {
     return result.rows[0];
   }
 
+
+
+
   async findAll() {
     const result = await pool.query("SELECT * FROM machinery_categories");
     return result.rows;
   }
+
+
+
 
   async findById(id) {
     const result = await pool.query(
@@ -33,6 +39,9 @@ export default class MachineryCategoryRepository {
     );
     return result.rows[0];
   }
+
+
+
 
   async update(id, categoryData) {
     if (!categoryData) throw new Error("Datos insuficientes para actualizar.");
@@ -53,6 +62,9 @@ export default class MachineryCategoryRepository {
     return result.rows[0];
   }
 
+
+
+
   async delete(id) {
     const result = await pool.query(
       "DELETE FROM machinery_categories WHERE category_id = $1 RETURNING *",
@@ -61,14 +73,50 @@ export default class MachineryCategoryRepository {
     return result.rows[0];
   }
 
-  async findTableData() {
+
+
+
+  async findTableData(page = 1, limit = 10, search="") {
+
+    const offset = (page - 1) * limit;
+
     const query = `
-      SELECT
-        category_id,
-        category_name
-      FROM machinery_categories
+        SELECT
+            category_id,
+            category_name
+        FROM machinery_categories
+        WHERE
+            $1 = ''
+            OR LOWER(category_name) LIKE LOWER($2)
+        ORDER BY category_id
+        LIMIT $3
+        OFFSET $4
     `;
-    const result = await pool.query(query);
-    return result.rows;
+
+    const result = await pool.query(query, [search, `%${search}%`, limit, offset]);
+
+    const totalQuery = await pool.query(
+        `
+        SELECT COUNT(*)
+        FROM machinery_categories
+        WHERE
+            $1 = ''
+            OR LOWER(category_name) LIKE LOWER($2)
+        `,
+        [search, `%${search}%`]
+    );
+
+    const total = Number(totalQuery.rows[0].count);
+
+    return {
+      data: result.rows,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit)
+      }
+    };
+
   }
 }

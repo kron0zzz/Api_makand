@@ -3,7 +3,7 @@ export default class GetMachineryCategoriesTable {
     this.machineryCategoryRepository = machineryCategoryRepository;
   }
   
-  async execute() {
-    return await this.machineryCategoryRepository.findTableData();
+  async execute(page, limit, search) {
+    return await this.machineryCategoryRepository.findTableData(page, limit, search);
   }
 }
