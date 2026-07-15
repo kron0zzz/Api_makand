@@ -3,7 +3,7 @@ export default class GetPositions {
     this.positonRepository = positonRepository;
   }
 
-  async execute() {
-    return await this.positonRepository.findAll();
+  async execute(page, limit, search) {
+    return await this.positonRepository.findAll(page, limit, search);
   }
 }

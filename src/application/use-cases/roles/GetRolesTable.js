@@ -3,7 +3,7 @@ export default class GetRolesTable {
     this.roleRepository = roleRepository;
   }
 
-  async execute() {
-    return await this.roleRepository.findTableData();
+  async execute(page, limit, search) {
+    return await this.roleRepository.findTableData(page, limit, search);
   }
 }

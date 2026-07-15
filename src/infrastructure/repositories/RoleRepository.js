@@ -33,7 +33,7 @@ export default class RoleRepository {
     }
   }
 
-  async findAll() {
+  async findAll(page = 1, limit = 10, search="") {
     const result = await pool.query("SELECT * FROM roles");
     return result.rows;
   }
@@ -94,15 +94,45 @@ export default class RoleRepository {
     return result.rows[0];
   }
 
-  async findTableData() {
-    // Trae los roles limpios para la vista principal de la tabla
+  async findTableData(page = 1, limit = 10, search="") {
+    const offset = (page - 1) * limit;
+
     const query = `
-      SELECT 
-        role_id,
-        role_name
-      FROM roles
+        SELECT
+            role_id,
+            role_name
+        FROM roles
+        WHERE
+            $1 = ''
+            OR LOWER(role_name) LIKE LOWER($2)
+        ORDER BY role_id
+        LIMIT $3
+        OFFSET $4
     `;
-    const result = await pool.query(query);
-    return result.rows;
+
+    const result = await pool.query(query, [search, `%${search}%`, limit, offset]);
+
+    const totalQuery = await pool.query(
+        `
+        SELECT COUNT(*)
+        FROM roles
+        WHERE
+            $1 = ''
+            OR LOWER(role_name) LIKE LOWER($2)
+        `,
+        [search, `%${search}%`]
+    );
+
+    const total = Number(totalQuery.rows[0].count);
+
+    return {
+      data: result.rows,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit)
+      }
+    };
   }
 }

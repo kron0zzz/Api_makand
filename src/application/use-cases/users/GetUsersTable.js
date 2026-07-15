@@ -4,8 +4,9 @@ export default class GetUsersTable {
     this.userRepository = userRepository;
   }
 
-  async execute() {
-    return await this.userRepository.findTableData();
+  async execute(page, limit, search) {
+    return await this.userRepository.findTableData(page, limit, search);
   }
 
 }
+

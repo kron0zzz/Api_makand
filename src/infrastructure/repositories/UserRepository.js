@@ -78,21 +78,51 @@ export default class UserRepository {
 
 
 
-  async findTableData() {
+  async findTableData(page = 1, limit = 10, search="") {
+
+    
+    const offset = (page - 1) * limit;
 
     const query = `
-      SELECT
-        user_id,
-        user_email,
-        employee_id,
-        role_id,
-        user_status
-      FROM users
+        SELECT
+            user_id,
+            user_email,
+            employee_id,
+            role_id,
+            user_status
+        FROM users
+        WHERE
+            $1 = ''
+            OR LOWER(user_email) LIKE LOWER($2)
+        ORDER BY user_id
+        LIMIT $3
+        OFFSET $4
     `;
 
-    const result = await pool.query(query);
+    const result = await pool.query(query, [search, `%${search}%`, limit, offset]);
 
-    return result.rows;
+    const totalQuery = await pool.query(
+        `
+        SELECT COUNT(*)
+        FROM users
+        WHERE
+            $1 = ''
+            OR LOWER(user_email) LIKE LOWER($2)
+        `,
+        [search, `%${search}%`]
+    );
+
+    const total = Number(totalQuery.rows[0].count);
+
+    return {
+      data: result.rows,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit)
+      }
+    };
   }
 
 
