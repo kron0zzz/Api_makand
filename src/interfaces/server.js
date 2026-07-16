@@ -23,6 +23,7 @@ import maintenanceRoutes from "../infrastructure/routes/maintenanceRoutes.js";
 import orderStatusRoutes from "../infrastructure/routes/orderStatusRoutes.js";
 import roleRoutes from "../infrastructure/routes/roleRoutes.js";
 import rentalCutRoutes from "../infrastructure/routes/rentalCutRoutes.js";
+console.log("¡Leyendo server.js!");
 
 const app = express();
 

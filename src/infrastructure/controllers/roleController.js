@@ -5,8 +5,9 @@ import GetRoleById from "../../application/use-cases/roles/GetRoleById.js";
 import UpdateRole from "../../application/use-cases/roles/UpdateRole.js";
 import DeleteRole from "../../application/use-cases/roles/DeleteRole.js";
 import GetRolesTable from "../../application/use-cases/roles/GetRolesTable.js";
+import GetPermissions from "../../application/use-cases/roles/GetPermissions.js"; 
+import GetRolePermissions from "../../application/use-cases/roles/GetRolePermissions.js";
 
-// Instanciamos el repositorio y los casos de uso aquí mismo (Singleton)
 const roleRepository = new RoleRepository();
 const createRoleUC = new CreateRole(roleRepository);
 const getRolesUC = new GetRoles(roleRepository);
@@ -14,6 +15,8 @@ const getRoleByIdUC = new GetRoleById(roleRepository);
 const updateRoleUC = new UpdateRole(roleRepository);
 const deleteRoleUC = new DeleteRole(roleRepository);
 const getRolesTableUC = new GetRolesTable(roleRepository);
+const getPermissionsUC = new GetPermissions(roleRepository);
+const getRolePermissionsUC = new GetRolePermissions(roleRepository);
 
 // Exportamos funciones directas para que coincidan con lo que pide el router
 export const createRole = async (req, res) => {
@@ -69,6 +72,39 @@ export const getRolesTable = async (req, res) => {
     const tableData = await getRolesTableUC.execute();
     res.status(200).json(tableData);
   } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const getPermissions = async (req, res) => {
+  try {
+    const permissions = await getPermissionsUC.execute();
+    res.status(200).json(permissions);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// export const getRoleByPermissions = async (req, res) => {
+//   try {
+//     const permissions = await getRolePermissionsUC.execute(req.params.id);
+//     res.status(200).json(permissions);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
+export const getRoleByPermissions = async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log("DEBUG: Petición recibida para Rol ID:", id); // Veremos si llega
+    
+    const permissions = await getRolePermissionsUC.execute(id);
+    console.log("DEBUG: Permisos encontrados:", permissions); // Veremos qué devuelve la BD
+    
+    res.status(200).json(permissions);
+  } catch (error) {
+    console.error("DEBUG: ERROR CRÍTICO EN CONTROLADOR:", error); // Veremos el error real
     res.status(500).json({ error: error.message });
   }
 };

@@ -105,4 +105,24 @@ export default class RoleRepository {
     const result = await pool.query(query);
     return result.rows;
   }
+
+  async findAllPermissions() {
+    const query = "SELECT permission_id as id, permission_name as name FROM permissions";
+    const result = await pool.query(query);
+    return result.rows;
+  }
+
+  async findPermissionsByRoleId(roleId) {
+    const query = `
+      SELECT p.permission_id as id, p.permission_name as name 
+      FROM permissions p
+      JOIN role_permissions rp ON p.permission_id = rp.permission_id
+      WHERE rp.role_id = $1
+    `;
+    const result = await pool.query(query, [roleId]);
+    return result.rows;
+  }
+
+
+
 }
