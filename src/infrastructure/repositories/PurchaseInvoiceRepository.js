@@ -48,7 +48,7 @@ export default class PurchaseInvoiceRepository {
   }
 
   async update(id, invoiceData) {
-    const { supplier_id, purchase_date, machinery_name, invoice_photo } = invoiceData;
+    const { supplier_id, purchase_date, invoice_photo } = invoiceData;
 
     let photoBuffer = null;
     if (invoice_photo) {
@@ -61,12 +61,11 @@ export default class PurchaseInvoiceRepository {
       SET 
         supplier_id = $1, 
         purchase_date = $2, 
-        machinery_name = $3, 
-        invoice_photo = COALESCE($4, invoice_photo)
-      WHERE invoice_id = $5
+        invoice_photo = COALESCE($3, invoice_photo)
+      WHERE invoice_id = $4
       RETURNING *
     `;
-    const values = [supplier_id, purchase_date, machinery_name, photoBuffer, id];
+    const values = [supplier_id, purchase_date, photoBuffer, id];
     const result = await pool.query(query, values);
     return result.rows[0];
   }
