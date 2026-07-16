@@ -79,17 +79,48 @@ export default class PurchaseInvoiceRepository {
     return result.rows[0];
   }
 
-  async findTableData() {
+  async findTableData(page=1, limit=10, search="") {
+    const offset = (page - 1) * limit;
+
     const query = `
-      SELECT 
-        pi.invoice_id,
-        pi.purchase_date,
-        s.supplier_name AS supplier_name
-      FROM purchase_invoices pi
-      INNER JOIN suppliers s ON pi.supplier_id = s.supplier_id
-      ORDER BY pi.invoice_id DESC
+        SELECT
+           pi.invoice_id,
+            pi.purchase_date,
+            s.supplier_name AS supplier_name
+        FROM purchase_invoices pi
+        INNER JOIN suppliers s ON pi.supplier_id = s.supplier_id
+        WHERE
+            $1 = ''
+            OR LOWER(s.supplier_name) LIKE LOWER($2)  
+        ORDER BY pi.invoice_id DESC
+        LIMIT $3
+        OFFSET $4
     `;
-    const result = await pool.query(query);
-    return result.rows;
+
+    const result = await pool.query(query, [search, `%${search}%`, limit, offset]);
+
+    const totalQuery = await pool.query(
+        `
+        SELECT COUNT(*)
+        FROM purchase_invoices pi
+        INNER JOIN suppliers s ON pi.supplier_id = s.supplier_id
+        WHERE
+            $1 = ''
+            OR LOWER(s.supplier_name) LIKE LOWER($2)
+        `,
+        [search, `%${search}%`]
+    );
+
+    const total = Number(totalQuery.rows[0].count);
+
+    return {
+      data: result.rows,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit)
+      }
+    };
   }
 }

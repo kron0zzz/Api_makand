@@ -64,22 +64,56 @@ export default class SubRentalRepository {
     return result.rows[0];
   }
 
-  async findTableData() {
+  async findTableData(page=1, limit=10, search="") {
+    const offset = (page - 1) * limit;
+
     const query = `
-      SELECT 
-        sr.sub_rental_id,
-        sr.machinery_id,     
-        sr.supplier_id,     
-        sr.supplier_cost,
-        sr.sub_rental_status,
-        m.machinery_name AS machinery_name,
-        s.supplier_name AS supplier_name
-      FROM sub_rentals sr
-      INNER JOIN machinery m ON sr.machinery_id = m.machinery_id
-      INNER JOIN suppliers s ON sr.supplier_id = s.supplier_id
-      ORDER BY sr.sub_rental_id DESC
+        SELECT
+            sr.sub_rental_id,
+            sr.machinery_id,     
+            sr.supplier_id,     
+            sr.supplier_cost,
+            sr.sub_rental_status,
+            m.machinery_name AS machinery_name,
+            s.supplier_name AS supplier_name
+        FROM sub_rentals sr
+        INNER JOIN machinery m ON sr.machinery_id = m.machinery_id
+        INNER JOIN suppliers s ON sr.supplier_id = s.supplier_id
+        WHERE
+            $1 = ''
+            OR LOWER(m.machinery_name) LIKE LOWER($2) 
+            OR LOWER(s.supplier_name) LIKE LOWER($2) 
+        ORDER BY sr.sub_rental_id DESC
+        LIMIT $3
+        OFFSET $4
     `;
-    const result = await pool.query(query);
-    return result.rows;
+
+    const result = await pool.query(query, [search, `%${search}%`, limit, offset]);
+
+    const totalQuery = await pool.query(
+        `
+        SELECT COUNT(*)
+        FROM sub_rentals sr
+        INNER JOIN machinery m ON sr.machinery_id = m.machinery_id
+        INNER JOIN suppliers s ON sr.supplier_id = s.supplier_id
+        WHERE
+            $1 = ''
+            OR LOWER(m.machinery_name) LIKE LOWER($2)
+            OR LOWER(s.supplier_name) LIKE LOWER($2) 
+        `,
+        [search, `%${search}%`]
+    );
+
+    const total = Number(totalQuery.rows[0].count);
+
+    return {
+      data: result.rows,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit)
+      }
+    };
   }
 }

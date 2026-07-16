@@ -93,21 +93,50 @@ export default class SupplierRepository {
 
 
 
-  async findTableData() {
+  async findTableData(page=1, limit=10, search="") {
+
+   const offset = (page - 1) * limit;
 
     const query = `
-      SELECT
-        supplier_id,
-        document_number,
-        supplier_name,
-        supplier_city,
-        supplier_status
-      FROM suppliers
+        SELECT
+            supplier_id,
+            document_number,
+            supplier_name,
+            supplier_city,
+            supplier_status
+        FROM suppliers
+        WHERE
+            $1 = ''
+            OR LOWER(supplier_name) LIKE LOWER($2) OR LOWER(document_number) LIKE LOWER($2)
+        ORDER BY supplier_id
+        LIMIT $3
+        OFFSET $4
     `;
 
-    const result = await pool.query(query);
+    const result = await pool.query(query, [search, `%${search}%`, limit, offset]);
 
-    return result.rows;
+    const totalQuery = await pool.query(
+        `
+        SELECT COUNT(*)
+        FROM suppliers
+        WHERE
+            $1 = ''
+            OR LOWER(supplier_name) LIKE LOWER($2) OR LOWER(document_number) LIKE LOWER($2)
+        `,
+        [search, `%${search}%`]
+    );
+
+    const total = Number(totalQuery.rows[0].count);
+
+    return {
+      data: result.rows,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit)
+      }
+    };
   }
 }
 

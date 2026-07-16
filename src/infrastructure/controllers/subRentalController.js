@@ -83,8 +83,11 @@ export const deleteSubRental = async (req, res) => {
 
 export const getSubRentalsTable = async (req, res) => {
   try {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 9;
+    const search = req.query.search || "";
     const useCase = new GetSubRentalsTable(subRentalRepository);
-    const tableData = await useCase.execute();
+    const tableData = await useCase.execute(page, limit, search);
     res.status(200).json(tableData);
   } catch (err) {
     res.status(500).json({ error: err.message });

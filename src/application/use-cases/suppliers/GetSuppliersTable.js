@@ -4,8 +4,8 @@ export default class GetSuppliersTable {
     this.supplierRepository = supplierRepository;
   }
 
-  async execute() {
-    return await this.supplierRepository.findTableData();
+  async execute(page, limit, search) {
+    return await this.supplierRepository.findTableData(page, limit, search);
   }
 
 }
