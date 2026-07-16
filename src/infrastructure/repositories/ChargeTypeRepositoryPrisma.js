@@ -55,14 +55,45 @@ export default class ChargeTypeRepositoryPrisma {
     return result.rows[0];
   }
 
-  async findTableData() {
+  async findTableData(page=1, limit=10, search ="") {
+    const offset = (page - 1) * limit;
+
     const query = `
-      SELECT
-        charge_type_id,
-        charge_type_name
-      FROM charge_types
+        SELECT
+            charge_type_id,
+            charge_type_name
+        FROM charge_types
+        WHERE
+            $1 = ''
+            OR LOWER(charge_type_name) LIKE LOWER($2)
+        ORDER BY charge_type_id
+        LIMIT $3
+        OFFSET $4
     `;
-    const result = await pool.query(query);
-    return result.rows;
+
+    const result = await pool.query(query, [search, `%${search}%`, limit, offset]);
+
+    const totalQuery = await pool.query(
+        `
+        SELECT COUNT(*)
+        FROM charge_types
+        WHERE
+            $1 = ''
+            OR LOWER(charge_type_name) LIKE LOWER($2)
+        `,
+        [search, `%${search}%`]
+    );
+
+    const total = Number(totalQuery.rows[0].count);
+
+    return {
+      data: result.rows,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit)
+      }
+    };
   }
 }

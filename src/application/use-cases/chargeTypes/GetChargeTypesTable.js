@@ -3,7 +3,7 @@ export default class GetChargeTypesTable {
     this.chargeTypeRepository = chargeTypeRepository;
   }
 
-  async execute() {
-    return await this.chargeTypeRepository.findTableData();
+  async execute(page, limit, search) {
+    return await this.chargeTypeRepository.findTableData(page, limit, search);
   }
 }

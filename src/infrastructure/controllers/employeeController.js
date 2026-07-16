@@ -112,8 +112,11 @@ export const deleteEmployee = async (req, res) => {
 
 export const getEmployeesTable = async (req, res) => {
   try {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 9;
+    const search = req.query.search || "";
     const getEmployeesTableUseCase = new GetEmployeesTable(employeeRepository);
-    const employeesTable = await getEmployeesTableUseCase.execute();
+    const employeesTable = await getEmployeesTableUseCase.execute(page, limit, search);
     res.status(200).json(employeesTable);
   } catch (err) {
     res.status(500).json({ error: err.message });

@@ -120,20 +120,50 @@ export default class EmployeeRepository {
   }
 
   // 🌟 Optimizado para tu tabla del Frontend usando JOIN con positions
-  async findTableData() {
+  async findTableData(page=1, limit=10, search="") {
+    const offset = (page - 1) * limit;
+
     const query = `
-      SELECT
-        e.employee_id,
-        e.employee_document_number,
-        CONCAT(e.employee_first_name, ' ', e.employee_last_name) AS employee_full_name,
-        e.employee_email,
-        e.employee_status,
-        p.position_name AS position_name
-      FROM employees e
-      INNER JOIN positions p ON e.position_id = p.position_id
+        SELECT
+            e.employee_id,
+            e.employee_document_number,
+            CONCAT(e.employee_first_name, ' ', e.employee_last_name) AS employee_full_name,
+            e.employee_email,
+            e.employee_status,
+            p.position_name AS position_name
+        FROM employees e
+        INNER JOIN positions p ON e.position_id = p.position_id
+        WHERE
+            $1 = ''
+            OR LOWER(CONCAT(e.employee_first_name, ' ', e.employee_last_name)) LIKE LOWER($2)
+        ORDER BY e.employee_id
+        LIMIT $3
+        OFFSET $4
     `;
 
-    const result = await pool.query(query);
-    return result.rows;
+    const result = await pool.query(query, [search, `%${search}%`, limit, offset]);
+
+    const totalQuery = await pool.query(
+        `
+        SELECT COUNT(*)
+        FROM employees
+        WHERE
+            $1 = ''
+            OR LOWER(employee_first_name) LIKE LOWER($2) OR LOWER(employee_last_name) LIKE LOWER($2)
+        `,
+        [search, `%${search}%`]
+    );
+
+    const total = Number(totalQuery.rows[0].count);
+
+    return {
+      data: result.rows,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit)
+      }
+    };
   }
 }

@@ -81,8 +81,11 @@ export const deleteCustomer = async (req, res) => {
 
 export const getCustomersTable = async (req, res) => {
   try {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 9;
+    const search = req.query.search || "";
     const getCustomersTableUseCase = new GetCustomersTable(customerRepository);
-    const customers = await getCustomersTableUseCase.execute();
+    const customers = await getCustomersTableUseCase.execute(page, limit, search);
     res.status(200).json(customers);
   } catch (err) {
     res.status(500).json({ error: err.message });
