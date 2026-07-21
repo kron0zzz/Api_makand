@@ -128,11 +128,11 @@ export const deleteOrder = async (req, res) => {
 
 export const getOrdersTable = async (req, res) => {
   try {
-    const getOrdersTable =
-      new GetOrdersTable(orderRepository);
-
-    const orders = await getOrdersTable.execute();
-
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 9;
+    const search = req.query.search || "";
+    const getOrdersTable = new GetOrdersTable(orderRepository);
+    const orders = await getOrdersTable.execute(page, limit, search);
     res.status(200).json(orders);
 
   } catch (err) {

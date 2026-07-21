@@ -79,8 +79,11 @@ export const deleteMachinery = async (req, res) => {
 
 export const getMachineriesTable = async (req, res) => {
   try {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 9;
+    const search = req.query.search || "";
     const getTableUseCase = new GetMachineriesTable(machineryRepository);
-    const machineries = await getTableUseCase.execute();
+    const machineries = await getTableUseCase.execute(page, limit, search);
     res.status(200).json(machineries);
   } catch (err) {
     res.status(500).json({ error: err.message });

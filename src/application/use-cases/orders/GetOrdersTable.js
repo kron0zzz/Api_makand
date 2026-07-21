@@ -4,8 +4,8 @@ export default class GetOrdersTable {
     this.orderRepository = orderRepository;
   }
 
-  async execute() {
-    return await this.orderRepository.findTableData();
+  async execute(page, limit, search) {
+    return await this.orderRepository.findTableData(page, limit, search);
   }
 
 }
