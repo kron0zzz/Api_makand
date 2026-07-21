@@ -31,8 +31,11 @@ export const getProjects = async (req, res) => {
 
 export const getProjectsTable = async (req, res) => {
   try {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 9;
+    const search = req.query.search || "";
     const getProjectsTableUseCase = new GetProjectsTable(projectRepository);
-    const projects = await getProjectsTableUseCase.execute();
+    const projects = await getProjectsTableUseCase.execute(page, limit, search);
     res.status(200).json(projects);
   } catch (err) {
     res.status(500).json({ error: err.message });

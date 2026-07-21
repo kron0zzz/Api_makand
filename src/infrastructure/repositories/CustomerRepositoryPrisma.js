@@ -96,23 +96,49 @@ export default class CustomerRepositoryPrisma {
     return result.rows[0];
   }
 
-  async findTableData() {
+  async findTableData(page=1, limit=10, search="") {
+    const offset = (page - 1) * limit;
+
     const query = `
-      SELECT
-      customer_id,
-      customer_document_type,
-      customer_document_number,
-      customer_first_name,
-      customer_last_name,
-      customer_address,
-      customer_phone,
-      customer_email,
-      customer_status,
-      organization_type
-      FROM customers
+        SELECT
+            customer_id,
+            customer_first_name,
+            customer_last_name,
+            customer_document_number,
+            customer_status
+        FROM customers
+        WHERE
+            $1 = ''
+            OR LOWER(customer_first_name) LIKE LOWER($2) OR LOWER(customer_last_name) LIKE LOWER($2)
+        ORDER BY customer_id
+        LIMIT $3
+        OFFSET $4
     `;
-    const result = await pool.query(query);
-    return result.rows;
+
+    const result = await pool.query(query, [search, `%${search}%`, limit, offset]);
+
+    const totalQuery = await pool.query(
+        `
+        SELECT COUNT(*)
+        FROM customers
+        WHERE
+            $1 = ''
+            OR LOWER(customer_first_name) LIKE LOWER($2) OR LOWER(customer_last_name) LIKE($2)
+        `,
+        [search, `%${search}%`]
+    );
+
+    const total = Number(totalQuery.rows[0].count);
+
+    return {
+      data: result.rows,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit)
+      }
+    };
   }
 }
 

@@ -48,7 +48,7 @@ export default class PurchaseInvoiceRepository {
   }
 
   async update(id, invoiceData) {
-    const { supplier_id, purchase_date, machinery_name, invoice_photo } = invoiceData;
+    const { supplier_id, purchase_date, invoice_photo } = invoiceData;
 
     let photoBuffer = null;
     if (invoice_photo) {
@@ -61,12 +61,11 @@ export default class PurchaseInvoiceRepository {
       SET 
         supplier_id = $1, 
         purchase_date = $2, 
-        machinery_name = $3, 
-        invoice_photo = COALESCE($4, invoice_photo)
-      WHERE invoice_id = $5
+        invoice_photo = COALESCE($3, invoice_photo)
+      WHERE invoice_id = $4
       RETURNING *
     `;
-    const values = [supplier_id, purchase_date, machinery_name, photoBuffer, id];
+    const values = [supplier_id, purchase_date, photoBuffer, id];
     const result = await pool.query(query, values);
     return result.rows[0];
   }
@@ -79,17 +78,48 @@ export default class PurchaseInvoiceRepository {
     return result.rows[0];
   }
 
-  async findTableData() {
+  async findTableData(page=1, limit=10, search="") {
+    const offset = (page - 1) * limit;
+
     const query = `
-      SELECT 
-        pi.invoice_id,
-        pi.purchase_date,
-        s.supplier_name AS supplier_name
-      FROM purchase_invoices pi
-      INNER JOIN suppliers s ON pi.supplier_id = s.supplier_id
-      ORDER BY pi.invoice_id DESC
+        SELECT
+           pi.invoice_id,
+            pi.purchase_date,
+            s.supplier_name AS supplier_name
+        FROM purchase_invoices pi
+        INNER JOIN suppliers s ON pi.supplier_id = s.supplier_id
+        WHERE
+            $1 = ''
+            OR LOWER(s.supplier_name) LIKE LOWER($2)  
+        ORDER BY pi.invoice_id DESC
+        LIMIT $3
+        OFFSET $4
     `;
-    const result = await pool.query(query);
-    return result.rows;
+
+    const result = await pool.query(query, [search, `%${search}%`, limit, offset]);
+
+    const totalQuery = await pool.query(
+        `
+        SELECT COUNT(*)
+        FROM purchase_invoices pi
+        INNER JOIN suppliers s ON pi.supplier_id = s.supplier_id
+        WHERE
+            $1 = ''
+            OR LOWER(s.supplier_name) LIKE LOWER($2)
+        `,
+        [search, `%${search}%`]
+    );
+
+    const total = Number(totalQuery.rows[0].count);
+
+    return {
+      data: result.rows,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit)
+      }
+    };
   }
 }

@@ -3,7 +3,7 @@ export default class GetProjectsTable {
     this.projectRepository = projectRepository;
   }
 
-  async execute() {
-    return await this.projectRepository.findTableData();
+  async execute(page, limit, search) {
+    return await this.projectRepository.findTableData(page, limit, search);
   }
 }

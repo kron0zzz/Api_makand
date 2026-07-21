@@ -63,28 +63,60 @@ export default class MachineryRepository {
   } 
 
   // 4. Traer los datos combinados (con INNER JOIN) especiales para tu tabla del Frontend
-  async findTableData() {
+  async findTableData(page=1, limit=10, search="") {
+    
+    const offset = (page - 1) * limit;
+
     const query = `
-      SELECT 
-        m.machinery_id,
-        m.machinery_name,
-        m.next_revision_date,
-        m.is_motorized,
-        m.sale_price,
-        m.daily_rental_price,
-        m.weight_kg,
-        m.stock_quantity,
-        m.is_owned,
-        m.machinery_description,
-        c.category_name,
-        s.status_name
-      FROM machinery m
-      INNER JOIN machinery_categories c ON m.category_id = c.category_id
-      INNER JOIN machinery_status s ON m.status_id = s.status_id
-      ORDER BY m.machinery_id DESC
+        SELECT
+          m.machinery_id,
+          m.machinery_name,
+          m.next_revision_date,
+          m.is_motorized,
+          m.sale_price,
+          m.daily_rental_price,
+          m.weight_kg,
+          m.stock_quantity,
+          m.is_owned,
+          m.machinery_description,
+          c.category_name,
+          s.status_name
+        FROM machinery m
+        INNER JOIN machinery_categories c ON m.category_id = c.category_id
+        INNER JOIN machinery_status s ON m.status_id = s.status_id
+        WHERE
+            $1 = ''
+            OR LOWER(machinery_name) LIKE LOWER($2)
+        ORDER BY m.machinery_id DESC
+        LIMIT $3
+        OFFSET $4
     `;
-    const result = await pool.query(query);
-    return result.rows;
+
+    const result = await pool.query(query, [search, `%${search}%`, limit, offset]);
+
+    const totalQuery = await pool.query(
+        `
+        SELECT COUNT(*)
+        FROM machinery
+        WHERE
+            $1 = ''
+            OR LOWER(machinery_name) LIKE LOWER($2)
+        `,
+        [search, `%${search}%`]
+    );
+
+    const total = Number(totalQuery.rows[0].count);
+
+    return {
+      data: result.rows,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit)
+      }
+    };
+
   }
 
   // 5. Actualizar los datos de una maquinaria

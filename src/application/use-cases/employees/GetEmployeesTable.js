@@ -3,7 +3,7 @@ export default class GetEmployeesTable {
     this.employeeRepository = employeeRepository;
   }
 
-  async execute() {
-    return await this.employeeRepository.findTableData();
+  async execute(page, limit, search) {
+    return await this.employeeRepository.findTableData(page, limit, search);
   }
 }

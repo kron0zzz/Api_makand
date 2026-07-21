@@ -79,8 +79,11 @@ export const deleteChargeType = async (req, res) => {
 
 export const getChargeTypesTable = async (req, res) => {
   try {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 9;
+    const search = req.query.search || "";
     const getChargeTypesTableUseCase = new GetChargeTypesTable(chargeTypeRepository);
-    const chargeTypes = await getChargeTypesTableUseCase.execute();
+    const chargeTypes = await getChargeTypesTableUseCase.execute(page, limit, search);
     res.status(200).json(chargeTypes);
   } catch (err) {
     res.status(500).json({ error: err.message });

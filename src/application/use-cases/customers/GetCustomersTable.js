@@ -4,8 +4,8 @@ export default class GetCustomersTable {
     this.customerRepository = customerRepository;
   }
 
-  async execute() {
-    return await this.customerRepository.findTableData();
+  async execute(page, limit, search) {
+    return await this.customerRepository.findTableData(page, limit, search);
   }
 
 }

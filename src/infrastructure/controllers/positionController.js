@@ -3,6 +3,7 @@ import GetPositions from "../../application/use-cases/positions/GetPositions.js"
 import GetPositionById from "../../application/use-cases/positions/GetPositionById.js";
 import UpdatePosition from "../../application/use-cases/positions/UpdatePosition.js";
 import DeletePosition from "../../application/use-cases/positions/DeletePosition.js";
+import GetPositionsTable from "../../application/use-cases/positions/GetPositionsTable.js"
 
 import PositionRepository from "../repositories/PositionRepository.js";
 
@@ -28,9 +29,7 @@ export const createPosition = async (req, res) => {
 
 export const getPositions = async (req, res) => {
   try {
-    const getPositions =
-      new GetPositions(positionRepository);
-
+    const getPositions = new GetPositions(positionRepository);
     const positions = await getPositions.execute();
 
     res.status(200).json(positions);
@@ -109,6 +108,24 @@ export const deletePosition = async (req, res) => {
       });
     }
 
+    res.status(500).json({
+      error: err.message
+    });
+  }
+};
+
+
+export const getPositionsTable = async (req, res) => {
+  try {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 9;
+    const search = req.query.search || "";
+    const getTable = new GetPositionsTable(positionRepository);
+    const positions = await getTable.execute(page, limit, search);
+
+    res.status(200).json(positions);
+
+  } catch (err) {
     res.status(500).json({
       error: err.message
     });

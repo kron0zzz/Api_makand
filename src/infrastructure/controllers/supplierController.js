@@ -5,9 +5,9 @@ import UpdateSupplier from "../../application/use-cases/suppliers/UpdateSupplier
 import DeleteSupplier from "../../application/use-cases/suppliers/DeleteSupplier.js";
 import GetSuppliersTable from "../../application/use-cases/suppliers/GetSuppliersTable.js"
 
-import SupplierRepositoryPrisma from "../repositories/SupplierRepositoryPrisma.js";
+import SupplierRepository from "../repositories/SupplierRepository.js";
 
-const supplierRepository = new SupplierRepositoryPrisma();
+const supplierRepository = new SupplierRepository();
 
 export const createSupplier = async (req, res) => {
   try {
@@ -119,10 +119,11 @@ export const deleteSupplier = async (req, res) => {
 
 export const getSuppliersTable = async (req, res) => {
   try {
-    const getSuppliersTable =
-      new GetSuppliersTable(supplierRepository);
-
-    const suppliers = await getSuppliersTable.execute();
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 9;
+    const search = req.query.search || "";
+    const getSuppliersTable = new GetSuppliersTable(supplierRepository);
+    const suppliers = await getSuppliersTable.execute(page, limit, search);
 
     res.status(200).json(suppliers);
 
