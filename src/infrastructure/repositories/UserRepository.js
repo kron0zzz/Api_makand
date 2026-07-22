@@ -171,8 +171,20 @@ export default class UserRepository {
       return null;
     }
     
-    // ⚠️ CRÍTICO: Debe leer .employee_email en minúsculas y tal cual viene de la BD
     return result.rows[0].employee_email; 
 
+  }
+
+  
+  // Método para actualizar la contraseña del usuario por su ID
+  async updatePassword(userId, newPassword) {
+    const query = `
+      UPDATE users 
+      SET user_password = $1 
+      WHERE user_id = $2
+      RETURNING *
+    `;
+    const result = await pool.query(query, [newPassword, userId]);
+    return result.rows[0];
   }
 }
