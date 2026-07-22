@@ -6,19 +6,19 @@
 -- Estado de la maquinaria (machinery_status)
 CREATE TABLE machinery_status (
     status_id SMALLSERIAL PRIMARY KEY,
-    status_name VARCHAR(50) NOT NULL
+    status_name VARCHAR(50) NOT NULL UNIQUE
 );
 
 -- Categoria de la maquinaria (machinery_categories)
 CREATE TABLE machinery_categories (
     category_id SERIAL PRIMARY KEY,
-    category_name VARCHAR(50) NOT NULL
+    category_name VARCHAR(50) NOT NULL UNIQUE
 );
 
 -- Roles (roles)
 CREATE TABLE roles (
     role_id SMALLSERIAL PRIMARY KEY,
-    role_name VARCHAR(50) NOT NULL,
+    role_name VARCHAR(50) NOT NULL UNIQUE,
     role_status BOOLEAN NOT NULL DEFAULT TRUE
 );
 
@@ -31,19 +31,19 @@ CREATE TABLE permissions (
 -- Estado de pedido (order_status)
 CREATE TABLE order_status (
     order_status_id SMALLSERIAL PRIMARY KEY,
-    order_status_name VARCHAR(50) NOT NULL
+    order_status_name VARCHAR(50) NOT NULL UNIQUE
 );
 
 -- Tipo de cobros (charge_types)
 CREATE TABLE charge_types (
     charge_type_id SERIAL PRIMARY KEY,
-    charge_type_name VARCHAR(100) NOT NULL
+    charge_type_name VARCHAR(100) NOT NULL UNIQUE
 );
 
 -- Cargos (positions)
 CREATE TABLE positions (
     position_id SMALLSERIAL PRIMARY KEY,
-    position_name VARCHAR(50) NOT NULL
+    position_name VARCHAR(50) NOT NULL UNIQUE
 );
 
 -- Proveedores (suppliers)
