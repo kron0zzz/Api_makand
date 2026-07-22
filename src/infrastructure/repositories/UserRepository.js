@@ -129,9 +129,10 @@ export default class UserRepository {
   async findByEmail(email) {
 
     const query = `
-      SELECT *
-      FROM users
-      WHERE user_email = $1
+      SELECT u.*, r.role_name 
+      FROM users u
+      INNER JOIN roles r ON u.role_id = r.role_id
+      WHERE u.user_email = $1
     `;
 
     const result =

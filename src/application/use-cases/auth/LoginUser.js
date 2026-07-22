@@ -26,6 +26,7 @@ export default class LoginUserUseCase {
       {
         user_id: user.user_id,
         role_id: user.role_id,
+        role_name: user.role_name, 
         permissions: permissions 
       },
       process.env.JWT_SECRET,
@@ -38,6 +39,7 @@ export default class LoginUserUseCase {
         user_id: user.user_id,
         user_email: user.user_email,
         role_id: user.role_id,
+        role_name: user.role_name,
         permissions: permissions 
       }
     };
