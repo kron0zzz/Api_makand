@@ -17,8 +17,15 @@ export default class MachineryStatusRepository {
       statusData.status_name || statusData.statusName || 'Sin Nombre'
     ];
 
-    const result = await pool.query(query, values);
-    return result.rows[0];
+    try {
+      const result = await pool.query(query, values);
+      return result.rows[0];
+    } catch (error) {
+      if (error.code === '23505') {
+        throw new Error('Ya existe un estado de maquinaria registrado con este nombre.');
+      }
+      throw error;
+    }
   }
 
   async findAll() {
@@ -49,8 +56,15 @@ export default class MachineryStatusRepository {
       id
     ];
 
-    const result = await pool.query(query, values);
-    return result.rows[0];
+    try {
+      const result = await pool.query(query, values);
+      return result.rows[0];
+    } catch (error) {
+      if (error.code === '23505') {
+        throw new Error('Ya existe un estado de maquinaria registrado con este nombre.');
+      }
+      throw error;
+    }
   }
 
   async delete(id) {

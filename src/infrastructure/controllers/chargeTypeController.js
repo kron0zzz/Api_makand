@@ -15,7 +15,7 @@ export const createChargeType = async (req, res) => {
     const chargeType = await createChargeTypeUseCase.execute(req.body);
     res.status(201).json(chargeType);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(400).json({ error: err.message });
   }
 };
 
@@ -58,7 +58,7 @@ export const updateChargeType = async (req, res) => {
 
     res.status(200).json(updatedChargeType);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(400).json({ error: err.message });
   }
 };
 

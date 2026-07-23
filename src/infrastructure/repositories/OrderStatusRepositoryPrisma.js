@@ -18,8 +18,15 @@ export default class OrderStatusRepositoryPrisma {
       orderStatusData.order_status_name
     ];
 
-    const result = await pool.query(query, values);
-    return result.rows[0];
+    try {
+      const result = await pool.query(query, values);
+      return result.rows[0];
+    } catch (error) {
+      if (error.code === '23505') {
+        throw new Error('Ya existe un estado de pedido registrado con este nombre.');
+      }
+      throw error;
+    }
   }
 
   async findAll() {
@@ -54,8 +61,15 @@ export default class OrderStatusRepositoryPrisma {
       id
     ];
 
-    const result = await pool.query(query, values);
-    return result.rows[0];
+    try {
+      const result = await pool.query(query, values);
+      return result.rows[0];
+    } catch (error) {
+      if (error.code === '23505') {
+        throw new Error('Ya existe un estado de pedido registrado con este nombre.');
+      }
+      throw error;
+    }
   }
 
   async delete(id) {

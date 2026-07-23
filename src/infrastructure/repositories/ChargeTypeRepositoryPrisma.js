@@ -14,8 +14,15 @@ export default class ChargeTypeRepositoryPrisma {
 
     const values = [chargeTypeData.charge_type_name || chargeTypeData.name];
 
-    const result = await pool.query(query, values);
-    return result.rows[0];
+    try {
+      const result = await pool.query(query, values);
+      return result.rows[0];
+    } catch (error) {
+      if (error.code === '23505') {
+        throw new Error('Ya existe un tipo de cobro registrado con este nombre.');
+      }
+      throw error;
+    }
   }
 
   async findAll() {
@@ -43,8 +50,15 @@ export default class ChargeTypeRepositoryPrisma {
 
     const values = [chargeTypeData.charge_type_name || chargeTypeData.name, id];
 
-    const result = await pool.query(query, values);
-    return result.rows[0];
+    try {
+      const result = await pool.query(query, values);
+      return result.rows[0];
+    } catch (error) {
+      if (error.code === '23505') {
+        throw new Error('Ya existe un tipo de cobro registrado con este nombre.');
+      }
+      throw error;
+    }
   }
 
   async delete(id) {
