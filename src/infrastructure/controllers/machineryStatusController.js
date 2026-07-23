@@ -15,7 +15,7 @@ export const createMachineryStatus = async (req, res) => {
     const status = await createUseCase.execute(req.body);
     res.status(201).json(status);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(400).json({ error: err.message });
   }
 };
 
@@ -46,7 +46,6 @@ export const getMachineryStatusById = async (req, res) => {
 
 export const updateMachineryStatus = async (req, res) => {
   try {
-    console.log("DATOS PARA ACTUALIZAR ESTADO DE MAQUINARIA:", req.body);
     const updateUseCase = new UpdateMachineryStatus(machineryStatusRepository);
     const updatedStatus = await updateUseCase.execute(
       req.params.id,
