@@ -71,6 +71,10 @@ export default class CancelOrder {
           detail.quantity_to_dispatch,
           client
         );
+        await this.machineryRepository.setAvailable(
+          detail.machinery_id,
+          client
+        );
       }
 
       const updatedOrder = await this.orderRepository.updateStatus(

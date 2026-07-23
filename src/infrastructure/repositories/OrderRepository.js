@@ -219,6 +219,7 @@ export default class OrderRepository {
         o.order_id,
         o.order_creation_date,
         p.project_name,
+        o.order_status_id,
         CONCAT(c.customer_first_name, ' ', c.customer_last_name) AS customer_name,
         os.order_status_name
 
