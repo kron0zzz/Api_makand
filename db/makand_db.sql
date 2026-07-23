@@ -359,10 +359,11 @@ VALUES
 
 
 -- order status
-INSERT INTO order_status (order_status_name) VALUES ('Creado');
 INSERT INTO order_status (order_status_name) VALUES ('En proceso');
-INSERT INTO order_status (order_status_name) VALUES ('Cancelado'); 
+INSERT INTO order_status (order_status_name) VALUES ('Devuelto');
+INSERT INTO order_status (order_status_name) VALUES ('Pagado');
 INSERT INTO order_status (order_status_name) VALUES ('Cerrado');
+INSERT INTO order_status (order_status_name) VALUES ('Cancelado'); 
 
 
 --positions
