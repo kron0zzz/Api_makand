@@ -241,4 +241,28 @@ export default class ReturnRepository {
     return result.rows;
 
   }
+
+
+  async existsByOrder(
+    orderId,
+    client = pool
+  ) {
+
+    const query = `
+      SELECT EXISTS(
+        SELECT 1
+        FROM returns r
+        INNER JOIN order_details od
+          ON r.order_detail_id = od.order_detail_id
+        WHERE od.order_id = $1
+      ) AS has_order
+    `;
+
+    const result = await client.query(
+      query,
+      [orderId]
+    );
+
+    return result.rows[0].has_order;
+  }
 }

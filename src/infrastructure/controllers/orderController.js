@@ -7,15 +7,22 @@ import GetOrdersTable from "../../application/use-cases/orders/GetOrdersTable.js
 import CreateCompleteOrder from "../../application/use-cases/orders/CreateCompleteOrder.js";
 import GetOrderFull from "../../application/use-cases/orders/GetOrderFull.js"
 import GetOrderWorkspace from "../../application/use-cases/orders/GetOrderWorkspace.js";
+import CancelOrder from "../../application/use-cases/orders/CancelOrder.js";
 
 import OrderDetailRepository from "../repositories/Order_detailRepository.js";
 import MachineryRepository from "../repositories/MachineryRepository.js";
 import OrderRepository from "../repositories/OrderRepository.js";
+import PaymentRepository from "../repositories/PaymentRepository.js";
+import RentalCutRepository from "../repositories/RentalCutRepository.js";
+import ReturnRepository from "../repositories/ReturnRepository.js";
 
 
 const orderRepository = new OrderRepository();
 const orderDetailRepository = new OrderDetailRepository();
 const machineryRepository = new MachineryRepository();
+const paymentRepository = new PaymentRepository();
+const rentalCutRepository = new RentalCutRepository();
+const returnRepository = new ReturnRepository();
 const getOrderWorkspaceUseCase = new GetOrderWorkspace(orderRepository);
 
 export const createOrder = async (req, res) => {
@@ -121,6 +128,39 @@ export const deleteOrder = async (req, res) => {
     }
 
     res.status(500).json({
+      error: err.message
+    });
+  }
+};
+
+export const cancelOrder = async (req, res) => {
+  try {
+    const cancelOrderUseCase =
+      new CancelOrder(
+        orderRepository,
+        orderDetailRepository,
+        machineryRepository,
+        paymentRepository,
+        rentalCutRepository,
+        returnRepository
+      );
+
+    const cancelledOrder =
+      await cancelOrderUseCase.execute(
+        req.params.id
+      );
+
+    res.status(200).json(cancelledOrder);
+
+  } catch (err) {
+
+    if (err.message === "Pedido no encontrado.") {
+      return res.status(404).json({
+        error: err.message
+      });
+    }
+
+    res.status(400).json({
       error: err.message
     });
   }

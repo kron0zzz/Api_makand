@@ -176,6 +176,27 @@ export default class OrderRepository {
     return result.rows[0];
   }
 
+  async updateStatus(
+    orderId,
+    statusId,
+    client = pool
+  ) {
+
+    const query = `
+      UPDATE orders
+      SET order_status_id = $1
+      WHERE order_id = $2
+      RETURNING *
+    `;
+
+    const result = await client.query(
+      query,
+      [statusId, orderId]
+    );
+
+    return result.rows[0];
+  }
+
   
   async delete(id) {
 

@@ -242,4 +242,26 @@ export default class PaymentRepository {
     return result.rows;
 
   }
+
+
+  async existsByOrder(
+    orderId,
+    client = pool
+  ) {
+
+    const query = `
+      SELECT EXISTS(
+        SELECT 1
+        FROM payments
+        WHERE order_id = $1
+      ) AS has_order
+    `;
+
+    const result = await client.query(
+      query,
+      [orderId]
+    );
+
+    return result.rows[0].has_order;
+  }
 }
