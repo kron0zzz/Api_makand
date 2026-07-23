@@ -15,7 +15,7 @@ export const createOrderStatus = async (req, res) => {
     const orderStatus = await createOrderStatusUseCase.execute(req.body);
     res.status(201).json(orderStatus);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(400).json({ message: err.message });
   }
 };
 
@@ -68,7 +68,7 @@ export const updateOrderStatus = async (req, res) => {
 
     res.status(200).json(updatedOrderStatus);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(400).json({ message: err.message });
   }
 };
 
