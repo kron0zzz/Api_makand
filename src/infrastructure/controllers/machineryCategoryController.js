@@ -50,7 +50,6 @@ export const getMachineryCategoryById = async (req, res) => {
 // Cambiado a updateMachineryCategory
 export const updateMachineryCategory = async (req, res) => {
   try {
-    console.log("DATOS PARA ACTUALIZAR CATEGORÍA DE MAQUINARIA:", req.body);
     const updateUseCase = new UpdateMachineryCategory(machineryCategoryRepository);
     const updatedCategory = await updateUseCase.execute(
       req.params.id,

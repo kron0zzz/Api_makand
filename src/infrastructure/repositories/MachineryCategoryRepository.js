@@ -17,8 +17,15 @@ export default class MachineryCategoryRepository {
       categoryData.category_name || categoryData.categoryName || 'Sin Nombre'
     ];
 
-    const result = await pool.query(query, values);
-    return result.rows[0];
+    try {
+      const result = await pool.query(query, values);
+      return result.rows[0];
+    } catch (error) {
+      if (error.code === '23505') {
+        throw new Error('Ya existe una categoría de maquinaria registrada con este nombre.');
+      }
+      throw error;
+    }
   }
 
 
@@ -58,8 +65,15 @@ export default class MachineryCategoryRepository {
       id
     ];
 
-    const result = await pool.query(query, values);
-    return result.rows[0];
+    try {
+      const result = await pool.query(query, values);
+      return result.rows[0];
+    } catch (error) {
+      if (error.code === '23505') {
+        throw new Error('Ya existe una categoría de maquinaria registrada con este nombre.');
+      }
+      throw error;
+    }
   }
 
 
