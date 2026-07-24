@@ -146,6 +146,28 @@ export default class RentalCutRepository {
   }
 
 
+  async existsByOrder(
+    orderId,
+    client = pool
+  ) {
+
+    const query = `
+      SELECT EXISTS(
+        SELECT 1
+        FROM rental_cuts
+        WHERE order_id = $1
+      ) AS has_order
+    `;
+
+    const result = await client.query(
+      query,
+      [orderId]
+    );
+
+    return result.rows[0].has_order;
+  }
+
+
   async getTotalBilled(orderId) {
 
     const query = `

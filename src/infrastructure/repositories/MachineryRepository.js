@@ -220,6 +220,20 @@ export default class MachineryRepository {
   }
 
 
+  async incrementStock(
+    machineryId,
+    quantity,
+    client = pool
+  ) {
+
+    return await this.increaseStock(
+      machineryId,
+      quantity,
+      client
+    );
+  }
+
+
 
   async setOccupied(
     machineryId,

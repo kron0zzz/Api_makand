@@ -176,7 +176,50 @@ export default class OrderRepository {
     return result.rows[0];
   }
 
+  async updateStatus(
+    orderId,
+    statusId,
+    client = pool
+  ) {
+
+    const query = `
+      UPDATE orders
+      SET order_status_id = $1
+      WHERE order_id = $2
+      RETURNING *
+    `;
+
+    const result = await client.query(
+      query,
+      [statusId, orderId]
+    );
+
+    return result.rows[0];
+  }
+
   
+  async closeOrder(
+    orderId,
+    client = pool
+  ) {
+
+    const query = `
+      UPDATE orders
+      SET order_status_id = $1,
+          order_closing_date = NOW()
+      WHERE order_id = $2
+      RETURNING *
+    `;
+
+    const result = await client.query(
+      query,
+      [4, orderId]
+    );
+
+    return result.rows[0];
+
+  }
+
   async delete(id) {
 
     const result = await pool.query(
@@ -198,6 +241,7 @@ export default class OrderRepository {
         o.order_id,
         o.order_creation_date,
         p.project_name,
+        o.order_status_id,
         CONCAT(c.customer_first_name, ' ', c.customer_last_name) AS customer_name,
         os.order_status_name
 
