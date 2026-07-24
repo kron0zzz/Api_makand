@@ -58,6 +58,14 @@ export default class CreateCompleteOrder {
           );
         }
 
+        if (
+          machinery.status_id !== 1
+        ) {
+          throw new Error(
+            `La maquinaria ${machinery.machinery_name} no está disponible para alquiler`
+          );
+        }
+
       }
 
       // Crear pedido
