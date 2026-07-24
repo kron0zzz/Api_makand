@@ -1,6 +1,6 @@
 
 import { Router } from "express";
-import { createOrder, getOrders, getOrderById, updateOrder, deleteOrder, getOrdersTable, createCompleteOrder, getOrderFull, getOrderWorkspace, cancelOrder } from "../controllers/orderController.js";
+import { createOrder, getOrders, getOrderById, updateOrder, deleteOrder, getOrdersTable, createCompleteOrder, getOrderFull, getOrderWorkspace, cancelOrder, closeOrder } from "../controllers/orderController.js";
 import authMiddleware from "../../middlewares/authMiddleware.js";
 import authorize from '../../middlewares/authorize.js';
 
@@ -15,6 +15,7 @@ router.get("/:id", authorize('Ver Detalle de Orden'), getOrderById);
 router.get("/:id/full", authorize('Ver Detalle Completo de Orden'), getOrderFull);
 router.get("/:id/workspace", authorize('Ver Workspace de Orden'), getOrderWorkspace); // Nueva ruta
 router.put("/:id/cancel", authorize('Anular Orden'), cancelOrder);
+router.put("/:id/close", authorize('Cerrar Orden'), closeOrder);
 router.put("/:id", authorize('Editar Orden'), updateOrder);
 router.delete("/:id", authorize('Eliminar Orden'), deleteOrder);
 router.post("/complete", authorize('Crear Orden Completa'), createCompleteOrder);

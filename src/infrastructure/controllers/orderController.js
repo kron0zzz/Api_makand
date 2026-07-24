@@ -8,6 +8,7 @@ import CreateCompleteOrder from "../../application/use-cases/orders/CreateComple
 import GetOrderFull from "../../application/use-cases/orders/GetOrderFull.js"
 import GetOrderWorkspace from "../../application/use-cases/orders/GetOrderWorkspace.js";
 import CancelOrder from "../../application/use-cases/orders/CancelOrder.js";
+import CloseOrder from "../../application/use-cases/orders/CloseOrder.js";
 
 import OrderDetailRepository from "../repositories/Order_detailRepository.js";
 import MachineryRepository from "../repositories/MachineryRepository.js";
@@ -151,6 +152,40 @@ export const cancelOrder = async (req, res) => {
       );
 
     res.status(200).json(cancelledOrder);
+
+  } catch (err) {
+
+    if (err.message === "Pedido no encontrado.") {
+      return res.status(404).json({
+        error: err.message
+      });
+    }
+
+    res.status(400).json({
+      error: err.message
+    });
+  }
+};
+
+export const closeOrder = async (req, res) => {
+  try {
+    const closeOrderUseCase =
+      new CloseOrder(
+        orderRepository,
+        orderDetailRepository,
+        rentalCutRepository,
+        paymentRepository,
+        returnRepository
+      );
+
+    const closedOrder =
+      await closeOrderUseCase.execute(
+        req.params.id
+      );
+
+    res.status(200).json({
+      message: "Pedido cerrado correctamente."
+    });
 
   } catch (err) {
 

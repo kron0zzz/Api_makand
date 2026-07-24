@@ -406,7 +406,7 @@ INSERT INTO permissions (permission_name) VALUES
 ('Listar Maquinaria'), ('Crear Maquinaria'), ('Ver Detalle de Maquinaria'), ('Editar Maquinaria'), ('Eliminar Maquinaria'),
 ('Listar Mantenimiento'), ('Crear Mantenimiento'), ('Ver Detalle de Mantenimiento'), ('Editar Mantenimiento'), ('Eliminar Mantenimiento'),
 ('Listar Detalle de Orden'), ('Crear Detalle de Orden'), ('Ver Detalle de Detalle de Orden'), ('Editar Detalle de Orden'), ('Eliminar Detalle de Orden'),
-('Listar Orden'), ('Crear Orden'), ('Listar Ordenes en Tabla'), ('Ver Detalle Completo de Orden'), ('Ver Detalle de Orden'), ('Editar Orden'), ('Eliminar Orden'), ('Crear Orden Completa'),('Anular Orden'),
+('Listar Orden'), ('Crear Orden'), ('Listar Ordenes en Tabla'), ('Ver Detalle Completo de Orden'), ('Ver Detalle de Orden'), ('Editar Orden'), ('Eliminar Orden'), ('Crear Orden Completa'),('Anular Orden'), ('Cerrar Orden'),
 ('Listar Estado de Orden'), ('Crear Estado de Orden'), ('Ver Detalle de Estado de Orden'), ('Editar Estado de Orden'), ('Eliminar Estado de Orden'),
 ('Listar Pago'), ('Crear Pago'), ('Ver Detalle de Pago'), ('Editar Pago'), ('Eliminar Pago'),
 ('Listar Cargo'), ('Crear Cargo'), ('Ver Detalle de Cargo'), ('Editar Cargo'), ('Eliminar Cargo'),

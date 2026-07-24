@@ -198,6 +198,28 @@ export default class OrderRepository {
   }
 
   
+  async closeOrder(
+    orderId,
+    client = pool
+  ) {
+
+    const query = `
+      UPDATE orders
+      SET order_status_id = $1,
+          order_closing_date = NOW()
+      WHERE order_id = $2
+      RETURNING *
+    `;
+
+    const result = await client.query(
+      query,
+      [4, orderId]
+    );
+
+    return result.rows[0];
+
+  }
+
   async delete(id) {
 
     const result = await pool.query(

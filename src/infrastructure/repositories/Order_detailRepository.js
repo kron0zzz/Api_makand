@@ -1,102 +1,3 @@
-// import pool from "../../config/database.js";
-
-// export default class Order_detailRepository {
-
-//   async create(order_detailData,client = pool) {
-
-//     const { order_id, machinery_id, machinery_name_snapshot, quantity_to_dispatch, rental_unit_price, subtotal_weight_kg} = order_detailData;
-
-//     const query = `
-//       INSERT INTO order_details ( order_id, machinery_id, machinery_name_snapshot, quantity_to_dispatch, rental_unit_price, subtotal_weight_kg)
-//       VALUES ($1, $2, $3, $4, $5, $6)
-//       RETURNING *
-//     `;
-
-//     const values = [ order_id, machinery_id, machinery_name_snapshot, quantity_to_dispatch, rental_unit_price, subtotal_weight_kg];
-
-//     const result = await client.query(query, values);
-
-//     return result.rows[0];
-//   }
-
-
-//   async findAll() {
-
-//     const result =
-//       await pool.query("SELECT * FROM order_details");
-
-//     return result.rows;
-//   }
-
-
-
-//   async findById(id) {
-
-//     const result = await pool.query(
-//       "SELECT * FROM order_details WHERE order_detail_id = $1",
-//       [id]
-//     );
-
-//     return result.rows[0];
-//   }
-
-
-  
-//   async update(id, order_detailData) {
-
-//     const { order_id, machinery_id, machinery_name_snapshot, quantity_to_dispatch, rental_unit_price, subtotal_weight_kg } = order_detailData;
-
-//     const query = `
-//       UPDATE order_details
-//       SET  
-//       order_id = $1,
-//       machinery_id = $2,
-//       machinery_name_snapshot = $3, 
-//       quantity_to_dispatch = $4, 
-//       rental_unit_price = $5,
-//       subtotal_weight_kg = $6
-//       WHERE order_detail_id = $7
-//       RETURNING *
-//     `;
-
-//     const values = [order_id, machinery_id, machinery_name_snapshot, quantity_to_dispatch, rental_unit_price, subtotal_weight_kg, id];
-
-//     const result =
-//       await pool.query(query, values);
-
-//     return result.rows[0];
-//   }
-
-  
-//   async delete(id) {
-
-//     const result = await pool.query(
-//       "DELETE FROM order_details WHERE order_detail_id = $1 RETURNING *",
-//       [id]
-//     );
-
-//     return result.rows[0];
-//   }
-
-
-//   async findTableData() {
-
-//     const query = `
-//       SELECT
-//         machinery_id,
-//         quantity_to_dispatch,
-//         rental_unit_price,
-//         machinery_rental_status
-//       FROM order_details
-//     `;
-
-//     const result = await pool.query(query);
-
-//     return result.rows;
-//   }
-// }
-
-
 import pool from "../../config/database.js";
 
 export default class Order_detailRepository {
@@ -256,6 +157,33 @@ export default class Order_detailRepository {
       );
 
     return result.rows[0];
+  }
+
+
+  async hasPendingReturns(
+    orderId,
+    client = pool
+  ) {
+
+    const query = `
+      SELECT EXISTS(
+        SELECT 1
+        FROM order_details od
+        LEFT JOIN returns r
+          ON r.order_detail_id = od.order_detail_id
+        WHERE od.order_id = $1
+        GROUP BY od.order_detail_id, od.quantity_to_dispatch
+        HAVING od.quantity_to_dispatch <> COALESCE(SUM(r.returned_quantity), 0)
+      ) AS has_pending
+    `;
+
+    const result = await client.query(
+      query,
+      [orderId]
+    );
+
+    return result.rows[0].has_pending;
+
   }
 
 }
