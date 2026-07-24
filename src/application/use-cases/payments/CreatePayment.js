@@ -115,6 +115,26 @@ export default class CreatePayment {
 
 
 
+    // =====================
+    // Verificar pago completo
+    // =====================
+
+    const remainingBalance =
+      balance.pending_balance -
+      Number(payment_amount);
+
+    if (remainingBalance <= 0) {
+
+      await this.orderRepository
+        .updateStatus(
+          order_id,
+          3
+        );
+
+    }
+
+
+
     return payment;
 
   }

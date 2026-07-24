@@ -3,7 +3,8 @@ export default class CreateReturn {
   constructor(
     returnRepository,
     orderDetailRepository,
-    machineryRepository
+    machineryRepository,
+    orderRepository
   ) {
 
     this.returnRepository =
@@ -14,6 +15,9 @@ export default class CreateReturn {
 
     this.machineryRepository =
       machineryRepository;
+
+    this.orderRepository =
+      orderRepository;
 
   }
 
@@ -105,6 +109,22 @@ export default class CreateReturn {
       .setReturned(
         order_detail_id
       );
+
+    }
+
+    const hasPendingReturns =
+      await this.orderDetailRepository
+        .hasPendingReturns(
+          detail.order_id
+        );
+
+    if (!hasPendingReturns) {
+
+      await this.orderRepository
+        .updateStatus(
+          detail.order_id,
+          2
+        );
 
     }
 

@@ -8,14 +8,16 @@ import GetReturnsTable from "../../application/use-cases/returns/GetReturnsTable
 import ReturnRepository from "../repositories/ReturnRepository.js";
 import Order_detailRepository from "../repositories/Order_detailRepository.js";
 import MachineryRepository from "../repositories/MachineryRepository.js";
+import OrderRepository from "../repositories/OrderRepository.js";
 
 const returnRepository = new ReturnRepository();
 const orderDetailRepository = new Order_detailRepository();
 const machineryRepository = new MachineryRepository();
+const orderRepository = new OrderRepository();
 
 export const createReturn = async (req, res) => {
   try {
-    const createReturn = new CreateReturn(returnRepository, orderDetailRepository, machineryRepository);
+    const createReturn = new CreateReturn(returnRepository, orderDetailRepository, machineryRepository, orderRepository);
     const returnData = await createReturn.execute(req.body);
     res.status(201).json(returnData);
   } catch (err) {
