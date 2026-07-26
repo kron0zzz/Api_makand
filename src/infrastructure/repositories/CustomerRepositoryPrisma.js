@@ -9,30 +9,29 @@ export default class CustomerRepositoryPrisma {
 
     const query = `
       INSERT INTO customers (
-        customer_document_type, 
-        customer_document_number, 
-        customer_status, 
-        customer_first_name, 
-        customer_last_name, 
-        customer_address, 
-        customer_phone, 
-        customer_email, 
-        organization_type
+        organization_type,
+        customer_document_type,
+        customer_document_number,
+        customer_name,
+        legal_representative,
+        customer_address,
+        customer_phone,
+        customer_email
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING *
     `;
 
     const values = [
+      customerData.organization_type || customerData.tipoOrganizacion || 'Natural',
       customerData.customer_document_type || customerData.tipoDocumento || 'CC', // Default si viene nulo
       customerData.customer_document_number || customerData.documento || '0',
-      customerData.customer_status !== undefined ? customerData.customer_status : true,
-      customerData.customer_first_name || customerData.firstName || 'Sin Nombre',
-      customerData.customer_last_name || customerData.lastName || 'Sin Apellido',
+      customerData.customer_name || customerData.firstName || 'Sin Nombre',
+      customerData.legal_representative || customerData.legal_representative || null,
       customerData.customer_address || customerData.direccion || '',
       customerData.customer_phone || customerData.telefono || '0',
       customerData.customer_email || customerData.email || '',
-      customerData.organization_type || customerData.tipoOrganizacion || 'Natural'
+      
     ];
 
     const result = await pool.query(query, values);
@@ -58,29 +57,29 @@ export default class CustomerRepositoryPrisma {
     const query = `
       UPDATE customers
       SET 
-        customer_document_type = $1, 
-        customer_document_number = $2,
-        customer_status = $3, 
-        customer_first_name = $4, 
-        customer_last_name = $5, 
-        customer_address = $6, 
-        customer_phone = $7, 
-        customer_email = $8, 
-        organization_type = $9
+        organization_type = $1,
+        customer_document_type = $2,
+        customer_document_number = $3,
+        customer_status = $4,
+        customer_name = $5,
+        legal_representative = $6,
+        customer_address = $7,
+        customer_phone = $8,
+        customer_email = $9
       WHERE customer_id = $10
       RETURNING *
     `;
 
     const values = [
+      customerData.organization_type || customerData.tipoOrganizacion || 'Natural',
       customerData.customer_document_type || customerData.tipoDocumento || 'CC', 
       customerData.customer_document_number || customerData.documento,
       customerData.customer_status !== undefined ? customerData.customer_status : true, 
-      customerData.customer_first_name || customerData.firstName,
-      customerData.customer_last_name || customerData.lastName,
+      customerData.customer_name || customerData.firstName,
+      customerData.legal_representative || customerData.legal_representative,
       customerData.customer_address || customerData.direccion,
       customerData.customer_phone || customerData.telefono,
       customerData.customer_email || customerData.email,
-      customerData.organization_type || customerData.tipoOrganizacion || 'Natural',
       id
     ];
 
@@ -102,14 +101,13 @@ export default class CustomerRepositoryPrisma {
     const query = `
         SELECT
             customer_id,
-            customer_first_name,
-            customer_last_name,
+            customer_name,
             customer_document_number,
             customer_status
         FROM customers
         WHERE
             $1 = ''
-            OR LOWER(customer_first_name) LIKE LOWER($2) OR LOWER(customer_last_name) LIKE LOWER($2)
+            OR LOWER(customer_name) LIKE LOWER($2) 
         ORDER BY customer_id
         LIMIT $3
         OFFSET $4
@@ -123,7 +121,7 @@ export default class CustomerRepositoryPrisma {
         FROM customers
         WHERE
             $1 = ''
-            OR LOWER(customer_first_name) LIKE LOWER($2) OR LOWER(customer_last_name) LIKE($2)
+            OR LOWER(customer_name) LIKE LOWER($2) 
         `,
         [search, `%${search}%`]
     );

@@ -7,9 +7,7 @@
 
 
 ### returns
-
-
-- también después de q todo sea devuelto, el estado del pedido debe cambiar a un nuevo estado "devuelto"??? o mejor se cambia a cerrado una vez pagado?
+- ???
 
 
 ### order status
@@ -31,3 +29,6 @@
 ### payments
 
 - cuando se cree el último pago y el saldo pendiente sea 0 va a cambiar el estado de pedido a "pagado"? ahora que lo pienso, creo que no es buena idea, porque si el cliente es cumplido con los cortes y los paga de una, constantemente ese saldo pendinte va a ser 0.
+
+### customers
+- en este momento el campo de tipo de organizacion es varchar, considerando que por ahora solo estamos seleccionando entre natural y jurídica, no es mejor que sea un boolean? así nos ahorramos problemas de vulnerabilidades en el front.

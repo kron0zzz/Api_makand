@@ -73,16 +73,16 @@ CREATE TABLE vehicles (
 -- Clientes (customers)
 CREATE TABLE customers (
     customer_id SERIAL PRIMARY KEY,
+    organization_type VARCHAR(20) NOT NULL,
     customer_document_type VARCHAR(20) NOT NULL,
     customer_document_number VARCHAR(20) NOT NULL UNIQUE,
-    customer_status BOOLEAN NOT NULL,
-    customer_first_name VARCHAR(70) NOT NULL,
-    customer_last_name VARCHAR(70) NOT NULL,
+    customer_status BOOLEAN NOT NULL DEFAULT TRUE,
+    customer_name VARCHAR(70) NOT NULL,
+    legal_representative VARCHAR(70),
     customer_address VARCHAR(100),
     customer_phone VARCHAR(20) NOT NULL,
-    customer_email VARCHAR(100),
-    organization_type VARCHAR(20) NOT NULL
-	);
+    customer_email VARCHAR(100)
+);
 
 
 
@@ -235,7 +235,7 @@ CREATE TABLE orders (
     user_id INT NOT NULL,
     discount_amount DECIMAL(9,2) DEFAULT 0.00,
     order_description VARCHAR(500),
-    last_cut_date TIMESTAMP, 
+    last_cut_date TIMESTAMP,
 
     CONSTRAINT fk_order_project
         FOREIGN KEY (project_id)
