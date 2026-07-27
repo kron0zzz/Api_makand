@@ -126,7 +126,32 @@ import pool from "../../config/database.js";
 
 export default class RoleRepository {
 
-  async create(roleData) {
+  // async create(roleData) {
+  //   const { role_name, role_status, permissionIds } = roleData;
+  //   await pool.query("BEGIN");
+  //   try {
+  //     const roleQuery = `INSERT INTO roles (role_name, role_status) VALUES ($1, $2) RETURNING *`;
+  //     const roleResult = await pool.query(roleQuery, [role_name, role_status ?? true]);
+  //     const newRole = roleResult.rows[0];
+
+  //     if (permissionIds && permissionIds.length > 0) {
+  //       for (const permission_id of permissionIds) {
+  //         await pool.query("INSERT INTO role_permissions (role_id, permission_id) VALUES ($1, $2)", [newRole.role_id, permission_id]);
+  //       }
+  //     }
+  //     await pool.query("COMMIT");
+  //     return newRole;
+  //   } catch (error) {
+  //     await pool.query("ROLLBACK");
+  //     if (error.code === '23505') {
+  //       throw new Error('Ya existe un rol registrado con este nombre.');
+  //     }
+  //     throw error;
+  //   }
+  // }
+
+
+async create(roleData) {
     const { role_name, role_status, permissionIds } = roleData;
     await pool.query("BEGIN");
     try {
@@ -134,11 +159,16 @@ export default class RoleRepository {
       const roleResult = await pool.query(roleQuery, [role_name, role_status ?? true]);
       const newRole = roleResult.rows[0];
 
+      // AÑADE O VERIFICA ESTE BLOQUE EXACTO EN TU CREATE:
       if (permissionIds && permissionIds.length > 0) {
         for (const permission_id of permissionIds) {
-          await pool.query("INSERT INTO role_permissions (role_id, permission_id) VALUES ($1, $2)", [newRole.role_id, permission_id]);
+          await pool.query(
+            "INSERT INTO role_permissions (role_id, permission_id) VALUES ($1, $2)",
+            [newRole.role_id, permission_id]
+          );
         }
       }
+
       await pool.query("COMMIT");
       return newRole;
     } catch (error) {
