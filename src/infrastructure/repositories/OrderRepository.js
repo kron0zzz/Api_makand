@@ -80,8 +80,7 @@ export default class OrderRepository {
         p.project_city,
 
         c.customer_id,
-        c.customer_first_name,
-        c.customer_last_name,
+        c.customer_name,
         c.customer_phone,
 
         u.user_email
@@ -242,7 +241,7 @@ export default class OrderRepository {
         o.order_creation_date,
         p.project_name,
         o.order_status_id,
-        CONCAT(c.customer_first_name, ' ', c.customer_last_name) AS customer_name,
+        c.customer_name AS customer_name,
         os.order_status_name
 
       FROM orders o
@@ -252,7 +251,7 @@ export default class OrderRepository {
 
         WHERE
            $1 = ''
-          OR LOWER(CONCAT(c.customer_first_name, ' ', c.customer_last_name)) LIKE LOWER($2)
+          OR LOWER(c.customer_name) LIKE LOWER($2)
           OR LOWER(p.project_name) LIKE LOWER($2)
 
         ORDER BY o.order_id DESC
@@ -272,7 +271,7 @@ export default class OrderRepository {
 
         WHERE
            $1 = ''
-          OR LOWER(CONCAT(c.customer_first_name, ' ', c.customer_last_name)) LIKE LOWER($2)
+          OR LOWER(c.customer_name) LIKE LOWER($2)
           OR LOWER(p.project_name) LIKE LOWER($2)
         `,
         [search, `%${search}%`]
