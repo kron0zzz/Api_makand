@@ -41,7 +41,7 @@ export default class ProjectRepositoryPrisma {
 
   async findById(id) {
     const query = `
-      SELECT p.*, c.customer_first_name, c.customer_last_name
+      SELECT p.*, c.customer_name
       FROM projects p
       LEFT JOIN customers c ON p.customer_id = c.customer_id
       WHERE p.project_id = $1
@@ -95,14 +95,13 @@ export default class ProjectRepositoryPrisma {
     const query = `
       SELECT 
         p.*, 
-        c.customer_first_name, 
-        c.customer_last_name
+        c.customer_name
       FROM projects p
       LEFT JOIN customers c ON p.customer_id = c.customer_id
         WHERE
             $1 = ''
             OR LOWER(project_name) LIKE LOWER($2)
-            OR LOWER(CONCAT(c.customer_first_name, ' ', c.customer_last_name)) LIKE ($2)
+            OR LOWER(c.customer_name) LIKE ($2)
         ORDER BY p.project_id DESC
         LIMIT $3
         OFFSET $4
@@ -118,7 +117,7 @@ export default class ProjectRepositoryPrisma {
         WHERE
             $1 = ''
             OR LOWER(project_name) LIKE LOWER($2)
-            OR LOWER(CONCAT(c.customer_first_name, ' ', c.customer_last_name)) LIKE ($2)
+            OR LOWER(c.customer_name) LIKE ($2)
         `,
         [search, `%${search}%`]
     );
