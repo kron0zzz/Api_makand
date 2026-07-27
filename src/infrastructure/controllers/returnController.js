@@ -9,11 +9,13 @@ import ReturnRepository from "../repositories/ReturnRepository.js";
 import Order_detailRepository from "../repositories/Order_detailRepository.js";
 import MachineryRepository from "../repositories/MachineryRepository.js";
 import OrderRepository from "../repositories/OrderRepository.js";
+import RentalCutRepository from "../repositories/RentalCutRepository.js";
 
 const returnRepository = new ReturnRepository();
 const orderDetailRepository = new Order_detailRepository();
 const machineryRepository = new MachineryRepository();
 const orderRepository = new OrderRepository();
+const rentalCutRepository = new RentalCutRepository();
 
 export const createReturn = async (req, res) => {
   try {
@@ -95,9 +97,26 @@ export const updateReturn = async (req, res) => {
 export const deleteReturn = async (req, res) => {
   try {
     const deleteReturn =
-      new DeleteReturn(returnRepository);
+      new DeleteReturn(
+        returnRepository,
+        orderDetailRepository,
+        machineryRepository,
+        orderRepository,
+        rentalCutRepository
+      );
 
-    await deleteReturn.execute(req.params.id);
+    const deletedReturn =
+      await deleteReturn.execute(
+        req.params.id
+      );
+
+    if (!deletedReturn) {
+
+      return res.status(404).json({
+        error: "Devolución no encontrada"
+      });
+
+    }
 
     res.status(204).send();
 

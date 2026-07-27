@@ -186,4 +186,74 @@ export default class Order_detailRepository {
 
   }
 
+
+
+  async setRented(
+    order_detail_id,
+    client = pool
+  ) {
+
+    const query = `
+      UPDATE order_details
+      SET machinery_rental_status = true
+      WHERE order_detail_id = $1
+      RETURNING *
+    `;
+
+    const result =
+      await client.query(
+        query,
+        [order_detail_id]
+      );
+
+    return result.rows[0];
+
+  }
+
+
+
+  async recalculateRentalStatus(
+    orderDetailId,
+    client = pool
+  ) {
+
+    const totalReturnedResult =
+      await client.query(
+        `
+        SELECT COALESCE(SUM(returned_quantity), 0) AS total_returned
+        FROM returns
+        WHERE order_detail_id = $1
+        `,
+        [orderDetailId]
+      );
+
+    const totalReturned =
+      Number(
+        totalReturnedResult.rows[0].total_returned
+      );
+
+    const detail =
+      await this.findById(
+        orderDetailId,
+        client
+      );
+
+    if (totalReturned >= detail.quantity_to_dispatch) {
+
+      await this.setReturned(
+        orderDetailId,
+        client
+      );
+
+    } else {
+
+      await this.setRented(
+        orderDetailId,
+        client
+      );
+
+    }
+
+  }
+
 }

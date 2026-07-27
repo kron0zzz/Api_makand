@@ -167,7 +167,6 @@ export default class RentalCutRepository {
     return result.rows[0].has_order;
   }
 
-
   async getTotalBilled(orderId) {
 
     const query = `
@@ -203,4 +202,40 @@ export default class RentalCutRepository {
     );
 
   }
+
+
+
+  async existsCutAfterDate(
+
+    orderId,
+
+    returnDate,
+
+    client = pool
+
+  ) {
+
+    const query = `
+
+      SELECT EXISTS(
+        SELECT 1
+        FROM rental_cuts
+        WHERE order_id = $1
+          AND period_end_date > $2
+      ) AS has_cut_after
+
+    `;
+
+    const result = await client.query(
+
+      query,
+
+      [orderId, returnDate]
+
+    );
+
+    return result.rows[0].has_cut_after;
+
+  }
+
 }
