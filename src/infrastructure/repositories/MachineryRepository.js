@@ -3,34 +3,27 @@ import pool from "../../config/database.js";
 export default class MachineryRepository {
 
   // 1. Crear una nueva maquinaria
-  async create(data) {
-    if (!data || Object.keys(data).length === 0) {
+  async create(machineryData) {
+    if (!machineryData || Object.keys(machineryData).length === 0) {
       throw new Error("No se recibieron datos de la maquinaria en el repositorio.");
     }
 
+    const {category_id, machinery_name, is_motorized, sale_price, daily_rental_price, weight_kg, machinery_description} = machineryData
     const query = `
       INSERT INTO machinery (
-        status_id, category_id, next_revision_date, machinery_name, 
-        is_motorized, sale_price, daily_rental_price, weight_kg, 
-        stock_quantity, is_owned, machinery_description
+        category_id, 
+        machinery_name, 
+        is_motorized, 
+        sale_price, 
+        daily_rental_price, 
+        weight_kg, 
+        machinery_description
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING *
     `;
 
-    const values = [
-      data.status_id,
-      data.category_id,
-      data.next_revision_date || null,
-      data.machinery_name,
-      data.is_motorized ?? false,
-      data.sale_price,
-      data.daily_rental_price,
-      data.weight_kg || null,
-      data.stock_quantity,
-      data.is_owned ?? true,
-      data.machinery_description
-    ];
+    const values = [category_id, machinery_name, is_motorized, sale_price, daily_rental_price, weight_kg, machinery_description];
 
     const result = await pool.query(query, values);
     return result.rows[0];
@@ -62,7 +55,8 @@ export default class MachineryRepository {
 
   } 
 
-  // 4. Traer los datos combinados (con INNER JOIN) especiales para tu tabla del Frontend
+  // oeeeeeeeeeeeeeee aún debo actualizar esta mierda, se necesita cambiar los datos que se traen
+  /*
   async findTableData(page=1, limit=10, search="") {
     
     const offset = (page - 1) * limit;
@@ -119,42 +113,95 @@ export default class MachineryRepository {
 
   }
 
+  */
+
+  async findTableData(page = 1, limit = 10, search = "") {
+    const offset = (page - 1) * limit;
+
+    const query = `
+      SELECT
+        m.machinery_id,
+        m.machinery_name,
+        m.machinery_description,
+        m.is_motorized,
+        m.sale_price,
+        m.daily_rental_price,
+        m.weight_kg,
+        c.category_name,
+        COALESCE(SUM(ms.stock_quantity), 0) AS total_stock,
+        COALESCE(SUM(CASE WHEN ms.status_id = 1 THEN ms.stock_quantity ELSE 0 END), 0) AS available_stock,
+        COALESCE(
+          JSON_AGG(
+            JSON_BUILD_OBJECT(
+              'stock_id', ms.stock_id,
+              'serial_number', ms.serial_number,
+              'status_id', ms.status_id,
+              'status_name', st.status_name,
+              'next_revision_date', ms.next_revision_date,
+              'is_owned', ms.is_owned,
+              'stock_quantity', ms.stock_quantity
+            )
+          ) FILTER (WHERE ms.stock_id IS NOT NULL), '[]'
+        ) AS stock_details
+      FROM machinery m
+      INNER JOIN machinery_categories c ON m.category_id = c.category_id
+      LEFT JOIN machinery_stock ms ON m.machinery_id = ms.machinery_id
+      LEFT JOIN machinery_status st ON ms.status_id = st.status_id
+      WHERE
+          $1 = ''
+          OR LOWER(m.machinery_name) LIKE LOWER($2)
+      GROUP BY m.machinery_id, c.category_name
+      ORDER BY m.machinery_id DESC
+      LIMIT $3 OFFSET $4
+    `;
+
+    const result = await pool.query(query, [search, `%${search}%`, limit, offset]);
+
+    const totalQuery = await pool.query(
+      `
+      SELECT COUNT(*)
+      FROM machinery
+      WHERE $1 = '' OR LOWER(machinery_name) LIKE LOWER($2)
+      `,
+      [search, `%${search}%`]
+    );
+
+    const total = Number(totalQuery.rows[0].count);
+
+    return {
+      data: result.rows,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit)
+      }
+    };
+  }
+
+
   // 5. Actualizar los datos de una maquinaria
-  async update(id, data) {
-    if (!data) throw new Error("Datos insuficientes para actualizar.");
+  async update(id, machineryData) {
+    if (!machineryData) throw new Error("Datos insuficientes para actualizar.");
+
+
+    const {category_id, machinery_name, is_motorized, sale_price, daily_rental_price, weight_kg, machinery_description} = machineryData
 
     const query = `
       UPDATE machinery
       SET 
-        status_id = $1,
-        category_id = $2,
-        next_revision_date = $3,
-        machinery_name = $4,
-        is_motorized = $5,
-        sale_price = $6,
-        daily_rental_price = $7,
-        weight_kg = $8,
-        stock_quantity = $9,
-        is_owned = $10,
-        machinery_description = $11
-      WHERE machinery_id = $12
+        category_id = $1,
+        machinery_name = $2,
+        is_motorized = $3,
+        sale_price = $4,
+        daily_rental_price = $5,
+        weight_kg = $6,
+        machinery_description = $7
+      WHERE machinery_id = $8
       RETURNING *
     `;
 
-    const values = [
-      data.status_id,
-      data.category_id,
-      data.next_revision_date || null,
-      data.machinery_name,
-      data.is_motorized,
-      data.sale_price,
-      data.daily_rental_price,
-      data.weight_kg || null,
-      data.stock_quantity,
-      data.is_owned,
-      data.machinery_description,
-      id
-    ];
+    const values = [category_id, machinery_name, is_motorized, sale_price, daily_rental_price, weight_kg, machinery_description, id];
 
     const result = await pool.query(query, values);
     return result.rows[0];
@@ -171,137 +218,6 @@ export default class MachineryRepository {
 
 
 
-  async discountStock(
-    machineryId,
-    quantity,
-    client = pool
-  ) {
-
-    const query = `
-      UPDATE machinery
-      SET stock_quantity =
-          stock_quantity - $1
-      WHERE machinery_id = $2
-      RETURNING *
-    `;
-
-    const result =
-      await client.query(
-        query,
-        [quantity, machineryId]
-      );
-
-    return result.rows[0];
-  }
-
-
-  async increaseStock(
-    machineryId,
-    quantity,
-    client = pool
-  ) {
-
-    const query = `
-      UPDATE machinery
-      SET stock_quantity =
-          stock_quantity + $1
-      WHERE machinery_id = $2
-      RETURNING *
-    `;
-
-    const result =
-      await client.query(
-        query,
-        [quantity, machineryId]
-      );
-
-    return result.rows[0];
-
-  }
-
-
-  async incrementStock(
-    machineryId,
-    quantity,
-    client = pool
-  ) {
-
-    return await this.increaseStock(
-      machineryId,
-      quantity,
-      client
-    );
-  }
-
-
-
-  async setOccupied(
-    machineryId,
-    client = pool
-  ) {
-
-    const query = `
-      UPDATE machinery
-      SET status_id = 3
-      WHERE machinery_id = $1
-      RETURNING *
-    `;
-
-    const result =
-      await client.query(
-        query,
-        [machineryId]
-      );
-
-    return result.rows[0];
-  }
-
-
-  
-  async setAvailable(
-    machineryId,
-    client = pool
-  ) {
-
-    const query = `
-      UPDATE machinery
-      SET status_id = 1
-      WHERE machinery_id = $1
-      RETURNING *
-    `;
-
-    const result =
-      await client.query(
-        query,
-        [machineryId]
-      );
-
-    return result.rows[0];
-
-  }
-
-
-  async setMaintenance(
-    machineryId,
-    client = pool
-  ) {
-
-    const query = `
-      UPDATE machinery
-      SET status_id = 2
-      WHERE machinery_id = $1
-      RETURNING *
-    `;
-
-    const result =
-      await client.query(
-        query,
-        [machineryId]
-      );
-
-    return result.rows[0];
-
-  }
 
 
 }

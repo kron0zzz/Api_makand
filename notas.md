@@ -32,3 +32,12 @@
 
 ### customers
 - en este momento el campo de tipo de organizacion es varchar, considerando que por ahora solo estamos seleccionando entre natural y jurídica, no es mejor que sea un boolean? así nos ahorramos problemas de vulnerabilidades en el front.
+
+## toda la mierda de maquinaria
+
+### maquinaria
+- como se cambiaron los campos, debo revisar si en el repository todo tiene los campos adecuados y que funcionen los endpoints
+
+
+#### notas pal front
+- se cambia el form de maquinaria

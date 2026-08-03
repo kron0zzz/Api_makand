@@ -163,50 +163,62 @@ CREATE TABLE projects (
 -- Maquinaria (machinery)
 CREATE TABLE machinery (
     machinery_id SERIAL PRIMARY KEY,
-    status_id SMALLINT NOT NULL,
     category_id INT NOT NULL,
-    next_revision_date DATE,
     machinery_name VARCHAR(100) NOT NULL,
-    is_motorized BOOLEAN NOT NULL,
+    machinery_description VARCHAR(1000) NOT NULL,
+    is_motorized BOOLEAN NOT NULL, -- SÍ (motorizada/serializada) / NO (no motorizada/a granel)
     sale_price DECIMAL(12,2) NOT NULL,
     daily_rental_price DECIMAL(9,2) NOT NULL,
     weight_kg DECIMAL(8,2),
-    stock_quantity INT NOT NULL CHECK (stock_quantity >= 0),
-    is_owned BOOLEAN NOT NULL,
-    machinery_description VARCHAR(1000) NOT NULL,
-
-    CONSTRAINT fk_machinery_status
-        FOREIGN KEY (status_id)
-        REFERENCES machinery_status(status_id),
 
     CONSTRAINT fk_machinery_category
         FOREIGN KEY (category_id)
         REFERENCES machinery_categories(category_id)
 );
 
+CREATE TABLE machinery_stock (
+    stock_id SERIAL PRIMARY KEY,
+    machinery_id INT NOT NULL,
+    status_id SMALLINT NOT NULL,
+    -- Campos para unidades SERIALIZADAS (Motorizadas). Serán NULL para tacos/andamios.
+    serial_number VARCHAR(50) UNIQUE,
+    next_revision_date DATE,
+    is_owned BOOLEAN NOT NULL DEFAULT TRUE,
+    -- Para motorizadas siempre es 1. Para no motorizadas es la cantidad en stock (ej: 500).
+    stock_quantity INT NOT NULL CHECK (stock_quantity >= 0),
+
+    CONSTRAINT fk_stock_machinery
+        FOREIGN KEY (machinery_id)
+        REFERENCES machinery(machinery_id),
+
+    CONSTRAINT fk_stock_status
+        FOREIGN KEY (status_id)
+        REFERENCES machinery_status(status_id)
+);
+
 -- Mantenimientos (maintenances)
 CREATE TABLE maintenances (
     maintenance_id SERIAL PRIMARY KEY,
-    machinery_id INT NOT NULL,
+    stock_id INT NOT NULL, -- Cambiado: se le hace mantenimiento a una unidad física específica
     maintenance_date DATE NOT NULL,
     revision_notes VARCHAR(500),
 
-    CONSTRAINT fk_maintenance_machinery
-        FOREIGN KEY (machinery_id)
-        REFERENCES machinery(machinery_id)
+    CONSTRAINT fk_maintenance_stock
+        FOREIGN KEY (stock_id)
+        REFERENCES machinery_stock(stock_id)
 );
 
 -- Subalquileres (sub_rentals)
 CREATE TABLE sub_rentals ( 
     sub_rental_id SERIAL PRIMARY KEY,
-    machinery_id INT NOT NULL,
+    stock_id INT NOT NULL, -- Cambiado: subalquilas una unidad específica o lote específico
     supplier_id INT NOT NULL,
     supplier_cost DECIMAL(9,2) NOT NULL,
     sub_rental_status BOOLEAN NOT NULL,
 
-    CONSTRAINT fk_sub_rental_machinery
-        FOREIGN KEY (machinery_id)
-        REFERENCES machinery(machinery_id),
+    CONSTRAINT fk_sub_rental_stock
+        FOREIGN KEY (stock_id)
+        REFERENCES machinery_stock(stock_id),
 
     CONSTRAINT fk_sub_rental_supplier
         FOREIGN KEY (supplier_id)
@@ -254,7 +266,7 @@ CREATE TABLE orders (
 CREATE TABLE order_details (
     order_detail_id BIGSERIAL PRIMARY KEY,
     order_id INT NOT NULL,
-    machinery_id INT NOT NULL,
+    stock_id INT NOT NULL, -- Cambiado
     machinery_name_snapshot VARCHAR(100),
     quantity_to_dispatch INT NOT NULL CHECK (quantity_to_dispatch > 0),
     rental_unit_price DECIMAL(9,2) NOT NULL,
@@ -266,9 +278,9 @@ CREATE TABLE order_details (
         REFERENCES orders(order_id)
         ON DELETE CASCADE,
 
-    CONSTRAINT fk_order_detail_machinery
-        FOREIGN KEY (machinery_id)
-        REFERENCES machinery(machinery_id)
+    CONSTRAINT fk_order_detail_stock
+        FOREIGN KEY (stock_id)
+        REFERENCES machinery_stock(stock_id)
 );
 
 -- Cortes (rental_cuts)
@@ -404,6 +416,7 @@ INSERT INTO permissions (permission_name) VALUES
 ('Listar Categoría de Maquinaria'), ('Crear Categoría de Maquinaria'), ('Ver Detalle de Categoría de Maquinaria'), ('Editar Categoría de Maquinaria'), ('Eliminar Categoría de Maquinaria'),
 ('Listar Estado de Maquinaria'), ('Crear Estado de Maquinaria'), ('Ver Detalle de Estado de Maquinaria'), ('Editar Estado de Maquinaria'), ('Eliminar Estado de Maquinaria'),
 ('Listar Maquinaria'), ('Crear Maquinaria'), ('Ver Detalle de Maquinaria'), ('Editar Maquinaria'), ('Eliminar Maquinaria'),
+('Listar Stock'), ('Crear Stock'), ('Ver Detalle de Stock'), ('Editar Stock'), ('Eliminar Stock'),
 ('Listar Mantenimiento'), ('Crear Mantenimiento'), ('Ver Detalle de Mantenimiento'), ('Editar Mantenimiento'), ('Eliminar Mantenimiento'),
 ('Listar Detalle de Orden'), ('Crear Detalle de Orden'), ('Ver Detalle de Detalle de Orden'), ('Editar Detalle de Orden'), ('Eliminar Detalle de Orden'),
 ('Listar Orden'), ('Crear Orden'), ('Listar Ordenes en Tabla'), ('Ver Detalle Completo de Orden'), ('Ver Detalle de Orden'), ('Editar Orden'), ('Eliminar Orden'), ('Crear Orden Completa'),('Anular Orden'), ('Cerrar Orden'),
@@ -439,6 +452,7 @@ WHERE permission_name IN (
     'Crear Subalquiler', 'Listar Subalquiler', 'Ver Detalle de Subalquiler',
     'Crear Proyecto', 'Listar Proyecto', 'Ver Detalle de Proyecto',
     'Listar Maquinaria', 'Ver Detalle de Maquinaria',
+    'Listar Stock',
     'Listar Categoría de Maquinaria', 'Listar Estado de Maquinaria',
     'Listar Vehículo', 'Ver Detalle de Vehículo',
     'Crear Cliente', 'Listar Cliente', 'Ver Detalle de Cliente',

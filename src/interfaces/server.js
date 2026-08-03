@@ -9,6 +9,7 @@ import positionRoutes from "../infrastructure/routes/positionRoutes.js";
 import machineryStatusRoutes from "../infrastructure/routes/machineryStatusRoutes.js";
 import machineryCategoryRoutes from "../infrastructure/routes/machineryCategoryRoutes.js";
 import machineryRoutes from "../infrastructure/routes/machineryRoutes.js";
+import machinery_stockRoutes from "../infrastructure/routes/machinery_stockRoutes.js"
 import userRoutes from "../infrastructure/routes/userRoutes.js";
 import authRoutes from "../infrastructure/routes/authRoutes.js";
 import employeeRoutes from "../infrastructure/routes/employeeRoutes.js";
@@ -48,6 +49,7 @@ app.use("/api/positions", positionRoutes);
 app.use("/api/machine-statuses", machineryStatusRoutes);
 app.use("/api/machine-categories", machineryCategoryRoutes); 
 app.use("/api/machines", machineryRoutes);
+app.use("/api/stock", machinery_stockRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/employees", employeeRoutes);
