@@ -55,6 +55,39 @@ export default class MachineryRepository {
 
   } 
 
+  async findByIdWithStock(id) {
+    const result = await pool.query(
+      `
+      SELECT
+        m.*,
+        c.category_name,
+        COALESCE(SUM(ms.stock_quantity), 0) AS total_stock,
+        COALESCE(SUM(CASE WHEN ms.status_id = 1 THEN ms.stock_quantity ELSE 0 END), 0) AS available_stock,
+        COALESCE(
+          JSON_AGG(
+            JSON_BUILD_OBJECT(
+              'stock_id', ms.stock_id,
+              'serial_number', ms.serial_number,
+              'status_id', ms.status_id,
+              'status_name', st.status_name,
+              'next_revision_date', ms.next_revision_date,
+              'is_owned', ms.is_owned,
+              'stock_quantity', ms.stock_quantity
+            )
+          ) FILTER (WHERE ms.stock_id IS NOT NULL), '[]'
+        ) AS stock_details
+      FROM machinery m
+      INNER JOIN machinery_categories c ON m.category_id = c.category_id
+      LEFT JOIN machinery_stock ms ON m.machinery_id = ms.machinery_id
+      LEFT JOIN machinery_status st ON ms.status_id = st.status_id
+      WHERE m.machinery_id = $1
+      GROUP BY m.machinery_id, c.category_name
+      `,
+      [id]
+    );
+    return result.rows[0];
+  }
+
   // oeeeeeeeeeeeeeee aún debo actualizar esta mierda, se necesita cambiar los datos que se traen
   /*
   async findTableData(page=1, limit=10, search="") {

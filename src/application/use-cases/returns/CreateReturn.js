@@ -3,7 +3,7 @@ export default class CreateReturn {
   constructor(
     returnRepository,
     orderDetailRepository,
-    machineryRepository,
+    machineryStockRepository,
     orderRepository
   ) {
 
@@ -13,8 +13,8 @@ export default class CreateReturn {
     this.orderDetailRepository =
       orderDetailRepository;
 
-    this.machineryRepository =
-      machineryRepository;
+    this.machineryStockRepository =
+      machineryStockRepository;
 
     this.orderRepository =
       orderRepository;
@@ -74,33 +74,33 @@ export default class CreateReturn {
       await this.returnRepository
         .create(returnData);
 
-    await this.machineryRepository
+    await this.machineryStockRepository
       .increaseStock(
-        detail.machinery_id,
+        detail.stock_id,
         returned_quantity
       );
 
-    const maquinaria =
-    await this.machineryRepository
+    const stock =
+    await this.machineryStockRepository
       .findById(
-        detail.machinery_id
+        detail.stock_id
       );
 
-    if (maquinaria.stock_quantity > 0){
+    if (stock.stock_quantity > 0){
 
-      if (maquinaria.is_motorized){
-        await this.machineryRepository
+      if (stock.is_motorized){
+        await this.machineryStockRepository
         .setMaintenance(
-          detail.machinery_id
+          detail.stock_id
         );
       }else{
-        await this.machineryRepository
+        await this.machineryStockRepository
         .setAvailable(
-          detail.machinery_id
+          detail.stock_id
         );
       }
 
-      
+
 
     }
 

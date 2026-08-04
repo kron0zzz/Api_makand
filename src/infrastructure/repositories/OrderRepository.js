@@ -328,7 +328,7 @@ export default class OrderRepository {
 
         od.order_detail_id,
         od.order_id,
-        od.machinery_id,
+        od.stock_id,
         od.machinery_name_snapshot,
         od.quantity_to_dispatch,
         od.rental_unit_price,

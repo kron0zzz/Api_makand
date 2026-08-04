@@ -8,7 +8,7 @@ export default class MaintenanceRepositoryPrisma {
 
     const query = `
       INSERT INTO maintenances (
-        machinery_id,
+        stock_id,
         maintenance_date,
         revision_notes
       )
@@ -17,7 +17,7 @@ export default class MaintenanceRepositoryPrisma {
     `;
 
     const values = [
-      maintenanceData.machinery_id,
+      maintenanceData.stock_id,
       maintenanceData.maintenance_date,
       maintenanceData.revision_notes || null
     ];
@@ -28,9 +28,11 @@ export default class MaintenanceRepositoryPrisma {
 
   async findAll() {
     const query = `
-      SELECT m.*, ma.machinery_name
+      SELECT m.*, ma.machinery_name, ms.serial_number, ms.stock_quantity, s.status_name
       FROM maintenances m
-      LEFT JOIN machinery ma ON m.machinery_id = ma.machinery_id
+      LEFT JOIN machinery_stock ms ON m.stock_id = ms.stock_id
+      LEFT JOIN machinery ma ON ms.machinery_id = ma.machinery_id
+      LEFT JOIN machinery_status s ON ms.status_id = s.status_id
     `;
     const result = await pool.query(query);
     return result.rows;
@@ -38,9 +40,11 @@ export default class MaintenanceRepositoryPrisma {
 
   async findById(id) {
     const query = `
-      SELECT m.*, ma.machinery_name
+      SELECT m.*, ma.machinery_name, ms.serial_number, ms.stock_quantity, s.status_name
       FROM maintenances m
-      LEFT JOIN machinery ma ON m.machinery_id = ma.machinery_id
+      LEFT JOIN machinery_stock ms ON m.stock_id = ms.stock_id
+      LEFT JOIN machinery ma ON ms.machinery_id = ma.machinery_id
+      LEFT JOIN machinery_status s ON ms.status_id = s.status_id
       WHERE m.maintenance_id = $1
     `;
     const result = await pool.query(query, [id]);
@@ -53,7 +57,7 @@ export default class MaintenanceRepositoryPrisma {
     const query = `
       UPDATE maintenances
       SET 
-        machinery_id = $1,
+        stock_id = $1,
         maintenance_date = $2,
         revision_notes = $3
       WHERE maintenance_id = $4
@@ -61,7 +65,7 @@ export default class MaintenanceRepositoryPrisma {
     `;
 
     const values = [
-      maintenanceData.machinery_id,
+      maintenanceData.stock_id,
       maintenanceData.maintenance_date,
       maintenanceData.revision_notes || null,
       id
@@ -83,7 +87,7 @@ export default class MaintenanceRepositoryPrisma {
     const query = `
       SELECT
         maintenance_id,
-        machinery_id,
+        stock_id,
         maintenance_date,
         revision_notes
       FROM maintenances

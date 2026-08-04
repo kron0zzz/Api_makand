@@ -7,19 +7,19 @@ import GetReturnsTable from "../../application/use-cases/returns/GetReturnsTable
 
 import ReturnRepository from "../repositories/ReturnRepository.js";
 import Order_detailRepository from "../repositories/Order_detailRepository.js";
-import MachineryRepository from "../repositories/MachineryRepository.js";
+import MachineryStockRepository from "../repositories/machineryStockRepository.js";
 import OrderRepository from "../repositories/OrderRepository.js";
 import RentalCutRepository from "../repositories/RentalCutRepository.js";
 
 const returnRepository = new ReturnRepository();
 const orderDetailRepository = new Order_detailRepository();
-const machineryRepository = new MachineryRepository();
+const machineryStockRepository = new MachineryStockRepository();
 const orderRepository = new OrderRepository();
 const rentalCutRepository = new RentalCutRepository();
 
 export const createReturn = async (req, res) => {
   try {
-    const createReturn = new CreateReturn(returnRepository, orderDetailRepository, machineryRepository, orderRepository);
+    const createReturn = new CreateReturn(returnRepository, orderDetailRepository, machineryStockRepository, orderRepository);
     const returnData = await createReturn.execute(req.body);
     res.status(201).json(returnData);
   } catch (err) {
@@ -100,7 +100,7 @@ export const deleteReturn = async (req, res) => {
       new DeleteReturn(
         returnRepository,
         orderDetailRepository,
-        machineryRepository,
+        machineryStockRepository,
         orderRepository,
         rentalCutRepository
       );

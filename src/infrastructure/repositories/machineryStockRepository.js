@@ -4,7 +4,7 @@ export default class MachineryStockRepository {
 
   async create(stockData) {
     if (!stockData || Object.keys(stockData).length === 0) {
-      throw new Error("No se recibieron datos de la maquinaria en el repositorio.");
+      throw new Error("No se recibieron datos del stock en el repositorio.");
     }
     const {machinery_id, status_id, serial_number, is_owned, stock_quantity} = stockData;
 
@@ -21,7 +21,10 @@ export default class MachineryStockRepository {
       return result.rows[0];
     } catch (error) {
       if (error.code === '23505') {
-        throw new Error('Ya existe una maquina motorizada registrada con este serial.');
+        if (error.constraint_name && error.constraint_name.includes('serial_number')) {
+          throw new Error('Ya existe un registro con este número de serie.');
+        }
+        throw new Error('Ya existe un registro con un valor único duplicado.');
       }
       throw error;
     }
@@ -40,7 +43,10 @@ export default class MachineryStockRepository {
 
   async findById(id) {
     const result = await pool.query(
-      "SELECT * FROM machinery_stock WHERE stock_id = $1",
+      `SELECT ms.*, m.machinery_name, m.is_motorized
+       FROM machinery_stock ms
+       INNER JOIN machinery m ON ms.machinery_id = m.machinery_id
+       WHERE ms.stock_id = $1`,
       [id]
     );
     return result.rows[0];
@@ -76,7 +82,10 @@ export default class MachineryStockRepository {
       return result.rows[0];
     } catch (error) {
       if (error.code === '23505') {
-        throw new Error('Ya existe una maquina motorizada registrada con este serial.');
+        if (error.constraint_name && error.constraint_name.includes('serial_number')) {
+          throw new Error('Ya existe un registro con este número de serie.');
+        }
+        throw new Error('Ya existe un registro con un valor único duplicado.');
       }
       throw error;
     }
@@ -103,13 +112,21 @@ export default class MachineryStockRepository {
     const query = `
         SELECT
             s.stock_id,
+            m.machinery_name,
+            s.machinery_id,
+            s.status_id,
             e.status_name,
-            s.serial_number
+            s.serial_number,
+            s.stock_quantity,
+            s.is_owned,
+            s.next_revision_date
         FROM machinery_stock s
+        INNER JOIN machinery m ON s.machinery_id = m.machinery_id
         INNER JOIN machinery_status e ON s.status_id = e.status_id
         WHERE
             $1 = ''
             OR LOWER(serial_number) LIKE LOWER($2)
+            OR LOWER(m.machinery_name) LIKE LOWER($2)
         ORDER BY stock_id
         LIMIT $3
         OFFSET $4
@@ -120,10 +137,12 @@ export default class MachineryStockRepository {
     const totalQuery = await pool.query(
         `
         SELECT COUNT(*)
-        FROM machinery_stock
+        FROM machinery_stock s
+        INNER JOIN machinery m ON s.machinery_id = m.machinery_id
         WHERE
             $1 = ''
-            OR LOWER(serial_number) LIKE LOWER($2)
+            OR LOWER(s.serial_number) LIKE LOWER($2)
+            OR LOWER(m.machinery_name) LIKE LOWER($2)
         `,
         [search, `%${search}%`]
     );
@@ -194,22 +213,6 @@ export default class MachineryStockRepository {
 
     return result.rows[0];
 
-  }
-
-
-
-  // oe que mierda tan inútil, luego se debe buscar en donde se consume esto pa hacer que consuma incraseStock
-  async incrementStock(
-    stockId,
-    quantity,
-    client = pool
-  ) {
-
-    return await this.increaseStock(
-      stockId,
-      quantity,
-      client
-    );
   }
 
 

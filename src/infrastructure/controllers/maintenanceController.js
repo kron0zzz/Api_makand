@@ -6,14 +6,14 @@ import UpdateMaintenance from "../../application/use-cases/maintenances/UpdateMa
 import DeleteMaintenance from "../../application/use-cases/maintenances/DeleteMaintenance.js";
 
 import MaintenanceRepositoryPrisma from "../repositories/MaintenanceRepositoryPrisma.js";
-import MachineryRepository from "../repositories/MachineryRepository.js";
+import MachineryStockRepository from "../repositories/machineryStockRepository.js";
 
 const maintenanceRepository = new MaintenanceRepositoryPrisma();
-const machineryRepository = new MachineryRepository();
+const machineryStockRepository = new MachineryStockRepository();
 
 export const createMaintenance = async (req, res) => {
   try {
-    const createMaintenanceUseCase = new CreateMaintenance(maintenanceRepository, machineryRepository);
+    const createMaintenanceUseCase = new CreateMaintenance(maintenanceRepository, machineryStockRepository);
     const maintenance = await createMaintenanceUseCase.execute(req.body);
     res.status(201).json(maintenance);
   } catch (err) {

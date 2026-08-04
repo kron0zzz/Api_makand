@@ -12,6 +12,7 @@ import CloseOrder from "../../application/use-cases/orders/CloseOrder.js";
 
 import OrderDetailRepository from "../repositories/Order_detailRepository.js";
 import MachineryRepository from "../repositories/MachineryRepository.js";
+import MachineryStockRepository from "../repositories/machineryStockRepository.js";
 import OrderRepository from "../repositories/OrderRepository.js";
 import PaymentRepository from "../repositories/PaymentRepository.js";
 import RentalCutRepository from "../repositories/RentalCutRepository.js";
@@ -21,6 +22,7 @@ import ReturnRepository from "../repositories/ReturnRepository.js";
 const orderRepository = new OrderRepository();
 const orderDetailRepository = new OrderDetailRepository();
 const machineryRepository = new MachineryRepository();
+const machineryStockRepository = new MachineryStockRepository();
 const paymentRepository = new PaymentRepository();
 const rentalCutRepository = new RentalCutRepository();
 const returnRepository = new ReturnRepository();
@@ -140,7 +142,7 @@ export const cancelOrder = async (req, res) => {
       new CancelOrder(
         orderRepository,
         orderDetailRepository,
-        machineryRepository,
+        machineryStockRepository,
         paymentRepository,
         rentalCutRepository,
         returnRepository
@@ -227,7 +229,7 @@ export const createCompleteOrder = async (req, res) => {
       new CreateCompleteOrder(
         orderRepository,
         orderDetailRepository,
-        machineryRepository
+        machineryStockRepository
       );
 
     const order =

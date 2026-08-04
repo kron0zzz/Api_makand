@@ -5,11 +5,11 @@ export default class CreateCompleteOrder {
   constructor(
     orderRepository,
     orderDetailRepository,
-    machineryRepository
+    machineryStockRepository
   ) {
     this.orderRepository = orderRepository;
     this.orderDetailRepository = orderDetailRepository;
-    this.machineryRepository = machineryRepository;
+    this.machineryStockRepository = machineryStockRepository;
   }
 
   async execute(data, user) {
@@ -33,42 +33,38 @@ export default class CreateCompleteOrder {
         order_status_id: 1
       };
 
-      // Validar stock
-
       for (const item of details) {
 
-        const machinery =
-          await this.machineryRepository.findById(
-            item.machinery_id,
+        const stock =
+          await this.machineryStockRepository.findById(
+            item.stock_id,
             client
           );
 
-        if (!machinery) {
+        if (!stock) {
           throw new Error(
-            `Maquinaria ${item.machinery_id} no encontrada`
+            `Stock ${item.stock_id} no encontrado`
           );
         }
 
         if (
-          machinery.stock_quantity <
+          stock.stock_quantity <
           item.quantity_to_dispatch
         ) {
           throw new Error(
-            `Stock insuficiente para ${machinery.machinery_name}`
+            `Stock insuficiente para ${stock.machinery_name}`
           );
         }
 
         if (
-          machinery.status_id !== 1
+          stock.status_id !== 1
         ) {
           throw new Error(
-            `La maquinaria ${machinery.machinery_name} no está disponible para alquiler`
+            `El stock de ${stock.machinery_name} no está disponible para alquiler`
           );
         }
 
       }
-
-      // Crear pedido
 
       const order =
         await this.orderRepository.create(
@@ -76,14 +72,11 @@ export default class CreateCompleteOrder {
           client
         );
 
-      // Crear detalles y descontar stock
-
       for (const item of details) {
 
-
-        const machinery =
-          await this.machineryRepository.findById(
-            item.machinery_id,
+        const stock =
+          await this.machineryStockRepository.findById(
+            item.stock_id,
             client
           );
 
@@ -91,10 +84,10 @@ export default class CreateCompleteOrder {
             {
               order_id: order.order_id,
 
-              machinery_id: item.machinery_id,
+              stock_id: item.stock_id,
 
               machinery_name_snapshot:
-                machinery.machinery_name,
+                stock.machinery_name,
 
               quantity_to_dispatch:
                 item.quantity_to_dispatch,
@@ -103,7 +96,7 @@ export default class CreateCompleteOrder {
                 item.rental_unit_price,
 
               subtotal_weight_kg:
-                Number(machinery.weight_kg) *
+                Number(stock.weight_kg || 0) *
                 Number(item.quantity_to_dispatch)
             },
             client
@@ -111,18 +104,18 @@ export default class CreateCompleteOrder {
 
 
 
-        const updatedMachinery =
-        await this.machineryRepository.discountStock(
-            item.machinery_id,
+        const updatedStock =
+        await this.machineryStockRepository.discountStock(
+            item.stock_id,
             item.quantity_to_dispatch,
             client
         );
 
         if (
-            updatedMachinery.stock_quantity == 0
+            updatedStock.stock_quantity == 0
         ) {
-            await this.machineryRepository.setOccupied(
-                item.machinery_id,
+            await this.machineryStockRepository.setOccupied(
+                item.stock_id,
                 client
             );
         }

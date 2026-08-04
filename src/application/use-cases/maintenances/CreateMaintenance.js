@@ -2,14 +2,14 @@ export default class CreateMaintenance {
 
   constructor(
     maintenanceRepository,
-    machineryRepository
+    machineryStockRepository
   ) {
 
     this.maintenanceRepository =
       maintenanceRepository;
 
-    this.machineryRepository =
-      machineryRepository;
+    this.machineryStockRepository =
+      machineryStockRepository;
 
   }
 
@@ -19,17 +19,17 @@ export default class CreateMaintenance {
       await this.maintenanceRepository
         .create(maintenanceData);
 
-    const machinery =
-      await this.machineryRepository
+    const stock =
+      await this.machineryStockRepository
         .findById(
-          maintenanceData.machinery_id
+          maintenanceData.stock_id
         );
 
-    if (machinery && machinery.is_motorized) {
+    if (stock && stock.is_motorized) {
 
-      await this.machineryRepository
+      await this.machineryStockRepository
         .setAvailable(
-          maintenanceData.machinery_id
+          maintenanceData.stock_id
         );
 
     }

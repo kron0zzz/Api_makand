@@ -4,6 +4,7 @@ export default class GetMachineryById {
   }
 
   async execute(id) {
-    return await this.machineryRepository.findById(id);
+    const machinery = await this.machineryRepository.findByIdWithStock(id);
+    return machinery;
   }
 }

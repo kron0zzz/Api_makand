@@ -5,7 +5,7 @@ export default class CancelOrder {
   constructor(
     orderRepository,
     orderDetailRepository,
-    machineryRepository,
+    machineryStockRepository,
     paymentRepository,
     rentalCutRepository,
     returnRepository
@@ -13,7 +13,7 @@ export default class CancelOrder {
 
     this.orderRepository = orderRepository;
     this.orderDetailRepository = orderDetailRepository;
-    this.machineryRepository = machineryRepository;
+    this.machineryStockRepository = machineryStockRepository;
     this.paymentRepository = paymentRepository;
     this.rentalCutRepository = rentalCutRepository;
     this.returnRepository = returnRepository;
@@ -66,13 +66,13 @@ export default class CancelOrder {
       );
 
       for (const detail of details) {
-        await this.machineryRepository.incrementStock(
-          detail.machinery_id,
+        await this.machineryStockRepository.increaseStock(
+          detail.stock_id,
           detail.quantity_to_dispatch,
           client
         );
-        await this.machineryRepository.setAvailable(
-          detail.machinery_id,
+        await this.machineryStockRepository.setAvailable(
+          detail.stock_id,
           client
         );
       }

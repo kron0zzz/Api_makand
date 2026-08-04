@@ -3,7 +3,7 @@ export default class DeleteReturn {
   constructor(
     returnRepository,
     orderDetailRepository,
-    machineryRepository,
+    machineryStockRepository,
     orderRepository,
     rentalCutRepository
   ) {
@@ -14,8 +14,8 @@ export default class DeleteReturn {
     this.orderDetailRepository =
       orderDetailRepository;
 
-    this.machineryRepository =
-      machineryRepository;
+    this.machineryStockRepository =
+      machineryStockRepository;
 
     this.orderRepository =
       orderRepository;
@@ -80,41 +80,41 @@ export default class DeleteReturn {
     await this.returnRepository
       .delete(id);
 
-    await this.machineryRepository
+    await this.machineryStockRepository
       .discountStock(
-        detail.machinery_id,
+        detail.stock_id,
         returnRecord.returned_quantity
       );
 
-    const maquinaria =
-      await this.machineryRepository
+    const stock =
+      await this.machineryStockRepository
         .findById(
-          detail.machinery_id
+          detail.stock_id
         );
 
-    if (maquinaria.stock_quantity > 0) {
+    if (stock.stock_quantity > 0) {
 
-      if (maquinaria.is_motorized) {
+      if (stock.is_motorized) {
 
-        await this.machineryRepository
+        await this.machineryStockRepository
           .setMaintenance(
-            detail.machinery_id
+            detail.stock_id
           );
 
       } else {
 
-        await this.machineryRepository
+        await this.machineryStockRepository
           .setAvailable(
-            detail.machinery_id
+            detail.stock_id
           );
 
       }
 
     } else {
 
-      await this.machineryRepository
+      await this.machineryStockRepository
         .setOccupied(
-          detail.machinery_id
+          detail.stock_id
         );
 
     }
