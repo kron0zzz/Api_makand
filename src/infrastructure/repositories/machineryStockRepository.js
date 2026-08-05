@@ -2,7 +2,7 @@ import pool from "../../config/database.js";
 
 export default class MachineryStockRepository {
 
-  async create(stockData) {
+  async create(stockData, client = pool) {
     if (!stockData || Object.keys(stockData).length === 0) {
       throw new Error("No se recibieron datos del stock en el repositorio.");
     }
@@ -17,7 +17,7 @@ export default class MachineryStockRepository {
     const values = [machinery_id, status_id, serial_number, is_owned, stock_quantity];
 
     try {
-      const result = await pool.query(query, values);
+      const result = await client.query(query, values);
       return result.rows[0];
     } catch (error) {
       if (error.code === '23505') {

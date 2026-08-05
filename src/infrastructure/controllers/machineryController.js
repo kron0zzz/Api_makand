@@ -1,12 +1,15 @@
 import CreateMachinery from "../../application/use-cases/machinery/CreateMachinery.js";
+import CreateMachineryComplete from "../../application/use-cases/machinery/CreateMachineryComplete.js";
 import GetMachineries from "../../application/use-cases/machinery/GetMachineries.js";
 import GetMachineryById from "../../application/use-cases/machinery/GetMachineryById.js";
 import UpdateMachinery from "../../application/use-cases/machinery/UpdateMachinery.js";
 import DeleteMachinery from "../../application/use-cases/machinery/DeleteMachinery.js";
 import GetMachineriesTable from "../../application/use-cases/machinery/GetMachineriesTable.js";
 import MachineryRepository from "../repositories/MachineryRepository.js";
+import MachineryStockRepository from "../repositories/machineryStockRepository.js";
 
 const machineryRepository = new MachineryRepository();
+const machineryStockRepository = new MachineryStockRepository();
 
 export const createMachinery = async (req, res) => {
   try {
@@ -71,7 +74,18 @@ export const deleteMachinery = async (req, res) => {
       return res.status(404).json({ error: "No se encontró la maquinaria para eliminar" });
     }
 
-    res.status(204).send(); 
+    res.status(204).send();
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const createMachineryComplete = async (req, res) => {
+  try {
+    const { machineryData, stockData } = req.body;
+    const createUseCase = new CreateMachineryComplete(machineryRepository, machineryStockRepository);
+    const machinery = await createUseCase.execute(machineryData, stockData, req.user);
+    res.status(201).json(machinery);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
