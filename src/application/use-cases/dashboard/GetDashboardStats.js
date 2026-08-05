@@ -1,4 +1,4 @@
-import DashboardRepository from "../../infrastructure/repositories/DashboardRepository.js";
+import DashboardRepository from "../../../infrastructure/repositories/DashboardRepository.js";
 
 const dashboardRepository = new DashboardRepository();
 
