@@ -39,6 +39,12 @@ import { sendRecoveryEmail } from "../services/emailService.js";
 
 const userRepository = new UserRepository();
 
+const verificationCodes = new Map();
+
+function generateCode() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -66,28 +72,66 @@ export const login = async (req, res) => {
 export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
-    
-    // Busca al usuario por su correo
+
     const user = await userRepository.findByEmail(email);
 
     if (!user) {
       return res.status(404).json({ error: "No existe un usuario registrado con este correo." });
     }
 
-    // Generamos un token temporal que expira en 15 minutos
-    const resetToken = jwt.sign(
+    const code = generateCode();
+
+    verificationCodes.set(code, {
+      user_id: user.user_id,
+      expiresAt: Date.now() + 15 * 60 * 1000
+    });
+
+    await sendRecoveryEmail(user.user_email, code);
+
+    res.status(200).json({ message: "Código de verificación enviado a tu correo. Revisa tu bandeja." });
+  } catch (err) {
+    console.error("Error en forgotPassword:", err);
+    res.status(500).json({ error: "Error al enviar el código de recuperación." });
+  }
+};
+
+export const verifyCode = async (req, res) => {
+  try {
+    const { email, code } = req.body;
+
+    const user = await userRepository.findByEmail(email);
+
+    if (!user) {
+      return res.status(404).json({ error: "No existe un usuario registrado con este correo." });
+    }
+
+    const stored = verificationCodes.get(code);
+
+    if (!stored) {
+      return res.status(400).json({ error: "Código inválido." });
+    }
+
+    if (stored.user_id !== user.user_id) {
+      return res.status(400).json({ error: "Código no corresponde a este usuario." });
+    }
+
+    if (Date.now() > stored.expiresAt) {
+      verificationCodes.delete(code);
+      return res.status(400).json({ error: "El código ha expirado." });
+    }
+
+    verificationCodes.delete(code);
+
+    const token = jwt.sign(
       { user_id: user.user_id },
       process.env.JWT_SECRET,
       { expiresIn: "15m" }
     );
 
-    // Enviamos el correo usando el servicio de Nodemailer
-    await sendRecoveryEmail(user.user_email, resetToken);
-
-    res.status(200).json({ message: "Correo de recuperación enviado con éxito. Revisa tu bandeja." });
+    res.status(200).json({ token });
   } catch (err) {
-    console.error("Error en forgotPassword:", err);
-    res.status(500).json({ error: "Error al enviar el correo de recuperación." });
+    console.error("Error en verifyCode:", err);
+    res.status(500).json({ error: "Error al verificar el código." });
   }
 };
 
@@ -98,6 +142,15 @@ export const resetPassword = async (req, res) => {
     // Verificamos que el token sea válido y no haya expirado
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const userId = decoded.user_id;
+
+    // Validamos que la nueva contraseña cumpla con los requisitos de seguridad:
+    // mínimo una mayúscula, una minúscula, un número y un carácter especial
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/;
+    if (!passwordRegex.test(newPassword)) {
+      return res.status(400).json({
+        error: "La contraseña debe contener al menos una mayúscula, una minúscula, un número y un carácter especial."
+      });
+    }
 
     // Encriptamos la nueva contraseña con bcrypt
     const salt = await bcrypt.genSalt(10);
