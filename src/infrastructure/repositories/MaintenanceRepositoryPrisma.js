@@ -86,11 +86,14 @@ export default class MaintenanceRepositoryPrisma {
   async findTableData() {
     const query = `
       SELECT
-        maintenance_id,
-        stock_id,
-        maintenance_date,
-        revision_notes
-      FROM maintenances
+        m.maintenance_id,
+        m.stock_id,
+        m.maintenance_date,
+        m.revision_notes,
+        ms.serial_number
+      FROM maintenances m
+      LEFT JOIN machinery_stock ms ON m.stock_id = ms.stock_id
+
     `;
     const result = await pool.query(query);
     return result.rows;
