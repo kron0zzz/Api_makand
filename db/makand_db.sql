@@ -432,7 +432,8 @@ INSERT INTO permissions (permission_name) VALUES
 ('Listar Usuario'), ('Crear Usuario'), ('Ver Detalle de Usuario'), ('Editar Usuario'), ('Eliminar Usuario'),
 ('Listar Vehículo'), ('Crear Vehículo'), ('Ver Detalle de Vehículo'), ('Editar Vehículo'), ('Eliminar Vehículo'),
 ('Crear Corte de Alquiler'), ('Listar Cortes de Alquiler'), ('Listar Cortes de Alquiler en Tabla'), ('Ver Detalle de Corte'), 
-('Listar Cortes por Orden'), ('Editar Corte de Alquiler'), ('Eliminar Corte de Alquiler'), ('Ver Workspace de Orden'), ('Listar Pagos por Orden');
+('Listar Cortes por Orden'), ('Editar Corte de Alquiler'), ('Eliminar Corte de Alquiler'), ('Ver Workspace de Orden'), ('Listar Pagos por Orden'),
+('Ver Dashboard');
 
 
 

@@ -24,6 +24,7 @@ import maintenanceRoutes from "../infrastructure/routes/maintenanceRoutes.js";
 import orderStatusRoutes from "../infrastructure/routes/orderStatusRoutes.js";
 import roleRoutes from "../infrastructure/routes/roleRoutes.js";
 import rentalCutRoutes from "../infrastructure/routes/rentalCutRoutes.js";
+import dashboardRoutes from "../infrastructure/routes/dashboardRoutes.js";
 console.log("¡Leyendo server.js!");
 
 const app = express();
@@ -65,5 +66,6 @@ app.use("/api/order-status", orderStatusRoutes);
 app.use("/api/roles", roleRoutes);
 app.use("/api/charge-types", chargeTypeRoutes);
 app.use("/api/rental-cuts", rentalCutRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 export default app;
