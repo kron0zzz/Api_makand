@@ -3,7 +3,7 @@ import pool from "../../config/database.js";
 
 export default class PurchaseInvoiceRepository {
   async create(invoiceData) {
-    const { supplier_id, purchase_date, invoice_photo } = invoiceData;
+    const { supplier_id, user_id, purchase_date, total_amount, invoice_photo } = invoiceData;
 
     // Convertimos la foto de Base64 a un Buffer para la columna BYTEA de PostgreSQL
     const photoBuffer = invoice_photo 
@@ -11,11 +11,11 @@ export default class PurchaseInvoiceRepository {
       : null;
 
     const query = `
-      INSERT INTO purchase_invoices (supplier_id, purchase_date, invoice_photo)
-      VALUES ($1, $2, $3)
+      INSERT INTO purchase_invoices (supplier_id, user_id, purchase_date, total_amount, invoice_photo)
+      VALUES ($1, $2, $3, $4, $5)
       RETURNING *
     `;
-    const values = [supplier_id, purchase_date || new Date(), photoBuffer];
+    const values = [supplier_id, user_id, purchase_date || new Date(), total_amount, photoBuffer];
     const result = await pool.query(query, values);
     return result.rows[0];
   }
@@ -30,11 +30,15 @@ export default class PurchaseInvoiceRepository {
       SELECT 
         pi.invoice_id, 
         pi.supplier_id, 
+        pi.user_id,
         pi.purchase_date, 
+        pi.total_amount,
         pi.invoice_photo,
-        s.supplier_name AS supplier_name
+        s.supplier_name AS supplier_name,
+        u.user_email
       FROM purchase_invoices pi
       INNER JOIN suppliers s ON pi.supplier_id = s.supplier_id
+      INNER JOIN users u ON pi.user_id = u.user_id
       WHERE pi.invoice_id = $1
     `;
     const result = await pool.query(query, [id]);
@@ -48,7 +52,7 @@ export default class PurchaseInvoiceRepository {
   }
 
   async update(id, invoiceData) {
-    const { supplier_id, purchase_date, invoice_photo } = invoiceData;
+    const { supplier_id, user_id, purchase_date, total_amount, invoice_photo} = invoiceData;
 
     let photoBuffer = null;
     if (invoice_photo) {
@@ -60,12 +64,14 @@ export default class PurchaseInvoiceRepository {
       UPDATE purchase_invoices
       SET 
         supplier_id = $1, 
-        purchase_date = $2, 
-        invoice_photo = COALESCE($3, invoice_photo)
-      WHERE invoice_id = $4
+        user_id = $2,
+        purchase_date = $3,
+        total_amount =$4, 
+        invoice_photo = COALESCE($5, invoice_photo)
+      WHERE invoice_id = $6
       RETURNING *
     `;
-    const values = [supplier_id, purchase_date, photoBuffer, id];
+    const values = [ supplier_id, user_id, purchase_date, total_amount, photoBuffer, id];
     const result = await pool.query(query, values);
     return result.rows[0];
   }
@@ -83,11 +89,15 @@ export default class PurchaseInvoiceRepository {
 
     const query = `
         SELECT
-           pi.invoice_id,
+            pi.invoice_id,
             pi.purchase_date,
-            s.supplier_name AS supplier_name
+            s.supplier_name AS supplier_name,
+            u.user_email,
+            pi.total_amount
         FROM purchase_invoices pi
         INNER JOIN suppliers s ON pi.supplier_id = s.supplier_id
+        INNER JOIN users u ON pi.user_id = u.user_id
+
         WHERE
             $1 = ''
             OR LOWER(s.supplier_name) LIKE LOWER($2)  

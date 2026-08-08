@@ -229,13 +229,40 @@ CREATE TABLE sub_rentals (
 CREATE TABLE purchase_invoices (
     invoice_id SERIAL PRIMARY KEY,
     supplier_id INT NOT NULL,
+    user_id INT NOT NULL,
     purchase_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    total_amount DECIMAL(12,2) NOT NULL CHECK (total_amount >= 0),
     invoice_photo BYTEA,
 
-    CONSTRAINT fk_invoice_supplier
+    CONSTRAINT fk_purchase_invoice_supplier
         FOREIGN KEY (supplier_id)
-        REFERENCES suppliers(supplier_id)
+        REFERENCES suppliers(supplier_id),
+
+    CONSTRAINT fk_purchase_invoice_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(user_id)
 );
+
+-- Detalles de facturas de compras (purchase_invoice_details)
+CREATE TABLE purchase_invoice_details (
+    invoice_detail_id SERIAL PRIMARY KEY,
+    invoice_id INT NOT NULL,
+    machinery_id INT NOT NULL,
+    quantity INT NOT NULL CHECK (quantity > 0),
+    unit_cost DECIMAL(12,2) NOT NULL CHECK (unit_cost >= 0),
+    subtotal DECIMAL(12,2) NOT NULL CHECK (subtotal >= 0),
+
+    CONSTRAINT fk_purchase_invoice_detail_invoice
+        FOREIGN KEY (invoice_id)
+        REFERENCES purchase_invoices(invoice_id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_purchase_invoice_detail_machinery
+        FOREIGN KEY (machinery_id)
+        REFERENCES machinery(machinery_id)
+);
+
+
 
 -- Pedidos (orders)
 CREATE TABLE orders (
@@ -425,6 +452,7 @@ INSERT INTO permissions (permission_name) VALUES
 ('Listar Cargo'), ('Crear Cargo'), ('Ver Detalle de Cargo'), ('Editar Cargo'), ('Eliminar Cargo'),
 ('Listar Proyecto'), ('Crear Proyecto'), ('Ver Detalle de Proyecto'), ('Editar Proyecto'), ('Eliminar Proyecto'),
 ('Listar Factura de Compra'), ('Crear Factura de Compra'), ('Ver Detalle de Factura de Compra'), ('Editar Factura de Compra'), ('Eliminar Factura de Compra'),
+('Listar Detalle de Factura de Compra'),('Crear Detalle de Factura de Compra'),('Ver Detalle de Detalle de Factura de Compra'), ('Editar Detalle de Factura de Compra'),('Eliminar Detalle de Factura de Compra'),
 ('Listar Devolución'), ('Crear Devolución'), ('Ver Detalle de Devolución'), ('Editar Devolución'), ('Eliminar Devolución'),
 ('Listar Rol'), ('Crear Rol'), ('Ver Detalle de Rol'), ('Editar Rol'), ('Eliminar Rol'),
 ('Listar Subalquiler'), ('Crear Subalquiler'), ('Ver Detalle de Subalquiler'), ('Editar Subalquiler'), ('Eliminar Subalquiler'),
