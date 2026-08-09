@@ -3,7 +3,7 @@ import pool from "../../config/database.js";
 export default class MachineryRepository {
 
   // 1. Crear una nueva maquinaria
-  async create(machineryData) {
+  async create(machineryData, client = pool) {
     if (!machineryData || Object.keys(machineryData).length === 0) {
       throw new Error("No se recibieron datos de la maquinaria en el repositorio.");
     }
@@ -25,13 +25,13 @@ export default class MachineryRepository {
 
     const values = [category_id, machinery_name, is_motorized, sale_price, daily_rental_price, weight_kg, machinery_description];
 
-    const result = await pool.query(query, values);
+    const result = await client.query(query, values);
     return result.rows[0];
   }
 
   // 2. Traer la data básica de la tabla pura (FindAll)
-  async findAll() {
-    const result = await pool.query("SELECT * FROM machinery");
+  async findAll(client = pool) {
+    const result = await client.query("SELECT * FROM machinery");
     return result.rows;
   }
 
@@ -55,8 +55,8 @@ export default class MachineryRepository {
 
   } 
 
-  async findByIdWithStock(id) {
-    const result = await pool.query(
+  async findByIdWithStock(id, client = pool) {
+    const result = await client.query(
       `
       SELECT
         m.*,
@@ -88,67 +88,8 @@ export default class MachineryRepository {
     return result.rows[0];
   }
 
-  // oeeeeeeeeeeeeeee aún debo actualizar esta mierda, se necesita cambiar los datos que se traen
-  /*
-  async findTableData(page=1, limit=10, search="") {
-    
-    const offset = (page - 1) * limit;
 
-    const query = `
-        SELECT
-          m.machinery_id,
-          m.machinery_name,
-          m.next_revision_date,
-          m.is_motorized,
-          m.sale_price,
-          m.daily_rental_price,
-          m.weight_kg,
-          m.stock_quantity,
-          m.is_owned,
-          m.machinery_description,
-          c.category_name,
-          s.status_name
-        FROM machinery m
-        INNER JOIN machinery_categories c ON m.category_id = c.category_id
-        INNER JOIN machinery_status s ON m.status_id = s.status_id
-        WHERE
-            $1 = ''
-            OR LOWER(machinery_name) LIKE LOWER($2)
-        ORDER BY m.machinery_id DESC
-        LIMIT $3
-        OFFSET $4
-    `;
-
-    const result = await pool.query(query, [search, `%${search}%`, limit, offset]);
-
-    const totalQuery = await pool.query(
-        `
-        SELECT COUNT(*)
-        FROM machinery
-        WHERE
-            $1 = ''
-            OR LOWER(machinery_name) LIKE LOWER($2)
-        `,
-        [search, `%${search}%`]
-    );
-
-    const total = Number(totalQuery.rows[0].count);
-
-    return {
-      data: result.rows,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit)
-      }
-    };
-
-  }
-
-  */
-
-  async findTableData(page = 1, limit = 10, search = "") {
+  async findTableData(page = 1, limit = 10, search = "", client = pool) {
     const offset = (page - 1) * limit;
 
     const query = `
@@ -188,9 +129,9 @@ export default class MachineryRepository {
       LIMIT $3 OFFSET $4
     `;
 
-    const result = await pool.query(query, [search, `%${search}%`, limit, offset]);
+    const result = await client.query(query, [search, `%${search}%`, limit, offset]);
 
-    const totalQuery = await pool.query(
+    const totalQuery = await client.query(
       `
       SELECT COUNT(*)
       FROM machinery
@@ -214,7 +155,7 @@ export default class MachineryRepository {
 
 
   // 5. Actualizar los datos de una maquinaria
-  async update(id, machineryData) {
+  async update(id, machineryData, client = pool) {
     if (!machineryData) throw new Error("Datos insuficientes para actualizar.");
 
 
@@ -236,20 +177,18 @@ export default class MachineryRepository {
 
     const values = [category_id, machinery_name, is_motorized, sale_price, daily_rental_price, weight_kg, machinery_description, id];
 
-    const result = await pool.query(query, values);
+    const result = await client.query(query, values);
     return result.rows[0];
   }
 
   // 6. Eliminar un registro de maquinaria
-  async delete(id) {
-    const result = await pool.query(
+  async delete(id, client = pool) {
+    const result = await client.query(
       "DELETE FROM machinery WHERE machinery_id = $1 RETURNING *",
       [id]
     );
     return result.rows[0];
   }
-
-
 
 
 

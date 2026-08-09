@@ -4,6 +4,7 @@ import authorize from "../../middlewares/authorize.js";
 
 import { 
   createPurchaseInvoice, 
+  createPurchaseComplete,
   getPurchaseInvoices, 
   getPurchaseInvoiceById, 
   updatePurchaseInvoice, 
@@ -16,8 +17,9 @@ const router = Router();
 // Protegemos el endpoint con tu middleware de autenticación
 router.use(authMiddleware);
 
-router.get("/table", authMiddleware, authorize('Listar Factura de Compra'), getPurchaseInvoicesTable);
+router.post("/complete", authMiddleware, authorize('Crear Factura de Compra Completa'), createPurchaseComplete);
 router.post("/", authMiddleware, authorize('Crear Factura de Compra'), createPurchaseInvoice);
+router.get("/table", authMiddleware, authorize('Listar Factura de Compra'), getPurchaseInvoicesTable);
 router.get("/", authMiddleware, authorize('Listar Factura de Compra'), getPurchaseInvoices);
 router.get("/:id", authMiddleware, authorize('Ver Detalle de Factura de Compra'), getPurchaseInvoiceById);
 router.put("/:id", authMiddleware, authorize('Editar Factura de Compra'), updatePurchaseInvoice);

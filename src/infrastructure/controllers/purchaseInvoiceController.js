@@ -1,13 +1,21 @@
 // src/infrastructure/controllers/purchaseInvoiceController.js
 import CreatePurchaseInvoice from "../../application/use-cases/purchase_invoices/CreatePurchaseInvoice.js";
+import CreatePurchaseComplete from "../../application/use-cases/purchase_invoices/CreatePurchaseComplete.js";
 import GetPurchaseInvoices from "../../application/use-cases/purchase_invoices/GetPurchaseInvoices.js";
 import GetPurchaseInvoiceById from "../../application/use-cases/purchase_invoices/GetPurchaseInvoiceById.js";
 import UpdatePurchaseInvoice from "../../application/use-cases/purchase_invoices/UpdatePurchaseInvoice.js";
 import DeletePurchaseInvoice from "../../application/use-cases/purchase_invoices/DeletePurchaseInvoice.js";
 import GetPurchaseInvoicesTable from "../../application/use-cases/purchase_invoices/GetPurchaseInvoicesTable.js";
 import PurchaseInvoiceRepository from "../repositories/PurchaseInvoiceRepository.js";
+import PurchaseInvoiceDetailRepository from "../repositories/PurchaseInvoiceDetailRepository.js";
+import MachineryRepository from "../repositories/MachineryRepository.js";
+import MachineryStockRepository from "../repositories/machineryStockRepository.js";
+import pool from "../../config/database.js";
 
 const purchaseInvoiceRepository = new PurchaseInvoiceRepository();
+const purchaseInvoiceDetailRepository = new PurchaseInvoiceDetailRepository();
+const machineryRepository = new MachineryRepository();
+const machineryStockRepository = new MachineryStockRepository();
 
 export const createPurchaseInvoice = async (req, res) => {
   try {
@@ -18,6 +26,22 @@ export const createPurchaseInvoice = async (req, res) => {
     if (err.code === "23503") {
       return res.status(400).json({ error: "El proveedor (supplier_id) especificado no existe." });
     }
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const createPurchaseComplete = async (req, res) => {
+  try {
+    const useCase = new CreatePurchaseComplete(
+      purchaseInvoiceRepository,
+      purchaseInvoiceDetailRepository,
+      machineryRepository,
+      machineryStockRepository,
+      pool
+    );
+    const invoice = await useCase.execute(req.body);
+    res.status(201).json(invoice);
+  } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };

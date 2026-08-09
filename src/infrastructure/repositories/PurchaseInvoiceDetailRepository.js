@@ -2,7 +2,7 @@
 import pool from "../../config/database.js";
 
 export default class PurchaseInvoiceDetailRepository {
-  async create(detailData) {
+  async create(detailData, client = pool) {
     const { invoice_id, machinery_id, quantity, unit_cost, subtotal } = detailData;
 
     const query = `
@@ -11,12 +11,12 @@ export default class PurchaseInvoiceDetailRepository {
       RETURNING *
     `;
     const values = [invoice_id, machinery_id, quantity, unit_cost, subtotal];
-    const result = await pool.query(query, values);
+    const result = await client.query(query, values);
     return result.rows[0];
   }
 
-  async findAll() {
-    const result = await pool.query(`
+  async findAll(client = pool) {
+    const result = await client.query(`
       SELECT 
         pid.invoice_detail_id,
         pid.invoice_id,
@@ -32,7 +32,7 @@ export default class PurchaseInvoiceDetailRepository {
     return result.rows;
   }
 
-  async findById(id) {
+  async findById(id, client = pool) {
     const query = `
       SELECT 
         pid.invoice_detail_id,
@@ -46,12 +46,12 @@ export default class PurchaseInvoiceDetailRepository {
       INNER JOIN machinery m ON pid.machinery_id = m.machinery_id
       WHERE pid.invoice_detail_id = $1
     `;
-    const result = await pool.query(query, [id]);
+    const result = await client.query(query, [id]);
     return result.rows[0];
   }
 
-  async findByInvoiceId(invoiceId) {
-    const result = await pool.query(`
+  async findByInvoiceId(invoiceId, client = pool) {
+    const result = await client.query(`
       SELECT 
         pid.invoice_detail_id,
         pid.invoice_id,
@@ -68,7 +68,7 @@ export default class PurchaseInvoiceDetailRepository {
     return result.rows;
   }
 
-  async update(id, detailData) {
+  async update(id, detailData, client = pool) {
     const { invoice_id, machinery_id, quantity, unit_cost, subtotal } = detailData;
 
     const query = `
@@ -83,19 +83,19 @@ export default class PurchaseInvoiceDetailRepository {
       RETURNING *
     `;
     const values = [invoice_id, machinery_id, quantity, unit_cost, subtotal, id];
-    const result = await pool.query(query, values);
+    const result = await client.query(query, values);
     return result.rows[0];
   }
 
-  async delete(id) {
-    const result = await pool.query(
+  async delete(id, client = pool) {
+    const result = await client.query(
       "DELETE FROM purchase_invoice_details WHERE invoice_detail_id = $1 RETURNING *",
       [id]
     );
     return result.rows[0];
   }
 
-  async findTableData(page = 1, limit = 10, search = "") {
+  async findTableData(page = 1, limit = 10, search = "", client = pool) {
     const offset = (page - 1) * limit;
 
     const query = `
@@ -116,9 +116,9 @@ export default class PurchaseInvoiceDetailRepository {
       OFFSET $4
     `;
 
-    const result = await pool.query(query, [search, `%${search}%`, limit, offset]);
+    const result = await client.query(query, [search, `%${search}%`, limit, offset]);
 
-    const totalQuery = await pool.query(
+    const totalQuery = await client.query(
       `
       SELECT COUNT(*)
       FROM purchase_invoice_details pid

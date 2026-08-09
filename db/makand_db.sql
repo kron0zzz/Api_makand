@@ -164,7 +164,7 @@ CREATE TABLE projects (
 CREATE TABLE machinery (
     machinery_id SERIAL PRIMARY KEY,
     category_id INT NOT NULL,
-    machinery_name VARCHAR(100) NOT NULL,
+    machinery_name VARCHAR(100) NOT NULL UNIQUE,
     machinery_description VARCHAR(1000) NOT NULL,
     is_motorized BOOLEAN NOT NULL, -- SÍ (motorizada/serializada) / NO (no motorizada/a granel)
     sale_price DECIMAL(12,2) NOT NULL,
@@ -229,18 +229,13 @@ CREATE TABLE sub_rentals (
 CREATE TABLE purchase_invoices (
     invoice_id SERIAL PRIMARY KEY,
     supplier_id INT NOT NULL,
-    user_id INT NOT NULL,
     purchase_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     total_amount DECIMAL(12,2) NOT NULL CHECK (total_amount >= 0),
     invoice_photo BYTEA,
 
     CONSTRAINT fk_purchase_invoice_supplier
         FOREIGN KEY (supplier_id)
-        REFERENCES suppliers(supplier_id),
-
-    CONSTRAINT fk_purchase_invoice_user
-        FOREIGN KEY (user_id)
-        REFERENCES users(user_id)
+        REFERENCES suppliers(supplier_id)
 );
 
 -- Detalles de facturas de compras (purchase_invoice_details)
@@ -451,7 +446,7 @@ INSERT INTO permissions (permission_name) VALUES
 ('Listar Pago'), ('Crear Pago'), ('Ver Detalle de Pago'), ('Editar Pago'), ('Eliminar Pago'),
 ('Listar Cargo'), ('Crear Cargo'), ('Ver Detalle de Cargo'), ('Editar Cargo'), ('Eliminar Cargo'),
 ('Listar Proyecto'), ('Crear Proyecto'), ('Ver Detalle de Proyecto'), ('Editar Proyecto'), ('Eliminar Proyecto'),
-('Listar Factura de Compra'), ('Crear Factura de Compra'), ('Ver Detalle de Factura de Compra'), ('Editar Factura de Compra'), ('Eliminar Factura de Compra'),
+('Listar Factura de Compra'), ('Crear Factura de Compra'), ('Ver Detalle de Factura de Compra'), ('Editar Factura de Compra'), ('Eliminar Factura de Compra'),('Crear Factura de Compra Completa'),
 ('Listar Detalle de Factura de Compra'),('Crear Detalle de Factura de Compra'),('Ver Detalle de Detalle de Factura de Compra'), ('Editar Detalle de Factura de Compra'),('Eliminar Detalle de Factura de Compra'),
 ('Listar Devolución'), ('Crear Devolución'), ('Ver Detalle de Devolución'), ('Editar Devolución'), ('Eliminar Devolución'),
 ('Listar Rol'), ('Crear Rol'), ('Ver Detalle de Rol'), ('Editar Rol'), ('Eliminar Rol'),

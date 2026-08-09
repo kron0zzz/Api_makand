@@ -32,17 +32,15 @@ export default class MachineryStockRepository {
 
 
 
-
-  async findAll() {
-    const result = await pool.query("SELECT * FROM machinery_stock");
+  async findAll(client = pool) {
+    const result = await client.query("SELECT * FROM machinery_stock");
     return result.rows;
   }
 
 
 
-
-  async findById(id) {
-    const result = await pool.query(
+  async findById(id, client = pool) {
+    const result = await client.query(
       `SELECT ms.*, m.machinery_name, m.is_motorized
        FROM machinery_stock ms
        INNER JOIN machinery m ON ms.machinery_id = m.machinery_id
@@ -52,10 +50,20 @@ export default class MachineryStockRepository {
     return result.rows[0];
   }
 
+  async findByMachineryId(machineryId, client = pool) {
+    const result = await client.query(
+      `SELECT ms.*, m.machinery_name, m.is_motorized
+       FROM machinery_stock ms
+       INNER JOIN machinery m ON ms.machinery_id = m.machinery_id
+       WHERE ms.machinery_id = $1`,
+      [machineryId]
+    );
+    return result.rows[0];
+  }
 
 
 
-  async update(id, stockData) {
+  async update(id, stockData, client = pool) {
     if (!stockData) throw new Error("Datos insuficientes para actualizar.");
 
     const {machinery_id, status_id, serial_number,next_revision_date, is_owned, stock_quantity} = stockData;
@@ -78,7 +86,7 @@ export default class MachineryStockRepository {
     ];
 
     try {
-      const result = await pool.query(query, values);
+      const result = await client.query(query, values);
       return result.rows[0];
     } catch (error) {
       if (error.code === '23505') {
@@ -93,9 +101,8 @@ export default class MachineryStockRepository {
 
 
 
-
-  async delete(id) {
-    const result = await pool.query(
+  async delete(id, client = pool) {
+    const result = await client.query(
       "DELETE FROM machinery_stock WHERE stock_id = $1 RETURNING *",
       [id]
     );
@@ -104,8 +111,7 @@ export default class MachineryStockRepository {
 
 
 
-
-  async findTableData(page = 1, limit = 10, search="") {
+  async findTableData(page = 1, limit = 10, search="", client = pool) {
 
     const offset = (page - 1) * limit;
 
@@ -132,9 +138,9 @@ export default class MachineryStockRepository {
         OFFSET $4
     `;
 
-    const result = await pool.query(query, [search, `%${search}%`, limit, offset]);
+    const result = await client.query(query, [search, `%${search}%`, limit, offset]);
 
-    const totalQuery = await pool.query(
+    const totalQuery = await client.query(
         `
         SELECT COUNT(*)
         FROM machinery_stock s
@@ -217,8 +223,6 @@ export default class MachineryStockRepository {
 
 
 
-
-
   async setOccupied(
     stockId,
     client = pool
@@ -239,7 +243,6 @@ export default class MachineryStockRepository {
 
     return result.rows[0];
   }
-
 
 
 
@@ -264,8 +267,6 @@ export default class MachineryStockRepository {
     return result.rows[0];
 
   }
-
-
 
 
 
