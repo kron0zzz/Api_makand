@@ -319,6 +319,7 @@ CREATE TABLE additional_charges (
     return_id BIGINT NULL,   -- Pa registrar cobros al devolver (ej: transporte de vuelta, pérdidas)
     charge_description VARCHAR(100),
     charge_amount DECIMAL(9,2) NOT NULL CHECK (charge_amount >= 0),
+    processed BOOLEAN DEFAULT FALSE, -- <-- Control pa saber si ya se cobró en un corte
 
     CONSTRAINT fk_additional_charge_type
         FOREIGN KEY (charge_type_id)
@@ -338,7 +339,6 @@ CREATE TABLE additional_charges (
     CONSTRAINT chk_charge_origin 
         CHECK (order_id IS NOT NULL OR return_id IS NOT NULL)
 );
-
 
 -- Abonos (payments)
 CREATE TABLE payments (
@@ -486,3 +486,8 @@ ON payments(order_id);
 
 CREATE INDEX idx_returns_order_detail
 ON returns(order_detail_id);
+
+INSERT INTO charge_types (charge_type_name) VALUES 
+('Transporte'),
+('Daño'),
+('Retraso');
