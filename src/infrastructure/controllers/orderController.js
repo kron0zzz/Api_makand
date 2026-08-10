@@ -17,7 +17,7 @@ import OrderRepository from "../repositories/OrderRepository.js";
 import PaymentRepository from "../repositories/PaymentRepository.js";
 import RentalCutRepository from "../repositories/RentalCutRepository.js";
 import ReturnRepository from "../repositories/ReturnRepository.js";
-
+import AdditionalChargeRepository from "../repositories/AdditionalChargeRepository.js";
 
 const orderRepository = new OrderRepository();
 const orderDetailRepository = new OrderDetailRepository();
@@ -27,6 +27,7 @@ const paymentRepository = new PaymentRepository();
 const rentalCutRepository = new RentalCutRepository();
 const returnRepository = new ReturnRepository();
 const getOrderWorkspaceUseCase = new GetOrderWorkspace(orderRepository);
+const additionalChargeRepository = new AdditionalChargeRepository();
 
 export const createOrder = async (req, res) => {
   try {
@@ -229,7 +230,8 @@ export const createCompleteOrder = async (req, res) => {
       new CreateCompleteOrder(
         orderRepository,
         orderDetailRepository,
-        machineryStockRepository
+        machineryStockRepository,
+        additionalChargeRepository
       );
 
     const order =

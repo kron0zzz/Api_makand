@@ -1,7 +1,7 @@
 import pool from "../../config/database.js";
 
 export default class AdditionalChargeRepository {
-  async create(chargeData) {
+  async create(chargeData, client = pool) {
     if (!chargeData || Object.keys(chargeData).length === 0) {
       throw new Error("No se recibieron datos del cobro adicional.");
     }
@@ -26,7 +26,7 @@ export default class AdditionalChargeRepository {
       chargeData.charge_amount !== undefined ? chargeData.charge_amount : chargeData.amount
     ];
 
-    const result = await pool.query(query, values);
+    const result = await client.query(query, values);
     return result.rows[0];
   }
 
