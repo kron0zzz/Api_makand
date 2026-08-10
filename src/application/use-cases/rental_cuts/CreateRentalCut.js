@@ -4,21 +4,15 @@ export default class CreateRentalCut {
     rentalCutRepository,
     orderRepository,
     orderDetailRepository,
-    returnRepository
+    returnRepository,
+    additionalChargeRepository
   ) {
 
-    this.rentalCutRepository =
-      rentalCutRepository;
-
-    this.orderRepository =
-      orderRepository;
-
-    this.orderDetailRepository =
-      orderDetailRepository;
-
-    this.returnRepository =
-      returnRepository;
-
+    this.rentalCutRepository = rentalCutRepository;
+    this.orderRepository = orderRepository;
+    this.orderDetailRepository = orderDetailRepository;
+    this.returnRepository = returnRepository;
+    this.additionalChargeRepository = additionalChargeRepository;
   }
 
   async execute(data) {
@@ -28,8 +22,6 @@ export default class CreateRentalCut {
       cut_notes,
       period_end_date
     } = data;
-
-
 
     // =====================
     // Buscar pedido
@@ -46,8 +38,6 @@ export default class CreateRentalCut {
       );
 
     }
-
-
 
     // =====================
     // Definir periodo
@@ -71,8 +61,6 @@ export default class CreateRentalCut {
       );
 
     }
-
-
 
     // =====================
     // Calcular días
@@ -98,8 +86,6 @@ export default class CreateRentalCut {
 
     }
 
-
-
     // =====================
     // Obtener detalles
     // =====================
@@ -110,11 +96,7 @@ export default class CreateRentalCut {
           order_id
         );
 
-
-
     let totalCutAmount = 0;
-
-
 
     // =====================
     // Calcular valor
@@ -137,8 +119,6 @@ export default class CreateRentalCut {
         );
 
       let detailTotal = 0;
-
-
 
       for (const item of returns) {
 
@@ -177,9 +157,6 @@ export default class CreateRentalCut {
             millisecondsPerDay
           );
 
-
-
-
         if (
           tramoDias > 0 &&
           currentQuantity > 0
@@ -201,8 +178,6 @@ export default class CreateRentalCut {
           returnDate;
 
       }
-
-
 
       const remainingDays =
         Math.ceil(
@@ -227,13 +202,22 @@ export default class CreateRentalCut {
 
       }
 
-
-
       totalCutAmount +=
         detailTotal;
 
     }
 
+    // =========================================
+    // Integración de Cobros Adicionales
+    // =========================================
+    const pendingCharges = await this.additionalChargeRepository.findPendingByOrderId(order_id);
+    
+    let extraChargesTotal = 0;
+    for (const charge of pendingCharges) {
+      extraChargesTotal += Number(charge.amount || 0);
+    }
+    
+    totalCutAmount += extraChargesTotal;
 
     // =====================
     // Crear corte
@@ -258,7 +242,10 @@ export default class CreateRentalCut {
 
         });
 
-
+    // =========================================
+    // Marcar cobros adicionales como procesados
+    // =========================================
+    await this.additionalChargeRepository.markAsProcessedByOrderId(order_id);
 
     // =====================
     // Actualizar último corte
@@ -269,8 +256,6 @@ export default class CreateRentalCut {
         order_id,
         periodEndDate
       );
-
-
 
     return rentalCut;
 

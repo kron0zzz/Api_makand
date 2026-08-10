@@ -79,6 +79,39 @@ export default class AdditionalChargeRepository {
     return result.rows[0];
   }
 
+  // =========================================
+  // MÉTODOS AÑADIDOS PARA EL PROCESO DE CORTES
+  // =========================================
+
+  async findPendingByOrderId(orderId) {
+    // Busca los cargos de este pedido que aún no han sido procesados en un corte
+    const query = `
+      SELECT 
+        additional_charge_id as id,
+        charge_type_id,
+        order_id,
+        return_id,
+        charge_description,
+        charge_amount as amount
+      FROM additional_charges 
+      WHERE order_id = $1 AND (processed = false OR processed IS NULL)
+    `;
+    const result = await pool.query(query, [orderId]);
+    return result.rows;
+  }
+
+  async markAsProcessedByOrderId(orderId) {
+    // Marca los cargos de este pedido como procesados para que no se cobren doble
+    const query = `
+      UPDATE additional_charges 
+      SET processed = true 
+      WHERE order_id = $1 AND (processed = false OR processed IS NULL)
+    `;
+    await pool.query(query, [orderId]);
+  }
+
+  // =========================================
+
   async findTableData(page = 1, limit = 10, search = "") {
     const offset = (page - 1) * limit;
 

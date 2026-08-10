@@ -6,6 +6,7 @@ import DeleteRentalCut from "../../application/use-cases/rental_cuts/DeleteRenta
 import GetRentalCutsTable from "../../application/use-cases/rental_cuts/GetRentalCutsTable.js";
 import GetRentalCutByOrderId from "../../application/use-cases/rental_cuts/GetRentalCutByOrderId.js";
 
+import AdditionalChargeRepository from "../repositories/AdditionalChargeRepository.js";
 import RentalCutRepository from "../repositories/RentalCutRepository.js";
 import OrderRepository from "../repositories/OrderRepository.js";
 import Order_detailRepository from "../repositories/Order_detailRepository.js";
@@ -15,10 +16,17 @@ const rentalCutRepository = new RentalCutRepository();
 const orderRepository = new OrderRepository();
 const order_detailRepository = new Order_detailRepository();
 const returnRepository = new ReturnRepository();
+const additionalChargeRepository = new AdditionalChargeRepository(); 
 
 export const createRentalCut = async (req, res) => {
   try {
-    const createRentalCut = new CreateRentalCut(rentalCutRepository, orderRepository, order_detailRepository, returnRepository);
+    const createRentalCut = new CreateRentalCut(
+      rentalCutRepository, 
+      orderRepository, 
+      order_detailRepository, 
+      returnRepository,
+      additionalChargeRepository 
+    );
     const rentalCut = await createRentalCut.execute(req.body);
     res.status(201).json(rentalCut);
   } catch (err) {
