@@ -333,21 +333,33 @@ CREATE TABLE returns (
         REFERENCES order_details(order_detail_id)
 );
 
--- Cobros adicionales (additional_charges)
+-- Cobros adicionales (additional_charges) ajustado
 CREATE TABLE additional_charges (
     additional_charge_id SERIAL PRIMARY KEY,
     charge_type_id INT NOT NULL,
-    return_id BIGINT NOT NULL,
+    order_id INT NULL,       -- Pa registrar cobros iniciales desde el pedido (ej: transporte de ida)
+    return_id BIGINT NULL,   -- Pa registrar cobros al devolver (ej: transporte de vuelta, pérdidas)
     charge_description VARCHAR(100),
     charge_amount DECIMAL(9,2) NOT NULL CHECK (charge_amount >= 0),
+    processed BOOLEAN DEFAULT FALSE, -- <-- Control pa saber si ya se cobró en un corte
 
     CONSTRAINT fk_additional_charge_type
         FOREIGN KEY (charge_type_id)
         REFERENCES charge_types(charge_type_id),
 
+    CONSTRAINT fk_additional_charge_order
+        FOREIGN KEY (order_id)
+        REFERENCES orders(order_id)
+        ON DELETE CASCADE,
+
     CONSTRAINT fk_additional_charge_return
         FOREIGN KEY (return_id)
         REFERENCES returns(return_id)
+        ON DELETE CASCADE,
+
+    -- Asegurar que el cobro esté asociado al menos a un pedido o a una devolución
+    CONSTRAINT chk_charge_origin 
+        CHECK (order_id IS NOT NULL OR return_id IS NOT NULL)
 );
 
 -- Abonos (payments)
@@ -428,6 +440,13 @@ VALUES
 ('prueba@gmail.com', '$2b$10$wI5Y5q.Q5G3oW4qM5K.T.uey5.5v2oV5P3aKqYj2gXp9l4XQ4V.q.', true, 2, 4);
 
 
+INSERT INTO charge_types (charge_type_name) VALUES 
+('Transporte'),
+('Daño'),
+('Retraso');
+
+
+
 
 -- 5. Permisos (La lista completa)
 -- 1. Insertar todos los permisos necesarios
@@ -486,6 +505,8 @@ WHERE permission_name IN (
     'Listar Cortes de Alquiler', 'Ver Detalle de Corte', 'Listar Cortes por Orden',
     'Ver Workspace de Orden', 'Listar Pagos por Orden'
 );
+
+
 
 -- INDICES----
 
