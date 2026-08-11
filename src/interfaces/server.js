@@ -1,15 +1,15 @@
 import express from "express";
-import cors from "cors"; 
+import cors from "cors";
 
 import chargeTypeRoutes from "../infrastructure/routes/chargeTypeRoutes.js";
-import supplierRoutes from "../infrastructure/routes/supplierRoutes.js"; 
+import supplierRoutes from "../infrastructure/routes/supplierRoutes.js";
 import vehicleRoutes from "../infrastructure/routes/vehicleRoutes.js";
 import customerRoutes from "../infrastructure/routes/customerRoutes.js";
 import positionRoutes from "../infrastructure/routes/positionRoutes.js";
 import machineryStatusRoutes from "../infrastructure/routes/machineryStatusRoutes.js";
 import machineryCategoryRoutes from "../infrastructure/routes/machineryCategoryRoutes.js";
 import machineryRoutes from "../infrastructure/routes/machineryRoutes.js";
-import machinery_stockRoutes from "../infrastructure/routes/machinery_stockRoutes.js"
+import machinery_stockRoutes from "../infrastructure/routes/machinery_stockRoutes.js";
 import userRoutes from "../infrastructure/routes/userRoutes.js";
 import authRoutes from "../infrastructure/routes/authRoutes.js";
 import employeeRoutes from "../infrastructure/routes/employeeRoutes.js";
@@ -26,20 +26,47 @@ import orderStatusRoutes from "../infrastructure/routes/orderStatusRoutes.js";
 import roleRoutes from "../infrastructure/routes/roleRoutes.js";
 import rentalCutRoutes from "../infrastructure/routes/rentalCutRoutes.js";
 import dashboardRoutes from "../infrastructure/routes/dashboardRoutes.js";
+
 console.log("¡Leyendo server.js!");
 
 const app = express();
+
+// Encabezados HTTP de seguridad recomendados.
+// Se mantienen únicamente aquellos que no alteran el comportamiento
+// de la aplicación ni requieren configuraciones adicionales.
+app.use((req, res, next) => {
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader(
+    "Referrer-Policy",
+    "strict-origin-when-cross-origin"
+  );
+
+  // Solo enviar HSTS cuando la aplicación esté siendo servida
+  // mediante HTTPS.
+  if (
+    req.secure ||
+    req.headers["x-forwarded-proto"] === "https"
+  ) {
+    res.setHeader(
+      "Strict-Transport-Security",
+      "max-age=31536000; includeSubDomains"
+    );
+  }
+
+  next();
+});
 
 // Configuración de límites
 // app.use(express.json({ limit: '50mb' }));
 // app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
-app.use(cors()); 
+app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
   res.json({
-    message: "API Makand funcionando (Unificada)"
+    message: "API Makand funcionando (Unificada)",
   });
 });
 
@@ -49,7 +76,7 @@ app.use("/api/customers", customerRoutes);
 app.use("/api/vehicles", vehicleRoutes);
 app.use("/api/positions", positionRoutes);
 app.use("/api/machine-statuses", machineryStatusRoutes);
-app.use("/api/machine-categories", machineryCategoryRoutes); 
+app.use("/api/machine-categories", machineryCategoryRoutes);
 app.use("/api/machines", machineryRoutes);
 app.use("/api/stock", machinery_stockRoutes);
 app.use("/api/users", userRoutes);
