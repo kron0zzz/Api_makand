@@ -10,16 +10,18 @@ import Order_detailRepository from "../repositories/Order_detailRepository.js";
 import MachineryStockRepository from "../repositories/machineryStockRepository.js";
 import OrderRepository from "../repositories/OrderRepository.js";
 import RentalCutRepository from "../repositories/RentalCutRepository.js";
+import AdditionalChargeRepository from "../repositories/AdditionalChargeRepository.js";
 
 const returnRepository = new ReturnRepository();
 const orderDetailRepository = new Order_detailRepository();
 const machineryStockRepository = new MachineryStockRepository();
 const orderRepository = new OrderRepository();
 const rentalCutRepository = new RentalCutRepository();
+const additionalChargeRepository = new AdditionalChargeRepository();
 
 export const createReturn = async (req, res) => {
   try {
-    const createReturn = new CreateReturn(returnRepository, orderDetailRepository, machineryStockRepository, orderRepository);
+    const createReturn = new CreateReturn(returnRepository, orderDetailRepository, machineryStockRepository, orderRepository, additionalChargeRepository);
     const returnData = await createReturn.execute(req.body);
     res.status(201).json(returnData);
   } catch (err) {

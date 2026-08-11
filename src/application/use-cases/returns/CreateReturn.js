@@ -4,7 +4,8 @@ export default class CreateReturn {
     returnRepository,
     orderDetailRepository,
     machineryStockRepository,
-    orderRepository
+    orderRepository,
+    additionalChargeRepository
   ) {
 
     this.returnRepository =
@@ -19,6 +20,9 @@ export default class CreateReturn {
     this.orderRepository =
       orderRepository;
 
+    this.additionalChargeRepository = 
+      additionalChargeRepository;
+
   }
 
   async execute(
@@ -27,7 +31,8 @@ export default class CreateReturn {
 
     const {
       order_detail_id,
-      returned_quantity
+      returned_quantity,
+      additional_charges
     } = returnData;
 
     const detail =
@@ -73,6 +78,19 @@ export default class CreateReturn {
     const nuevaDevolucion =
       await this.returnRepository
         .create(returnData);
+
+      // Guardar cargos adicionales de devolución
+      if (additional_charges && additional_charges.length > 0) {
+        for (const charge of additional_charges) {
+          await this.additionalChargeRepository.create({
+            charge_type_id: charge.charge_type_id || charge.chargeTypeId,
+            order_id: detail.order_id,                  // Asociado al pedido
+            return_id: nuevaDevolucion.return_id,       // Asociado a esta devolución exacta
+            charge_description: charge.description || charge.charge_description || "",
+            charge_amount: charge.amount !== undefined ? charge.amount : charge.charge_amount
+          });
+        }
+      }
 
     await this.machineryStockRepository
       .increaseStock(
