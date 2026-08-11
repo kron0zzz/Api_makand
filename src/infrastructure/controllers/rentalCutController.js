@@ -28,11 +28,14 @@ export const createRentalCut = async (req, res) => {
       additionalChargeRepository 
     );
     const rentalCut = await createRentalCut.execute(req.body);
-    res.status(201).json(rentalCut);
+    return res.status(201).json(rentalCut);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    // Esto imprimirá el error real y exacto en la terminal de VS Code
+    console.error("ERROR AL CREAR EL CORTE DE RENTA:", err);
+    return res.status(500).json({ error: err.message });
   }
 };
+
 
 export const getRentalCuts = async (req, res) => {
   try {
