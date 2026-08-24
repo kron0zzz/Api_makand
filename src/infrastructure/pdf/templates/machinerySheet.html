@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hoja de Vida del Equipo - MAKAND</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 15mm;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 11pt;
+      color: #1f2937;
+      background: #ffffff;
+      line-height: 1.5;
+    }
+    .page {
+      max-width: 210mm;
+      margin: 0 auto;
+      padding: 10mm;
+    }
+    .header {
+      text-align: center;
+      border-bottom: 3px solid #111827;
+      padding-bottom: 12px;
+      margin-bottom: 18px;
+    }
+    .header .brand {
+      font-size: 22pt;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #111827;
+    }
+    .header .subtitle {
+      font-size: 12pt;
+      color: #4b5563;
+      margin-top: 4px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .section {
+      margin-bottom: 18px;
+      page-break-inside: avoid;
+    }
+    .section-title {
+      font-size: 13pt;
+      font-weight: 700;
+      color: #111827;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-left: 5px solid #2563eb;
+      padding-left: 10px;
+      margin-bottom: 10px;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10.5pt;
+    }
+    .data-table th,
+    .data-table td {
+      border: 1px solid #d1d5db;
+      padding: 8px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    .data-table th {
+      background: #f3f4f6;
+      font-weight: 600;
+      width: 35%;
+      color: #374151;
+    }
+    .data-table td {
+      background: #ffffff;
+      color: #111827;
+    }
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      font-size: 9.5pt;
+      font-weight: 600;
+      background: #dbeafe;
+      color: #1e40af;
+    }
+    .badge.success {
+      background: #d1fae5;
+      color: #065f46;
+    }
+    .badge.warning {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    .badge.danger {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    .empty {
+      color: #9ca3af;
+      font-style: italic;
+    }
+    .footer {
+      margin-top: 24px;
+      border-top: 1px solid #e5e7eb;
+      padding-top: 10px;
+      font-size: 9pt;
+      color: #6b7280;
+      text-align: center;
+    }
+    .maintenance-table th,
+    .maintenance-table td {
+      font-size: 10pt;
+    }
+    .maintenance-table th {
+      background: #eff6ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="header">
+      <div class="brand">MAKAND</div>
+      <div class="subtitle">Hoja de Vida del Equipo</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Información General</div>
+      <table class="data-table">
+        <tr>
+          <th>Nombre del Equipo</th>
+          <td>{{machinery_name}}</td>
+        </tr>
+        <tr>
+          <th>Código Interno</th>
+          <td>#{{machinery_id}}</td>
+        </tr>
+        <tr>
+          <th>Categoría</th>
+          <td>{{category_name}}</td>
+        </tr>
+        <tr>
+          <th>Descripción</th>
+          <td>{{machinery_description}}</td>
+        </tr>
+        <tr>
+          <th>Tipo</th>
+          <td>{{is_motorized_label}}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Información Técnica y Comercial</div>
+      <table class="data-table">
+        <tr>
+          <th>Precio de Venta</th>
+          <td>{{sale_price}}</td>
+        </tr>
+        <tr>
+          <th>Alquiler por Día</th>
+          <td>{{daily_rental_price}}</td>
+        </tr>
+        <tr>
+          <th>Peso Neto</th>
+          <td>{{weight_kg}}</td>
+        </tr>
+        <tr>
+          <th>Stock Total</th>
+          <td>{{total_stock}} unidades</td>
+        </tr>
+        <tr>
+          <th>Stock Disponible</th>
+          <td>{{available_stock}} unidades</td>
+        </tr>
+        <tr>
+          <th>Unidad / Serie</th>
+          <td>{{serial_number}}</td>
+        </tr>
+        <tr>
+          <th>Próxima Revisión Técnica</th>
+          <td>{{next_revision_date}}</td>
+        </tr>
+        <tr>
+          <th>Origen</th>
+          <td>{{is_owned_label}}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Estado Actual</div>
+      <table class="data-table">
+        <tr>
+          <th>Estado</th>
+          <td>{{current_status}}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Último Mantenimiento</div>
+      <table class="data-table">
+        <tr>
+          <th>Fecha</th>
+          <td>{{last_maintenance_date}}</td>
+        </tr>
+        <tr>
+          <th>Notas de Revisión</th>
+          <td>{{last_maintenance_notes}}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Próximo Mantenimiento</div>
+      <table class="data-table">
+        <tr>
+          <th>Fecha Programada</th>
+          <td>{{next_maintenance_date}}</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Historial de Mantenimiento</div>
+      {{#if maintenance_history}}
+      <table class="data-table maintenance-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Fecha</th>
+            <th>Unidad / Serie</th>
+            <th>Notas</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each maintenance_history}}
+          <tr>
+            <td>{{@index}}</td>
+            <td>{{maintenance_date}}</td>
+            <td>{{serial_number}}</td>
+            <td>{{revision_notes}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+      {{else}}
+      <p class="empty">Sin registros de mantenimiento.</p>
+      {{/if}}
+    </div>
+
+    <div class="footer">
+      Documento generado automáticamente por MAKAND &bull; {{generated_at}}
+    </div>
+  </div>
+</body>
+</html>

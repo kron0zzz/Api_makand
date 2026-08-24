@@ -98,4 +98,24 @@ export default class MaintenanceRepositoryPrisma {
     const result = await pool.query(query);
     return result.rows;
   }
+
+  async findByMachineryId(machineryId) {
+    const query = `
+      SELECT
+        m.maintenance_id,
+        m.stock_id,
+        m.maintenance_date,
+        m.revision_notes,
+        ms.serial_number,
+        ms.machinery_id,
+        s.status_name
+      FROM maintenances m
+      LEFT JOIN machinery_stock ms ON m.stock_id = ms.stock_id
+      LEFT JOIN machinery_status s ON ms.status_id = s.status_id
+      WHERE ms.machinery_id = $1
+      ORDER BY m.maintenance_date DESC
+    `;
+    const result = await pool.query(query, [machineryId]);
+    return result.rows;
+  }
 }

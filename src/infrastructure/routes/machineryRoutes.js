@@ -2,14 +2,15 @@ import { Router } from "express";
 import authMiddleware from "../../middlewares/authMiddleware.js";
 import authorize from "../../middlewares/authorize.js";
 
-import { 
-  createMachinery, 
+import {
+  createMachinery,
   createMachineryComplete,
-  getMachineries, 
-  getMachineryById, 
-  updateMachinery, 
-  deleteMachinery, 
-  getMachineriesTable 
+  getMachineries,
+  getMachineryById,
+  getMachineryPdf,
+  updateMachinery,
+  deleteMachinery,
+  getMachineriesTable
 } from "../controllers/machineryController.js";
 
 const router = Router();
@@ -20,6 +21,7 @@ router.get("/", authMiddleware, authorize('Listar Maquinaria'), getMachineries);
 router.post("/", authMiddleware, authorize('Crear Maquinaria'), createMachinery);
 router.post("/complete", authMiddleware, authorize('Crear Maquinaria'), createMachineryComplete);
 router.get("/:id", authMiddleware, authorize('Ver Detalle de Maquinaria'), getMachineryById);
+router.get("/:id/pdf", authMiddleware, authorize('Ver Detalle de Maquinaria'), getMachineryPdf);
 router.put("/:id", authMiddleware, authorize('Editar Maquinaria'), updateMachinery);
 router.delete("/:id", authMiddleware, authorize('Eliminar Maquinaria'), deleteMachinery);
 
