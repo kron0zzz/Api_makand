@@ -77,7 +77,7 @@ export default class DashboardRepository {
         COUNT(o.order_id) AS "count"
       FROM order_status os
       LEFT JOIN orders o ON o.order_status_id = os.order_status_id
-      GROUP BY os.order_status_name
+      GROUP BY os.order_status_id, os.order_status_name
       ORDER BY os.order_status_id
     `;
 
@@ -93,10 +93,10 @@ export default class DashboardRepository {
     const query = `
       SELECT
         ms.status_name AS "statusName",
-        COUNT(m.machinery_id) AS "count"
+        COUNT(mstk.stock_id) AS "count"
       FROM machinery_status ms
-      LEFT JOIN machinery m ON m.status_id = ms.status_id
-      GROUP BY ms.status_name
+      LEFT JOIN machinery_stock mstk ON mstk.status_id = ms.status_id
+      GROUP BY ms.status_id, ms.status_name
       ORDER BY ms.status_id
     `;
 
@@ -115,8 +115,7 @@ export default class DashboardRepository {
         o.order_creation_date,
         os.order_status_name AS "statusName",
         p.project_name,
-        c.customer_first_name,
-        c.customer_last_name,
+        c.customer_name,
         o.discount_amount
       FROM orders o
       INNER JOIN projects p ON o.project_id = p.project_id
@@ -133,8 +132,7 @@ export default class DashboardRepository {
       order_creation_date: row.order_creation_date,
       statusName: row.statusName,
       project_name: row.project_name,
-      customer_first_name: row.customer_first_name,
-      customer_last_name: row.customer_last_name,
+      customer_name: row.customer_name,
       discount_amount: row.discount_amount
     }));
   }
