@@ -333,7 +333,11 @@ export default class OrderRepository {
         od.quantity_to_dispatch,
         od.rental_unit_price,
         od.machinery_rental_status,
-        od.subtotal_weight_kg,
+        COALESCE(m.weight_kg, 0) * od.quantity_to_dispatch AS subtotal_weight_kg,
+
+        m.is_motorized,
+        m.machinery_id,
+        ms.serial_number,
 
         COALESCE(
 
@@ -344,7 +348,9 @@ export default class OrderRepository {
 
                 'return_id', r.return_id,
                 'return_date', r.return_date,
-                'returned_quantity', r.returned_quantity
+                'returned_quantity', r.returned_quantity,
+                'serial_number', ms2.serial_number,
+                'stock_id', ms2.stock_id
 
               )
 
@@ -353,6 +359,12 @@ export default class OrderRepository {
             )
 
             FROM returns r
+
+            INNER JOIN order_details od2
+              ON r.order_detail_id = od2.order_detail_id
+
+            INNER JOIN machinery_stock ms2
+              ON od2.stock_id = ms2.stock_id
 
             WHERE r.order_detail_id =
               od.order_detail_id
@@ -364,6 +376,12 @@ export default class OrderRepository {
         ) AS returns
 
       FROM order_details od
+
+      INNER JOIN machinery_stock ms
+        ON od.stock_id = ms.stock_id
+
+      INNER JOIN machinery m
+        ON ms.machinery_id = m.machinery_id
 
       WHERE od.order_id = $1
 
