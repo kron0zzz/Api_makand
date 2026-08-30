@@ -20,66 +20,63 @@ const getPermissionsUC = new GetPermissions(roleRepository);
 const getRolePermissionsUC = new GetRolePermissions(roleRepository);
 
 
-export const createRole = async (req, res) => {
+export const createRole = async (req, res, next) => {
   try {
     const newRole = await createRoleUC.execute(req.body);
     res.status(201).json(newRole);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    next(error);
   }
 };
 
-export const getRoles = async (req, res) => {
+export const getRoles = async (req, res, next) => {
   try {
     const roles = await getRolesUC.execute();
     res.status(200).json(roles);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-export const getRoleById = async (req, res) => {
+export const getRoleById = async (req, res, next) => {
   try {
     const role = await getRoleByIdUC.execute(req.params.id);
     if (!role) return res.status(404).json({ error: "Rol no encontrado" });
     res.status(200).json(role);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-export const updateRole = async (req, res) => {
+export const updateRole = async (req, res, next) => {
   try {
     const updatedRole = await updateRoleUC.execute(req.params.id, req.body);
     res.status(200).json(updatedRole);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    next(error);
   }
 };
 
-// Esta es la función nueva que tu router necesita para el PUT /:id/permissions
-export const updateRolePermissions = async (req, res) => {
+export const updateRolePermissions = async (req, res, next) => {
   try {
-    // Reutilizamos el mismo updateRoleUC porque tu repositorio 
-    // ya maneja la lógica de limpiar y reinsertar permisos en el método update
     const updatedRole = await updateRoleUC.execute(req.params.id, req.body);
     res.status(200).json({ message: "Permisos actualizados", role: updatedRole });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    next(error);
   }
 };
 
-export const deleteRole = async (req, res) => {
+export const deleteRole = async (req, res, next) => {
   try {
     const deletedRole = await deleteRoleUC.execute(req.params.id);
     if (!deletedRole) return res.status(404).json({ error: "Rol no encontrado" });
     res.status(200).json({ message: "Rol eliminado con éxito", role: deletedRole });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-export const getRolesTable = async (req, res) => {
+export const getRolesTable = async (req, res, next) => {
   try {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 9;
@@ -87,25 +84,25 @@ export const getRolesTable = async (req, res) => {
     const tableData = await getRolesTableUC.execute(page, limit, search);
     res.status(200).json(tableData);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-export const getPermissions = async (req, res) => {
+export const getPermissions = async (req, res, next) => {
   try {
     const permissions = await getPermissionsUC.execute();
     res.status(200).json(permissions);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
-export const getRoleByPermissions = async (req, res) => {
+export const getRoleByPermissions = async (req, res, next) => {
   try {
     const { id } = req.params;
     const permissions = await getRolePermissionsUC.execute(id);
     res.status(200).json(permissions);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };

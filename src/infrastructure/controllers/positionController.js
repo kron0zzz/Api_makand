@@ -9,7 +9,7 @@ import PositionRepository from "../repositories/PositionRepository.js";
 
 const positionRepository = new PositionRepository();
 
-export const createPosition = async (req, res) => {
+export const createPosition = async (req, res, next) => {
   try {
     const createPosition =
       new CreatePosition(positionRepository);
@@ -21,13 +21,11 @@ export const createPosition = async (req, res) => {
     res.status(201).json(position);
 
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const getPositions = async (req, res) => {
+export const getPositions = async (req, res, next) => {
   try {
     const getPositions = new GetPositions(positionRepository);
     const positions = await getPositions.execute();
@@ -35,13 +33,11 @@ export const getPositions = async (req, res) => {
     res.status(200).json(positions);
 
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const getPositionById = async (req, res) => {
+export const getPositionById = async (req, res, next) => {
   try {
     const getPositionById =
       new GetPositionById(positionRepository);
@@ -58,13 +54,11 @@ export const getPositionById = async (req, res) => {
     res.status(200).json(position);
 
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const updatePosition = async (req, res) => {
+export const updatePosition = async (req, res, next) => {
   try {
     const updatePosition =
       new UpdatePosition(positionRepository);
@@ -78,20 +72,11 @@ export const updatePosition = async (req, res) => {
     res.status(200).json(updatedPosition);
 
   } catch (err) {
-
-    if (err.code === "P2025") {
-      return res.status(404).json({
-        error: " no encontrado"
-      });
-    }
-
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const deletePosition = async (req, res) => {
+export const deletePosition = async (req, res, next) => {
   try {
     const deletePosition =
       new DeletePosition(positionRepository);
@@ -101,21 +86,12 @@ export const deletePosition = async (req, res) => {
     res.status(204).send();
 
   } catch (err) {
-
-    if (err.code === "P2025") {
-      return res.status(404).json({
-        error: "Cargo no encontrado"
-      });
-    }
-
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
 
-export const getPositionsTable = async (req, res) => {
+export const getPositionsTable = async (req, res, next) => {
   try {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 9;
@@ -126,8 +102,6 @@ export const getPositionsTable = async (req, res) => {
     res.status(200).json(positions);
 
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };

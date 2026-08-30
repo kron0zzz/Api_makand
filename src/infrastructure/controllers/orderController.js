@@ -29,7 +29,7 @@ const returnRepository = new ReturnRepository();
 const getOrderWorkspaceUseCase = new GetOrderWorkspace(orderRepository);
 const additionalChargeRepository = new AdditionalChargeRepository();
 
-export const createOrder = async (req, res) => {
+export const createOrder = async (req, res, next) => {
   try {
     const createOrder =
       new CreateOrder(orderRepository);
@@ -42,13 +42,11 @@ export const createOrder = async (req, res) => {
     res.status(201).json(order);
 
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const getOrders = async (req, res) => {
+export const getOrders = async (req, res, next) => {
   try {
     const getOrders =
       new GetOrders(orderRepository);
@@ -58,13 +56,11 @@ export const getOrders = async (req, res) => {
     res.status(200).json(orders);
 
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const getOrderById = async (req, res) => {
+export const getOrderById = async (req, res, next) => {
   try {
     const getOrderById =
       new GetOrderById(orderRepository);
@@ -81,13 +77,11 @@ export const getOrderById = async (req, res) => {
     res.status(200).json(order);
 
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const updateOrder = async (req, res) => {
+export const updateOrder = async (req, res, next) => {
   try {
     const updateOrder =
       new UpdateOrder(orderRepository);
@@ -101,20 +95,11 @@ export const updateOrder = async (req, res) => {
     res.status(200).json(updatedOrder);
 
   } catch (err) {
-
-    if (err.code === "P2025") {
-      return res.status(404).json({
-        error: "Pedido no encontrado"
-      });
-    }
-
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const deleteOrder = async (req, res) => {
+export const deleteOrder = async (req, res, next) => {
   try {
     const deleteOrder =
       new DeleteOrder(orderRepository);
@@ -124,20 +109,11 @@ export const deleteOrder = async (req, res) => {
     res.status(204).send();
 
   } catch (err) {
-
-    if (err.code === "P2025") {
-      return res.status(404).json({
-        error: "Pedido no encontrado"
-      });
-    }
-
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const cancelOrder = async (req, res) => {
+export const cancelOrder = async (req, res, next) => {
   try {
     const cancelOrderUseCase =
       new CancelOrder(
@@ -157,20 +133,11 @@ export const cancelOrder = async (req, res) => {
     res.status(200).json(cancelledOrder);
 
   } catch (err) {
-
-    if (err.message === "Pedido no encontrado.") {
-      return res.status(404).json({
-        error: err.message
-      });
-    }
-
-    res.status(400).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const closeOrder = async (req, res) => {
+export const closeOrder = async (req, res, next) => {
   try {
     const closeOrderUseCase =
       new CloseOrder(
@@ -191,20 +158,11 @@ export const closeOrder = async (req, res) => {
     });
 
   } catch (err) {
-
-    if (err.message === "Pedido no encontrado.") {
-      return res.status(404).json({
-        error: err.message
-      });
-    }
-
-    res.status(400).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const getOrdersTable = async (req, res) => {
+export const getOrdersTable = async (req, res, next) => {
   try {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 9;
@@ -214,15 +172,13 @@ export const getOrdersTable = async (req, res) => {
     res.status(200).json(orders);
 
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
 
 
-export const createCompleteOrder = async (req, res) => {
+export const createCompleteOrder = async (req, res, next) => {
 
   try {
 
@@ -243,16 +199,11 @@ export const createCompleteOrder = async (req, res) => {
     res.status(201).json(order);
 
   } catch (err) {
-
-    res.status(500).json({
-      error: err.message
-    });
-
+    next(err);
   }
-
 };
 
-export const getOrderFull = async (req, res) => {
+export const getOrderFull = async (req, res, next) => {
 
   try {
 
@@ -278,22 +229,17 @@ export const getOrderFull = async (req, res) => {
     res.status(200).json(order);
 
   } catch (err) {
-
-    res.status(500).json({
-      error: err.message
-    });
-
+    next(err);
   }
-
 };
 
 
-export const getOrderWorkspace = async (req, res) => {
+export const getOrderWorkspace = async (req, res, next) => {
   try {
     const workspace = await getOrderWorkspaceUseCase.execute(req.params.id);
     res.status(200).json(workspace);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 
 };

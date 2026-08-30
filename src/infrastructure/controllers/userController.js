@@ -9,7 +9,7 @@ import UserRepository from "../repositories/UserRepository.js";
 
 const userRepository = new UserRepository();
 
-export const createUser = async (req, res) => {
+export const createUser = async (req, res, next) => {
   try {
     const createUser =
       new CreateUser(userRepository);
@@ -21,13 +21,11 @@ export const createUser = async (req, res) => {
     res.status(201).json(user);
 
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const getUsers = async (req, res) => {
+export const getUsers = async (req, res, next) => {
   try {
     const getUsers =
       new GetUsers(userRepository);
@@ -37,13 +35,11 @@ export const getUsers = async (req, res) => {
     res.status(200).json(users);
 
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const getUserById = async (req, res) => {
+export const getUserById = async (req, res, next) => {
   try {
     const getUserById =
       new GetUserById(userRepository);
@@ -53,20 +49,18 @@ export const getUserById = async (req, res) => {
 
     if (!user) {
       return res.status(404).json({
-        error: "usuario no encontrado"
+        error: "Usuario no encontrado"
       });
     }
 
     res.status(200).json(user);
 
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const updateUser = async (req, res) => {
+export const updateUser = async (req, res, next) => {
   try {
     const updateUser =
       new UpdateUser(userRepository);
@@ -80,20 +74,11 @@ export const updateUser = async (req, res) => {
     res.status(200).json(updatedUser);
 
   } catch (err) {
-
-    if (err.code === "P2025") {
-      return res.status(404).json({
-        error: "Usuario no encontrado"
-      });
-    }
-
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const deleteUser = async (req, res) => {
+export const deleteUser = async (req, res, next) => {
   try {
     const deleteUser =
       new DeleteUser(userRepository);
@@ -103,21 +88,12 @@ export const deleteUser = async (req, res) => {
     res.status(204).send();
 
   } catch (err) {
-
-    if (err.code === "P2025") {
-      return res.status(404).json({
-        error: "Usuario no encontrado"
-      });
-    }
-
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
 
-export const getUsersTable = async (req, res) => {
+export const getUsersTable = async (req, res, next) => {
   try {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 9;
@@ -130,12 +106,8 @@ export const getUsersTable = async (req, res) => {
     res.status(200).json(users);
 
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
-
-
 
 

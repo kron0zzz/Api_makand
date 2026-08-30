@@ -9,27 +9,27 @@ import ProjectRepositoryPrisma from "../repositories/ProjectRepositoryPrisma.js"
 
 const projectRepository = new ProjectRepositoryPrisma();
 
-export const createProject = async (req, res) => {
+export const createProject = async (req, res, next) => {
   try {
     const createProjectUseCase = new CreateProject(projectRepository);
     const project = await createProjectUseCase.execute(req.body);
     res.status(201).json(project);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const getProjects = async (req, res) => {
+export const getProjects = async (req, res, next) => {
   try {
     const getProjectsUseCase = new GetProjects(projectRepository);
     const projects = await getProjectsUseCase.execute();
     res.status(200).json(projects);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const getProjectsTable = async (req, res) => {
+export const getProjectsTable = async (req, res, next) => {
   try {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 9;
@@ -38,11 +38,11 @@ export const getProjectsTable = async (req, res) => {
     const projects = await getProjectsTableUseCase.execute(page, limit, search);
     res.status(200).json(projects);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const getProjectById = async (req, res) => {
+export const getProjectById = async (req, res, next) => {
   try {
     const getProjectByIdUseCase = new GetProjectById(projectRepository);
     const project = await getProjectByIdUseCase.execute(req.params.id);
@@ -53,11 +53,11 @@ export const getProjectById = async (req, res) => {
 
     res.status(200).json(project);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const updateProject = async (req, res) => {
+export const updateProject = async (req, res, next) => {
   try {
     const updateProjectUseCase = new UpdateProject(projectRepository);
     const updatedProject = await updateProjectUseCase.execute(
@@ -71,11 +71,11 @@ export const updateProject = async (req, res) => {
 
     res.status(200).json(updatedProject);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const deleteProject = async (req, res) => {
+export const deleteProject = async (req, res, next) => {
   try {
     const deleteProjectUseCase = new DeleteProject(projectRepository);
     const deletedProject = await deleteProjectUseCase.execute(req.params.id);
@@ -86,6 +86,6 @@ export const deleteProject = async (req, res) => {
 
     res.status(204).send();
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };

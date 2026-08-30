@@ -9,37 +9,37 @@ import OrderStatusRepositoryPrisma from "../repositories/OrderStatusRepositoryPr
 
 const orderStatusRepository = new OrderStatusRepositoryPrisma();
 
-export const createOrderStatus = async (req, res) => {
+export const createOrderStatus = async (req, res, next) => {
   try {
     const createOrderStatusUseCase = new CreateOrderStatus(orderStatusRepository);
     const orderStatus = await createOrderStatusUseCase.execute(req.body);
     res.status(201).json(orderStatus);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    next(err);
   }
 };
 
-export const getOrderStatuss = async (req, res) => {
+export const getOrderStatuss = async (req, res, next) => {
   try {
     const getOrderStatussUseCase = new GetOrderStatuss(orderStatusRepository);
     const orderStatuss = await getOrderStatussUseCase.execute();
     res.status(200).json(orderStatuss);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const getOrderStatussTable = async (req, res) => {
+export const getOrderStatussTable = async (req, res, next) => {
   try {
     const getOrderStatussTableUseCase = new GetOrderStatussTable(orderStatusRepository);
     const orderStatuss = await getOrderStatussTableUseCase.execute();
     res.status(200).json(orderStatuss);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const getOrderStatusById = async (req, res) => {
+export const getOrderStatusById = async (req, res, next) => {
   try {
     const getOrderStatusByIdUseCase = new GetOrderStatusById(orderStatusRepository);
     const orderStatus = await getOrderStatusByIdUseCase.execute(req.params.id);
@@ -50,11 +50,11 @@ export const getOrderStatusById = async (req, res) => {
 
     res.status(200).json(orderStatus);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const updateOrderStatus = async (req, res) => {
+export const updateOrderStatus = async (req, res, next) => {
   try {
     const updateOrderStatusUseCase = new UpdateOrderStatus(orderStatusRepository);
     const updatedOrderStatus = await updateOrderStatusUseCase.execute(
@@ -68,11 +68,11 @@ export const updateOrderStatus = async (req, res) => {
 
     res.status(200).json(updatedOrderStatus);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    next(err);
   }
 };
 
-export const deleteOrderStatus = async (req, res) => {
+export const deleteOrderStatus = async (req, res, next) => {
   try {
     const deleteOrderStatusUseCase = new DeleteOrderStatus(orderStatusRepository);
     const deletedOrderStatus = await deleteOrderStatusUseCase.execute(req.params.id);
@@ -83,6 +83,6 @@ export const deleteOrderStatus = async (req, res) => {
 
     res.status(204).send();
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };

@@ -19,18 +19,17 @@ const orderRepository = new OrderRepository();
 const rentalCutRepository = new RentalCutRepository();
 const additionalChargeRepository = new AdditionalChargeRepository();
 
-export const createReturn = async (req, res) => {
+export const createReturn = async (req, res, next) => {
   try {
     const createReturn = new CreateReturn(returnRepository, orderDetailRepository, machineryStockRepository, orderRepository, additionalChargeRepository);
     const returnData = await createReturn.execute(req.body);
     res.status(201).json(returnData);
   } catch (err) {
-    console.error("ERROR DETALLADO EN REGISTRO DE DEVOLUCIÓN:", err);
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const getReturns = async (req, res) => {
+export const getReturns = async (req, res, next) => {
   try {
     const getReturns =
       new GetReturns(returnRepository);
@@ -40,13 +39,11 @@ export const getReturns = async (req, res) => {
     res.status(200).json(returns);
 
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const getReturnById = async (req, res) => {
+export const getReturnById = async (req, res, next) => {
   try {
     const getReturnById =
       new GetReturnById(returnRepository);
@@ -63,13 +60,11 @@ export const getReturnById = async (req, res) => {
     res.status(200).json(returnData);
 
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const updateReturn = async (req, res) => {
+export const updateReturn = async (req, res, next) => {
   try {
     const updateReturn =
       new UpdateReturn(returnRepository);
@@ -83,20 +78,11 @@ export const updateReturn = async (req, res) => {
     res.status(200).json(updatedReturn);
 
   } catch (err) {
-
-    if (err.code === "P2025") {
-      return res.status(404).json({
-        error: "Devolución no encontrada"
-      });
-    }
-
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const deleteReturn = async (req, res) => {
+export const deleteReturn = async (req, res, next) => {
   try {
     const deleteReturn =
       new DeleteReturn(
@@ -123,20 +109,11 @@ export const deleteReturn = async (req, res) => {
     res.status(204).send();
 
   } catch (err) {
-
-    if (err.code === "P2025") {
-      return res.status(404).json({
-        error: "Devolución no encontrada"
-      });
-    }
-
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const getReturnsTable = async (req, res) => {
+export const getReturnsTable = async (req, res, next) => {
   try {
     const getReturnsTable =
       new GetReturnsTable(returnRepository);
@@ -146,8 +123,6 @@ export const getReturnsTable = async (req, res) => {
     res.status(200).json(returns);
 
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };

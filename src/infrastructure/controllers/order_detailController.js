@@ -9,7 +9,7 @@ import Order_detailRepository from "../repositories/Order_detailRepository.js";
 
 const order_detailRepository = new Order_detailRepository();
 
-export const createOrder_detail = async (req, res) => {
+export const createOrder_detail = async (req, res, next) => {
   try {
     const createOrder_detail =
       new CreateOrder_detail(order_detailRepository);
@@ -21,13 +21,11 @@ export const createOrder_detail = async (req, res) => {
     res.status(201).json(order_detail);
 
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const getOrder_details = async (req, res) => {
+export const getOrder_details = async (req, res, next) => {
   try {
     const getOrder_details =
       new GetOrder_details(order_detailRepository);
@@ -37,13 +35,11 @@ export const getOrder_details = async (req, res) => {
     res.status(200).json(order_details);
 
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const getOrder_detailById = async (req, res) => {
+export const getOrder_detailById = async (req, res, next) => {
   try {
     const getOrder_detailById =
       new GetOrder_detailById(order_detailRepository);
@@ -60,13 +56,11 @@ export const getOrder_detailById = async (req, res) => {
     res.status(200).json(order_detail);
 
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const updateOrder_detail = async (req, res) => {
+export const updateOrder_detail = async (req, res, next) => {
   try {
     const updateOrder_detail =
       new UpdateOrder_detail(order_detailRepository);
@@ -80,20 +74,11 @@ export const updateOrder_detail = async (req, res) => {
     res.status(200).json(updatedOrder_detail);
 
   } catch (err) {
-
-    if (err.code === "P2025") {
-      return res.status(404).json({
-        error: "Detalle de pedido no encontrado"
-      });
-    }
-
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const deleteOrder_detail = async (req, res) => {
+export const deleteOrder_detail = async (req, res, next) => {
   try {
     const deleteOrder_detail =
       new DeleteOrder_detail(order_detailRepository);
@@ -103,20 +88,11 @@ export const deleteOrder_detail = async (req, res) => {
     res.status(204).send();
 
   } catch (err) {
-
-    if (err.code === "P2025") {
-      return res.status(404).json({
-        error: "Detalle de pedido no encontrado"
-      });
-    }
-
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const getOrder_detailsTable = async (req, res) => {
+export const getOrder_detailsTable = async (req, res, next) => {
   try {
     const getOrder_detailsTable =
       new GetOrder_detailsTable(order_detailRepository);
@@ -126,8 +102,6 @@ export const getOrder_detailsTable = async (req, res) => {
     res.status(200).json(order_details);
 
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };

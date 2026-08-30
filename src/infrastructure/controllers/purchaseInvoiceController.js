@@ -17,20 +17,17 @@ const purchaseInvoiceDetailRepository = new PurchaseInvoiceDetailRepository();
 const machineryRepository = new MachineryRepository();
 const machineryStockRepository = new MachineryStockRepository();
 
-export const createPurchaseInvoice = async (req, res) => {
+export const createPurchaseInvoice = async (req, res, next) => {
   try {
     const useCase = new CreatePurchaseInvoice(purchaseInvoiceRepository);
     const invoice = await useCase.execute(req.body);
     res.status(201).json(invoice);
   } catch (err) {
-    if (err.code === "23503") {
-      return res.status(400).json({ error: "El proveedor (supplier_id) especificado no existe." });
-    }
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const createPurchaseComplete = async (req, res) => {
+export const createPurchaseComplete = async (req, res, next) => {
   try {
     const useCase = new CreatePurchaseComplete(
       purchaseInvoiceRepository,
@@ -42,21 +39,21 @@ export const createPurchaseComplete = async (req, res) => {
     const invoice = await useCase.execute(req.body);
     res.status(201).json(invoice);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const getPurchaseInvoices = async (req, res) => {
+export const getPurchaseInvoices = async (req, res, next) => {
   try {
     const useCase = new GetPurchaseInvoices(purchaseInvoiceRepository);
     const invoices = await useCase.execute();
     res.status(200).json(invoices);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const getPurchaseInvoiceById = async (req, res) => {
+export const getPurchaseInvoiceById = async (req, res, next) => {
   try {
     const useCase = new GetPurchaseInvoiceById(purchaseInvoiceRepository);
     const id = parseInt(req.params.id, 10);
@@ -67,11 +64,11 @@ export const getPurchaseInvoiceById = async (req, res) => {
     }
     res.status(200).json(invoice);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const updatePurchaseInvoice = async (req, res) => {
+export const updatePurchaseInvoice = async (req, res, next) => {
   try {
     const useCase = new UpdatePurchaseInvoice(purchaseInvoiceRepository);
     const id = parseInt(req.params.id, 10);
@@ -82,14 +79,11 @@ export const updatePurchaseInvoice = async (req, res) => {
     }
     res.status(200).json(updated);
   } catch (err) {
-    if (err.code === "23503") {
-      return res.status(400).json({ error: "El proveedor especificado no es válido." });
-    }
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const deletePurchaseInvoice = async (req, res) => {
+export const deletePurchaseInvoice = async (req, res, next) => {
   try {
     const useCase = new DeletePurchaseInvoice(purchaseInvoiceRepository);
     const id = parseInt(req.params.id, 10);
@@ -100,11 +94,11 @@ export const deletePurchaseInvoice = async (req, res) => {
     }
     res.status(204).send();
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const getPurchaseInvoicesTable = async (req, res) => {
+export const getPurchaseInvoicesTable = async (req, res, next) => {
   try {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 9;
@@ -113,6 +107,6 @@ export const getPurchaseInvoicesTable = async (req, res) => {
     const tableData = await useCase.execute(page, limit, search);
     res.status(200).json(tableData);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };

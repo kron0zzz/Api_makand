@@ -9,27 +9,27 @@ import AdditionalChargeRepository from "../repositories/AdditionalChargeReposito
 
 const additionalChargeRepository = new AdditionalChargeRepository();
 
-export const createAdditionalCharge = async (req, res) => {
+export const createAdditionalCharge = async (req, res, next) => {
   try {
     const createUseCase = new CreateAdditionalCharge(additionalChargeRepository);
     const charge = await createUseCase.execute(req.body);
     res.status(201).json(charge);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const getAdditionalCharges = async (req, res) => {
+export const getAdditionalCharges = async (req, res, next) => {
   try {
     const getUseCase = new GetAdditionalCharges(additionalChargeRepository);
     const charges = await getUseCase.execute();
     res.status(200).json(charges);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const getAdditionalChargeById = async (req, res) => {
+export const getAdditionalChargeById = async (req, res, next) => {
   try {
     const getByIdUseCase = new GetAdditionalChargeById(additionalChargeRepository);
     const charge = await getByIdUseCase.execute(req.params.id);
@@ -40,11 +40,11 @@ export const getAdditionalChargeById = async (req, res) => {
 
     res.status(200).json(charge);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const updateAdditionalCharge = async (req, res) => {
+export const updateAdditionalCharge = async (req, res, next) => {
   try {
     const updateUseCase = new UpdateAdditionalCharge(additionalChargeRepository);
     const updatedCharge = await updateUseCase.execute(req.params.id, req.body);
@@ -55,11 +55,11 @@ export const updateAdditionalCharge = async (req, res) => {
 
     res.status(200).json(updatedCharge);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const deleteAdditionalCharge = async (req, res) => {
+export const deleteAdditionalCharge = async (req, res, next) => {
   try {
     const deleteUseCase = new DeleteAdditionalCharge(additionalChargeRepository);
     const deletedCharge = await deleteUseCase.execute(req.params.id);
@@ -70,11 +70,11 @@ export const deleteAdditionalCharge = async (req, res) => {
 
     res.status(204).send();
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const getAdditionalChargesTable = async (req, res) => {
+export const getAdditionalChargesTable = async (req, res, next) => {
   try {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 9;
@@ -83,6 +83,6 @@ export const getAdditionalChargesTable = async (req, res) => {
     const result = await getTableUseCase.execute(page, limit, search);
     res.status(200).json(result);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };

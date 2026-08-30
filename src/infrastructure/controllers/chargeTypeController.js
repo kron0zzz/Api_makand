@@ -9,27 +9,27 @@ import ChargeTypeRepositoryPrisma from "../repositories/ChargeTypeRepositoryPris
 
 const chargeTypeRepository = new ChargeTypeRepositoryPrisma();
 
-export const createChargeType = async (req, res) => {
+export const createChargeType = async (req, res, next) => {
   try {
     const createChargeTypeUseCase = new CreateChargeType(chargeTypeRepository);
     const chargeType = await createChargeTypeUseCase.execute(req.body);
     res.status(201).json(chargeType);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    next(err);
   }
 };
 
-export const getChargeTypes = async (req, res) => {
+export const getChargeTypes = async (req, res, next) => {
   try {
     const getChargeTypesUseCase = new GetChargeTypes(chargeTypeRepository);
     const chargeTypes = await getChargeTypesUseCase.execute();
     res.status(200).json(chargeTypes);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const getChargeTypeById = async (req, res) => {
+export const getChargeTypeById = async (req, res, next) => {
   try {
     const getChargeTypeByIdUseCase = new GetChargeTypeById(chargeTypeRepository);
     const chargeType = await getChargeTypeByIdUseCase.execute(req.params.id);
@@ -40,11 +40,11 @@ export const getChargeTypeById = async (req, res) => {
 
     res.status(200).json(chargeType);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const updateChargeType = async (req, res) => {
+export const updateChargeType = async (req, res, next) => {
   try {
     const updateChargeTypeUseCase = new UpdateChargeType(chargeTypeRepository);
     const updatedChargeType = await updateChargeTypeUseCase.execute(
@@ -58,11 +58,11 @@ export const updateChargeType = async (req, res) => {
 
     res.status(200).json(updatedChargeType);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    next(err);
   }
 };
 
-export const deleteChargeType = async (req, res) => {
+export const deleteChargeType = async (req, res, next) => {
   try {
     const deleteChargeTypeUseCase = new DeleteChargeType(chargeTypeRepository);
     const deletedChargeType = await deleteChargeTypeUseCase.execute(req.params.id);
@@ -73,11 +73,11 @@ export const deleteChargeType = async (req, res) => {
 
     res.status(204).send();
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const getChargeTypesTable = async (req, res) => {
+export const getChargeTypesTable = async (req, res, next) => {
   try {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 9;
@@ -86,6 +86,6 @@ export const getChargeTypesTable = async (req, res) => {
     const chargeTypes = await getChargeTypesTableUseCase.execute(page, limit, search);
     res.status(200).json(chargeTypes);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };

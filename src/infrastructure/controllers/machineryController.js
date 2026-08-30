@@ -14,27 +14,27 @@ const machineryRepository = new MachineryRepository();
 const machineryStockRepository = new MachineryStockRepository();
 const maintenanceRepositoryPrisma = new MaintenanceRepositoryPrisma();
 
-export const createMachinery = async (req, res) => {
+export const createMachinery = async (req, res, next) => {
   try {
     const createUseCase = new CreateMachinery(machineryRepository);
     const machinery = await createUseCase.execute(req.body);
     res.status(201).json(machinery);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const getMachineries = async (req, res) => {
+export const getMachineries = async (req, res, next) => {
   try {
     const getMachineriesUseCase = new GetMachineries(machineryRepository);
     const machineries = await getMachineriesUseCase.execute();
     res.status(200).json(machineries);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const getMachineryById = async (req, res) => {
+export const getMachineryById = async (req, res, next) => {
   try {
     const getByIdUseCase = new GetMachineryById(machineryRepository);
     const machinery = await getByIdUseCase.execute(req.params.id);
@@ -45,11 +45,11 @@ export const getMachineryById = async (req, res) => {
 
     res.status(200).json(machinery);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const updateMachinery = async (req, res) => {
+export const updateMachinery = async (req, res, next) => {
   try {
     console.log("DATOS PARA ACTUALIZAR MAQUINARIA:", req.body);
     const updateUseCase = new UpdateMachinery(machineryRepository);
@@ -64,11 +64,11 @@ export const updateMachinery = async (req, res) => {
 
     res.status(200).json(updatedMachinery);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const deleteMachinery = async (req, res) => {
+export const deleteMachinery = async (req, res, next) => {
   try {
     const deleteUseCase = new DeleteMachinery(machineryRepository);
     const deletedMachinery = await deleteUseCase.execute(req.params.id);
@@ -79,22 +79,22 @@ export const deleteMachinery = async (req, res) => {
 
     res.status(204).send();
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const createMachineryComplete = async (req, res) => {
+export const createMachineryComplete = async (req, res, next) => {
   try {
     const { machineryData, stockData } = req.body;
     const createUseCase = new CreateMachineryComplete(machineryRepository, machineryStockRepository);
     const machinery = await createUseCase.execute(machineryData, stockData, req.user);
     res.status(201).json(machinery);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const getMachineriesTable = async (req, res) => {
+export const getMachineriesTable = async (req, res, next) => {
   try {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 9;
@@ -103,11 +103,11 @@ export const getMachineriesTable = async (req, res) => {
     const machineries = await getTableUseCase.execute(page, limit, search);
     res.status(200).json(machineries);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const getMachineryPdf = async (req, res) => {
+export const getMachineryPdf = async (req, res, next) => {
   try {
     const getPdfUseCase = new GetMachineryPdf(machineryRepository, maintenanceRepositoryPrisma);
     const pdfBuffer = await getPdfUseCase.execute(req.params.id);
@@ -120,6 +120,6 @@ export const getMachineryPdf = async (req, res) => {
       return res.status(404).json({ error: err.message });
     }
     console.error("Error generando PDF:", err);
-    res.status(500).json({ error: "Error al generar el documento PDF" });
+    next(err);
   }
 };

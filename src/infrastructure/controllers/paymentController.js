@@ -16,18 +16,18 @@ const orderRepository = new OrderRepository();
 const rentalCutRepository = new RentalCutRepository();
 const getOrderBalance = new GetOrderBalance(orderRepository, rentalCutRepository, paymentRepository);
 
-export const createPayment = async (req, res) => {
+export const createPayment = async (req, res, next) => {
   try {
     const createPayment = new CreatePayment(paymentRepository, orderRepository, getOrderBalance);
     const payment = await createPayment.execute(req.body);
     res.status(201).json(payment);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
 
-export const getPayments = async (req, res) => {
+export const getPayments = async (req, res, next) => {
   try {
     const getPayments =
       new GetPayments(paymentRepository);
@@ -37,13 +37,11 @@ export const getPayments = async (req, res) => {
     res.status(200).json(payments);
 
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const getPaymentById = async (req, res) => {
+export const getPaymentById = async (req, res, next) => {
   try {
     const getPaymentById =
       new GetPaymentById(paymentRepository);
@@ -60,13 +58,11 @@ export const getPaymentById = async (req, res) => {
     res.status(200).json(payment);
 
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const updatePayment = async (req, res) => {
+export const updatePayment = async (req, res, next) => {
   try {
     const updatePayment =
       new UpdatePayment(paymentRepository);
@@ -80,20 +76,11 @@ export const updatePayment = async (req, res) => {
     res.status(200).json(updatedPayment);
 
   } catch (err) {
-
-    if (err.code === "P2025") {
-      return res.status(404).json({
-        error: "Abono no encontrado"
-      });
-    }
-
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const deletePayment = async (req, res) => {
+export const deletePayment = async (req, res, next) => {
   try {
     const deletePayment =
       new DeletePayment(paymentRepository);
@@ -103,20 +90,11 @@ export const deletePayment = async (req, res) => {
     res.status(204).send();
 
   } catch (err) {
-
-    if (err.code === "P2025") {
-      return res.status(404).json({
-        error: "Abono no encontrado"
-      });
-    }
-
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const getPaymentsTable = async (req, res) => {
+export const getPaymentsTable = async (req, res, next) => {
   try {
     const getPaymentsTable =
       new GetPaymentsTable(paymentRepository);
@@ -126,18 +104,16 @@ export const getPaymentsTable = async (req, res) => {
     res.status(200).json(payments);
 
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const getPaymentsByOrderId = async (req, res) => {
+export const getPaymentsByOrderId = async (req, res, next) => {
   try {
     const getPaymentsByOrderId = new GetPaymentsByOrderId(paymentRepository, rentalCutRepository);
     const paymentsOrder = await getPaymentsByOrderId.execute(req.params.id);
     res.status(200).json(paymentsOrder);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };

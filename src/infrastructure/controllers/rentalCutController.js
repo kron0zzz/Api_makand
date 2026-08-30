@@ -18,7 +18,7 @@ const order_detailRepository = new Order_detailRepository();
 const returnRepository = new ReturnRepository();
 const additionalChargeRepository = new AdditionalChargeRepository(); 
 
-export const createRentalCut = async (req, res) => {
+export const createRentalCut = async (req, res, next) => {
   try {
     const createRentalCut = new CreateRentalCut(
       rentalCutRepository, 
@@ -30,14 +30,12 @@ export const createRentalCut = async (req, res) => {
     const rentalCut = await createRentalCut.execute(req.body);
     return res.status(201).json(rentalCut);
   } catch (err) {
-    // Esto imprimirá el error real y exacto en la terminal de VS Code
-    console.error("ERROR AL CREAR EL CORTE DE RENTA:", err);
-    return res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
 
-export const getRentalCuts = async (req, res) => {
+export const getRentalCuts = async (req, res, next) => {
   try {
     const getRentalCuts =
       new GetRentalCuts(rentalCutRepository);
@@ -47,13 +45,11 @@ export const getRentalCuts = async (req, res) => {
     res.status(200).json(rentalCuts);
 
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const getRentalCutById = async (req, res) => {
+export const getRentalCutById = async (req, res, next) => {
   try {
     const getRentalCutById =
       new GetRentalCutById(rentalCutRepository);
@@ -70,13 +66,11 @@ export const getRentalCutById = async (req, res) => {
     res.status(200).json(rentalCut);
 
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const updateRentalCut = async (req, res) => {
+export const updateRentalCut = async (req, res, next) => {
   try {
     const updateRentalCut =
       new UpdateRentalCut(rentalCutRepository);
@@ -90,20 +84,11 @@ export const updateRentalCut = async (req, res) => {
     res.status(200).json(updatedRentalCut);
 
   } catch (err) {
-
-    if (!err.message) {
-      return res.status(404).json({
-        error: "Corte de alquiler no encontrado"
-      });
-    }
-
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const deleteRentalCut = async (req, res) => {
+export const deleteRentalCut = async (req, res, next) => {
   try {
     const deleteRentalCut =
       new DeleteRentalCut(rentalCutRepository);
@@ -113,20 +98,11 @@ export const deleteRentalCut = async (req, res) => {
     res.status(204).send();
 
   } catch (err) {
-
-    if (!err.message) {
-      return res.status(404).json({
-        error: "Corte de alquiler no encontrado"
-      });
-    }
-
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const getRentalCutsTable = async (req, res) => {
+export const getRentalCutsTable = async (req, res, next) => {
   try {
     const getRentalCutsTable =
       new GetRentalCutsTable(rentalCutRepository);
@@ -136,15 +112,13 @@ export const getRentalCutsTable = async (req, res) => {
     res.status(200).json(rentalCuts);
 
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
 
 
-export const getRentalCutByOrderId = async (req, res) => {
+export const getRentalCutByOrderId = async (req, res, next) => {
   try {
     const getRentalCutByOrderId =
       new GetRentalCutByOrderId(rentalCutRepository);
@@ -161,9 +135,6 @@ export const getRentalCutByOrderId = async (req, res) => {
     res.status(200).json(rentalCutsOrder);
 
   } catch (err) {
-    console.error("ERROR DETECTADO EN getRentalCutByOrderId:", err);
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };

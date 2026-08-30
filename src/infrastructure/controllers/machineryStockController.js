@@ -10,29 +10,29 @@ import MachineryStockRepository from "../repositories/machineryStockRepository.j
 const machineryStockRepository = new MachineryStockRepository();
 
 // Cambiado a createMachineryStock
-export const createMachineryStock = async (req, res) => {
+export const createMachineryStock = async (req, res, next) => {
   try {
     const createUseCase = new CreateMachineryStock(machineryStockRepository);
     const stock = await createUseCase.execute(req.body);
     res.status(201).json(stock);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
 // Cambiado a getMachineryStocks
-export const getMachineryStocks = async (req, res) => {
+export const getMachineryStocks = async (req, res, next) => {
   try {
     const getStocksUseCase = new GetMachineryStocks(machineryStockRepository);
     const stocks = await getStocksUseCase.execute();
     res.status(200).json(stocks);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
 // Cambiado a getMachineryStockById
-export const getMachineryStockById = async (req, res) => {
+export const getMachineryStockById = async (req, res, next) => {
   try {
     const getByIdUseCase = new GetMachineryStockById(machineryStockRepository);
     const stock = await getByIdUseCase.execute(req.params.id);
@@ -43,12 +43,12 @@ export const getMachineryStockById = async (req, res) => {
 
     res.status(200).json(stock);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
 // Cambiado a updateMachineryStock
-export const updateMachineryStock = async (req, res) => {
+export const updateMachineryStock = async (req, res, next) => {
   try {
     const updateUseCase = new UpdateMachineryStock(machineryStockRepository);
     const updatedStock = await updateUseCase.execute(
@@ -62,12 +62,12 @@ export const updateMachineryStock = async (req, res) => {
 
     res.status(200).json(updatedStock);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
 // Cambiado a deleteMachineryStock
-export const deleteMachineryStock = async (req, res) => {
+export const deleteMachineryStock = async (req, res, next) => {
   try {
     const deleteUseCase = new DeleteMachineryStock(machineryStockRepository);
     const deletedStock = await deleteUseCase.execute(req.params.id);
@@ -78,12 +78,12 @@ export const deleteMachineryStock = async (req, res) => {
 
     res.status(204).send(); 
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
 // Cambiado a getMachineryStocksTable
-export const getMachineryStocksTable = async (req, res) => {
+export const getMachineryStocksTable = async (req, res, next) => {
   try {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 9;
@@ -94,6 +94,6 @@ export const getMachineryStocksTable = async (req, res) => {
 
     res.status(200).json(stocks);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };

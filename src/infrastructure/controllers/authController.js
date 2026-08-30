@@ -45,7 +45,7 @@ function generateCode() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-export const login = async (req, res) => {
+export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
@@ -61,15 +61,11 @@ export const login = async (req, res) => {
     res.status(200).json(result);
 
   } catch (err) {
-
-    res.status(401).json({
-      error: err.message
-    });
-
+    next(err);
   }
 };
 
-export const forgotPassword = async (req, res) => {
+export const forgotPassword = async (req, res, next) => {
   try {
     const { email } = req.body;
 
@@ -90,12 +86,11 @@ export const forgotPassword = async (req, res) => {
 
     res.status(200).json({ message: "Código de verificación enviado a tu correo. Revisa tu bandeja." });
   } catch (err) {
-    console.error("Error en forgotPassword:", err);
-    res.status(500).json({ error: "Error al enviar el código de recuperación." });
+    next(err);
   }
 };
 
-export const verifyCode = async (req, res) => {
+export const verifyCode = async (req, res, next) => {
   try {
     const { email, code } = req.body;
 
@@ -130,21 +125,17 @@ export const verifyCode = async (req, res) => {
 
     res.status(200).json({ token });
   } catch (err) {
-    console.error("Error en verifyCode:", err);
-    res.status(500).json({ error: "Error al verificar el código." });
+    next(err);
   }
 };
 
-export const resetPassword = async (req, res) => {
+export const resetPassword = async (req, res, next) => {
   try {
     const { token, newPassword } = req.body;
 
-    // Verificamos que el token sea válido y no haya expirado
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const userId = decoded.user_id;
 
-    // Validamos que la nueva contraseña cumpla con los requisitos de seguridad:
-    // mínimo una mayúscula, una minúscula, un número y un carácter especial
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/;
     if (!passwordRegex.test(newPassword)) {
       return res.status(400).json({
@@ -152,16 +143,13 @@ export const resetPassword = async (req, res) => {
       });
     }
 
-    // Encriptamos la nueva contraseña con bcrypt
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-    // Actualizamos en la base de datos
     await userRepository.updatePassword(userId, hashedPassword);
 
     res.status(200).json({ message: "Contraseña actualizada exitosamente." });
   } catch (err) {
-    console.error("Error en resetPassword:", err);
-    res.status(400).json({ error: "El enlace es inválido o ha expirado." });
+    next(err);
   }
 };

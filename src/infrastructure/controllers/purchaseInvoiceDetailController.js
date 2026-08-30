@@ -9,30 +9,27 @@ import PurchaseInvoiceDetailRepository from "../repositories/PurchaseInvoiceDeta
 
 const purchaseInvoiceDetailRepository = new PurchaseInvoiceDetailRepository();
 
-export const createPurchaseInvoiceDetail = async (req, res) => {
+export const createPurchaseInvoiceDetail = async (req, res, next) => {
   try {
     const useCase = new CreatePurchaseInvoiceDetail(purchaseInvoiceDetailRepository);
     const detail = await useCase.execute(req.body);
     res.status(201).json(detail);
   } catch (err) {
-    if (err.code === "23503") {
-      return res.status(400).json({ error: "La factura (invoice_id) o la maquinaria (machinery_id) especificada no existe." });
-    }
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const getPurchaseInvoiceDetails = async (req, res) => {
+export const getPurchaseInvoiceDetails = async (req, res, next) => {
   try {
     const useCase = new GetPurchaseInvoiceDetails(purchaseInvoiceDetailRepository);
     const details = await useCase.execute();
     res.status(200).json(details);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const getPurchaseInvoiceDetailById = async (req, res) => {
+export const getPurchaseInvoiceDetailById = async (req, res, next) => {
   try {
     const useCase = new GetPurchaseInvoiceDetailById(purchaseInvoiceDetailRepository);
     const id = parseInt(req.params.id, 10);
@@ -43,11 +40,11 @@ export const getPurchaseInvoiceDetailById = async (req, res) => {
     }
     res.status(200).json(detail);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const updatePurchaseInvoiceDetail = async (req, res) => {
+export const updatePurchaseInvoiceDetail = async (req, res, next) => {
   try {
     const useCase = new UpdatePurchaseInvoiceDetail(purchaseInvoiceDetailRepository);
     const id = parseInt(req.params.id, 10);
@@ -58,14 +55,11 @@ export const updatePurchaseInvoiceDetail = async (req, res) => {
     }
     res.status(200).json(updated);
   } catch (err) {
-    if (err.code === "23503") {
-      return res.status(400).json({ error: "La factura o maquinaria especificada no es válida." });
-    }
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const deletePurchaseInvoiceDetail = async (req, res) => {
+export const deletePurchaseInvoiceDetail = async (req, res, next) => {
   try {
     const useCase = new DeletePurchaseInvoiceDetail(purchaseInvoiceDetailRepository);
     const id = parseInt(req.params.id, 10);
@@ -76,11 +70,11 @@ export const deletePurchaseInvoiceDetail = async (req, res) => {
     }
     res.status(204).send();
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const getPurchaseInvoiceDetailsTable = async (req, res) => {
+export const getPurchaseInvoiceDetailsTable = async (req, res, next) => {
   try {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 9;
@@ -89,6 +83,6 @@ export const getPurchaseInvoiceDetailsTable = async (req, res) => {
     const tableData = await useCase.execute(page, limit, search);
     res.status(200).json(tableData);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };

@@ -27,6 +27,7 @@ import roleRoutes from "../infrastructure/routes/roleRoutes.js";
 import rentalCutRoutes from "../infrastructure/routes/rentalCutRoutes.js";
 import dashboardRoutes from "../infrastructure/routes/dashboardRoutes.js";
 import additionalChargeRoutes from "../infrastructure/routes/additionalChargeRoutes.js";
+import errorMiddleware from "../middlewares/errorMiddleware.js";
 console.log("¡Leyendo server.js!");
 
 const app = express();
@@ -71,5 +72,7 @@ app.use("/api/charge-types", chargeTypeRoutes);
 app.use("/api/rental-cuts", rentalCutRoutes);
 app.use("/api/additional-charges", additionalChargeRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+
+app.use(errorMiddleware);
 
 export default app;

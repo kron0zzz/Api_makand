@@ -9,27 +9,27 @@ import MachineryStatusRepository from "../repositories/MachineryStatusRepository
 
 const machineryStatusRepository = new MachineryStatusRepository();
 
-export const createMachineryStatus = async (req, res) => {
+export const createMachineryStatus = async (req, res, next) => {
   try {
     const createUseCase = new CreateMachineryStatus(machineryStatusRepository);
     const status = await createUseCase.execute(req.body);
     res.status(201).json(status);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    next(err);
   }
 };
 
-export const getMachineryStatuses = async (req, res) => {
+export const getMachineryStatuses = async (req, res, next) => {
   try {
     const getStatusesUseCase = new GetMachineryStatuses(machineryStatusRepository);
     const statuses = await getStatusesUseCase.execute();
     res.status(200).json(statuses);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const getMachineryStatusById = async (req, res) => {
+export const getMachineryStatusById = async (req, res, next) => {
   try {
     const getByIdUseCase = new GetMachineryStatusById(machineryStatusRepository);
     const status = await getByIdUseCase.execute(req.params.id);
@@ -40,11 +40,11 @@ export const getMachineryStatusById = async (req, res) => {
 
     res.status(200).json(status);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const updateMachineryStatus = async (req, res) => {
+export const updateMachineryStatus = async (req, res, next) => {
   try {
     const updateUseCase = new UpdateMachineryStatus(machineryStatusRepository);
     const updatedStatus = await updateUseCase.execute(
@@ -58,11 +58,11 @@ export const updateMachineryStatus = async (req, res) => {
 
     res.status(200).json(updatedStatus);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const deleteMachineryStatus = async (req, res) => {
+export const deleteMachineryStatus = async (req, res, next) => {
   try {
     const deleteUseCase = new DeleteMachineryStatus(machineryStatusRepository);
     const deletedStatus = await deleteUseCase.execute(req.params.id);
@@ -73,16 +73,16 @@ export const deleteMachineryStatus = async (req, res) => {
 
     res.status(204).send(); 
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
-export const getMachineryStatusesTable = async (req, res) => {
+export const getMachineryStatusesTable = async (req, res, next) => {
   try {
     const getTableUseCase = new GetMachineryStatusesTable(machineryStatusRepository);
     const statuses = await getTableUseCase.execute();
     res.status(200).json(statuses);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };

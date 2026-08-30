@@ -29,7 +29,7 @@ const validateVehiclePayload = (data) => {
   return null;
 };
 
-export const createVehicle = async (req, res) => {
+export const createVehicle = async (req, res, next) => {
   const validationError = validateVehiclePayload(req.body);
   if (validationError) {
     return res.status(400).json({ error: validationError });
@@ -40,31 +40,21 @@ export const createVehicle = async (req, res) => {
     const vehicle = await createVehicle.execute(req.body);
     res.status(201).json(vehicle);
   } catch (err) {
-    if (err.code === "23505") {
-      return res.status(400).json({
-        error: "Ya existe un vehículo con esa placa"
-      });
-    }
-
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const getVehicles = async (req, res) => {
+export const getVehicles = async (req, res, next) => {
   try {
     const getVehicles = new GetVehicles(vehicleRepository);
     const vehicles = await getVehicles.execute();
     res.status(200).json(vehicles);
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const getVehicleById = async (req, res) => {
+export const getVehicleById = async (req, res, next) => {
   try {
     const getVehicleById = new GetVehicleById(vehicleRepository);
     const vehicle = await getVehicleById.execute(req.params.id);
@@ -77,13 +67,11 @@ export const getVehicleById = async (req, res) => {
 
     res.status(200).json(vehicle);
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const updateVehicle = async (req, res) => {
+export const updateVehicle = async (req, res, next) => {
   const validationError = validateVehiclePayload(req.body);
   if (validationError) {
     return res.status(400).json({ error: validationError });
@@ -101,19 +89,11 @@ export const updateVehicle = async (req, res) => {
 
     res.status(200).json(updatedVehicle);
   } catch (err) {
-    if (err.code === "23505") {
-      return res.status(400).json({
-        error: "Ya existe un vehículo con esa placa"
-      });
-    }
-
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
-export const deleteVehicle = async (req, res) => {
+export const deleteVehicle = async (req, res, next) => {
   try {
     const deleteVehicle = new DeleteVehicle(vehicleRepository);
     const deletedVehicle = await deleteVehicle.execute(req.params.id);
@@ -126,15 +106,13 @@ export const deleteVehicle = async (req, res) => {
 
     res.status(204).send();
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };
 
 
 
-export const getVehiclesTable = async (req, res) => {
+export const getVehiclesTable = async (req, res, next) => {
   try {
     const getVehiclesTable =
       new GetVehiclesTable(vehicleRepository);
@@ -144,8 +122,6 @@ export const getVehiclesTable = async (req, res) => {
     res.status(200).json(vehicles);
 
   } catch (err) {
-    res.status(500).json({
-      error: err.message
-    });
+    next(err);
   }
 };

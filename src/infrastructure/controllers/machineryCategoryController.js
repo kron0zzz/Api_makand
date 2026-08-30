@@ -9,30 +9,29 @@ import MachineryCategoryRepository from "../repositories/MachineryCategoryReposi
 
 const machineryCategoryRepository = new MachineryCategoryRepository();
 
-// Cambiado a createMachineryCategory
-export const createMachineryCategory = async (req, res) => {
+export const createMachineryCategory = async (req, res, next) => {
   try {
     const createUseCase = new CreateMachineryCategory(machineryCategoryRepository);
     const category = await createUseCase.execute(req.body);
     res.status(201).json(category);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
 // Cambiado a getMachineryCategories
-export const getMachineryCategories = async (req, res) => {
+export const getMachineryCategories = async (req, res, next) => {
   try {
     const getCategoriesUseCase = new GetMachineryCategories(machineryCategoryRepository);
     const categories = await getCategoriesUseCase.execute();
     res.status(200).json(categories);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
 // Cambiado a getMachineryCategoryById
-export const getMachineryCategoryById = async (req, res) => {
+export const getMachineryCategoryById = async (req, res, next) => {
   try {
     const getByIdUseCase = new GetMachineryCategoryById(machineryCategoryRepository);
     const category = await getByIdUseCase.execute(req.params.id);
@@ -43,12 +42,12 @@ export const getMachineryCategoryById = async (req, res) => {
 
     res.status(200).json(category);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
 // Cambiado a updateMachineryCategory
-export const updateMachineryCategory = async (req, res) => {
+export const updateMachineryCategory = async (req, res, next) => {
   try {
     const updateUseCase = new UpdateMachineryCategory(machineryCategoryRepository);
     const updatedCategory = await updateUseCase.execute(
@@ -62,12 +61,12 @@ export const updateMachineryCategory = async (req, res) => {
 
     res.status(200).json(updatedCategory);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
 // Cambiado a deleteMachineryCategory
-export const deleteMachineryCategory = async (req, res) => {
+export const deleteMachineryCategory = async (req, res, next) => {
   try {
     const deleteUseCase = new DeleteMachineryCategory(machineryCategoryRepository);
     const deletedCategory = await deleteUseCase.execute(req.params.id);
@@ -78,12 +77,12 @@ export const deleteMachineryCategory = async (req, res) => {
 
     res.status(204).send(); 
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
 // Cambiado a getMachineryCategoriesTable
-export const getMachineryCategoriesTable = async (req, res) => {
+export const getMachineryCategoriesTable = async (req, res, next) => {
   try {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 9;
@@ -94,6 +93,6 @@ export const getMachineryCategoriesTable = async (req, res) => {
 
     res.status(200).json(categories);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
