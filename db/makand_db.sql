@@ -189,7 +189,8 @@ CREATE TABLE machinery_stock (
 
     CONSTRAINT fk_stock_machinery
         FOREIGN KEY (machinery_id)
-        REFERENCES machinery(machinery_id),
+        REFERENCES machinery(machinery_id)
+        ON DELETE CASCADE,
 
     CONSTRAINT fk_stock_status
         FOREIGN KEY (status_id)
