@@ -31,7 +31,8 @@ export default class CreateCompleteOrder {
       const finalOrderData = {
         ...orderData,
         user_id: user.user_id,
-        order_status_id: 1
+        order_status_id: 1,
+        cut_frequency: orderData.cut_frequency || null
       };
 
       // Validaciones de stock de maquinaria

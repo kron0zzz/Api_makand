@@ -271,6 +271,7 @@ CREATE TABLE orders (
     discount_amount DECIMAL(9,2) DEFAULT 0.00,
     order_description VARCHAR(500),
     last_cut_date TIMESTAMP,
+    cut_frequency VARCHAR(10) CHECK (cut_frequency IN ('QUINCENAL', 'MENSUAL')),
 
     CONSTRAINT fk_order_project
         FOREIGN KEY (project_id)
@@ -519,3 +520,6 @@ ON payments(order_id);
 
 CREATE INDEX idx_returns_order_detail
 ON returns(order_detail_id);
+
+CREATE INDEX idx_orders_cut_frequency 
+ON orders(cut_frequency);

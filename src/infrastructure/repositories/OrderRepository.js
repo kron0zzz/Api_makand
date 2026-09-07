@@ -10,7 +10,8 @@ export default class OrderRepository {
       order_status_id,
       user_id,
       discount_amount,
-      order_description
+      order_description,
+      cut_frequency
     } = orderData;
 
     const query = `
@@ -20,9 +21,10 @@ export default class OrderRepository {
         order_status_id,
         user_id,
         discount_amount,
-        order_description
+        order_description,
+        cut_frequency
       )
-      VALUES ($1, $2, $3, $4, $5, $6)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING *
     `;
 
@@ -32,7 +34,8 @@ export default class OrderRepository {
       order_status_id,
       user_id,
       discount_amount,
-      order_description
+      order_description,
+      cut_frequency || null
     ];
 
     const result =
@@ -239,6 +242,7 @@ export default class OrderRepository {
       SELECT
         o.order_id,
         o.order_creation_date,
+        o.cut_frequency,
         p.project_name,
         o.order_status_id,
         c.customer_name AS customer_name,
@@ -393,5 +397,20 @@ export default class OrderRepository {
 
     return result.rows;
 
+  }
+
+  async findCutsByOrderId(orderId) {
+
+    const query = `
+      SELECT period_end_date
+      FROM rental_cuts
+      WHERE order_id = $1
+      ORDER BY period_end_date ASC
+    `;
+
+    const result =
+      await pool.query(query, [orderId]);
+
+    return result.rows;
   }
 }
