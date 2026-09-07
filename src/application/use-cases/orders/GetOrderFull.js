@@ -1,8 +1,15 @@
+import AdditionalChargeRepository from "../../../infrastructure/repositories/AdditionalChargeRepository.js";
+
 export default class GetOrderFull {
 
-  constructor(orderRepository) {
-    this.orderRepository =
-      orderRepository;
+  constructor(
+    orderRepository,
+    additionalChargeRepository
+  ) {
+
+    this.orderRepository = orderRepository;
+    this.additionalChargeRepository = additionalChargeRepository;
+
   }
 
   async execute(id) {
@@ -19,10 +26,16 @@ export default class GetOrderFull {
       await this.orderRepository
         .findDetailsByOrderId(id);
 
+    const additionalCharges =
+      await this.additionalChargeRepository
+        .findByOrderId(id);
+
     return {
       ...order,
-      details
+      details,
+      additional_charges: additionalCharges
     };
+
   }
 
 }

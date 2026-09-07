@@ -84,7 +84,11 @@ export const getOrderById = async (req, res, next) => {
 export const updateOrder = async (req, res, next) => {
   try {
     const updateOrder =
-      new UpdateOrder(orderRepository);
+      new UpdateOrder(
+        orderRepository,
+        rentalCutRepository,
+        additionalChargeRepository
+      );
 
     const updatedOrder =
       await updateOrder.execute(
@@ -209,7 +213,8 @@ export const getOrderFull = async (req, res, next) => {
 
     const getOrderFull =
       new GetOrderFull(
-        orderRepository
+        orderRepository,
+        additionalChargeRepository
       );
 
     const order =
