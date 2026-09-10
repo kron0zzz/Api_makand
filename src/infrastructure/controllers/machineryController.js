@@ -2,17 +2,14 @@ import CreateMachinery from "../../application/use-cases/machinery/CreateMachine
 import CreateMachineryComplete from "../../application/use-cases/machinery/CreateMachineryComplete.js";
 import GetMachineries from "../../application/use-cases/machinery/GetMachineries.js";
 import GetMachineryById from "../../application/use-cases/machinery/GetMachineryById.js";
-import GetMachineryPdf from "../../application/use-cases/machinery/GetMachineryPdf.js";
 import UpdateMachinery from "../../application/use-cases/machinery/UpdateMachinery.js";
 import DeleteMachinery from "../../application/use-cases/machinery/DeleteMachinery.js";
 import GetMachineriesTable from "../../application/use-cases/machinery/GetMachineriesTable.js";
 import MachineryRepository from "../repositories/MachineryRepository.js";
 import MachineryStockRepository from "../repositories/machineryStockRepository.js";
-import MaintenanceRepositoryPrisma from "../repositories/MaintenanceRepositoryPrisma.js";
 
 const machineryRepository = new MachineryRepository();
 const machineryStockRepository = new MachineryStockRepository();
-const maintenanceRepositoryPrisma = new MaintenanceRepositoryPrisma();
 
 export const createMachinery = async (req, res, next) => {
   try {
@@ -103,23 +100,6 @@ export const getMachineriesTable = async (req, res, next) => {
     const machineries = await getTableUseCase.execute(page, limit, search);
     res.status(200).json(machineries);
   } catch (err) {
-    next(err);
-  }
-};
-
-export const getMachineryPdf = async (req, res, next) => {
-  try {
-    const getPdfUseCase = new GetMachineryPdf(machineryRepository, maintenanceRepositoryPrisma);
-    const pdfBuffer = await getPdfUseCase.execute(req.params.id);
-
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", `attachment; filename="hoja-vida-maquinaria-${req.params.id}.pdf"`);
-    res.send(pdfBuffer);
-  } catch (err) {
-    if (err.statusCode === 404) {
-      return res.status(404).json({ error: err.message });
-    }
-    console.error("Error generando PDF:", err);
     next(err);
   }
 };

@@ -7,7 +7,6 @@ import {
   createMachineryComplete,
   getMachineries,
   getMachineryById,
-  getMachineryPdf,
   updateMachinery,
   deleteMachinery,
   getMachineriesTable
@@ -21,7 +20,6 @@ router.get("/", authMiddleware, authorize('Listar Maquinaria'), getMachineries);
 router.post("/", authMiddleware, authorize('Crear Maquinaria'), createMachinery);
 router.post("/complete", authMiddleware, authorize('Crear Maquinaria'), createMachineryComplete);
 router.get("/:id", authMiddleware, authorize('Ver Detalle de Maquinaria'), getMachineryById);
-router.get("/:id/pdf", authMiddleware, authorize('Ver Detalle de Maquinaria'), getMachineryPdf);
 router.put("/:id", authMiddleware, authorize('Editar Maquinaria'), updateMachinery);
 router.delete("/:id", authMiddleware, authorize('Eliminar Maquinaria'), deleteMachinery);
 

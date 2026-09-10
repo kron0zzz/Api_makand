@@ -4,10 +4,13 @@ import GetMachineryStockById from "../../application/use-cases/machinery_stocks/
 import UpdateMachineryStock from "../../application/use-cases/machinery_stocks/UpdateMachineryStock.js";
 import DeleteMachineryStock from "../../application/use-cases/machinery_stocks/DeleteMachineryStock.js";
 import GetMachineryStocksTable from "../../application/use-cases/machinery_stocks/GetMachineryStocksTable.js";
+import GetStockPdf from "../../application/use-cases/machinery_stocks/GetStockPdf.js";
 
 import MachineryStockRepository from "../repositories/machineryStockRepository.js";
+import MaintenanceRepositoryPrisma from "../repositories/MaintenanceRepositoryPrisma.js";
 
 const machineryStockRepository = new MachineryStockRepository();
+const maintenanceRepository = new MaintenanceRepositoryPrisma();
 
 // Cambiado a createMachineryStock
 export const createMachineryStock = async (req, res, next) => {
@@ -94,6 +97,26 @@ export const getMachineryStocksTable = async (req, res, next) => {
 
     res.status(200).json(stocks);
   } catch (err) {
+    next(err);
+  }
+};
+
+export const getStockPdf = async (req, res, next) => {
+  try {
+    const getStockPdfUseCase = new GetStockPdf(machineryStockRepository, maintenanceRepository);
+    const pdfBuffer = await getStockPdfUseCase.execute(req.params.id);
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `attachment; filename="hoja-vida-equipo-${req.params.id}.pdf"`);
+    res.send(pdfBuffer);
+  } catch (err) {
+    if (err.statusCode === 404) {
+      return res.status(404).json({ error: err.message });
+    }
+    if (err.statusCode === 400) {
+      return res.status(400).json({ error: err.message });
+    }
+    console.error("Error generando PDF:", err);
     next(err);
   }
 };
