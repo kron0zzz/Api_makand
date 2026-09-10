@@ -43,7 +43,7 @@ insert into machinery (category_id, machinery_name, machinery_description, is_mo
 insert into machinery_stock (machinery_id, status_id, is_owned, stock_quantity) values (1010, 1, true, 150);
 
 insert into machinery (category_id, machinery_name, machinery_description, is_motorized, sale_price, daily_rental_price, weight_kg) values (2, 'Cinturón de Herramientas', 'Cinturón portaherramientas cuero', false, 65000, 3000, 1.2);
-insert into machinery_stock (machinery_id, status_id, is_owned, stock_quantity) values (1011, 1, true, 60);
+insert into machinery_stock (machinery_id, status_id, is_owned, stock_quantity) values (1011, 1, false, 60);
 
 INSERT INTO suppliers (document_type, document_number, supplier_status, supplier_name, supplier_phone, supplier_state, supplier_city) VALUES ('CC', '10234454', true, 'Ferretería Vasquez', '3114553423', 'Antioquia', 'Caldas');
 
