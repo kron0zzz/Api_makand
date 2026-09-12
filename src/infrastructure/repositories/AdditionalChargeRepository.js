@@ -183,8 +183,30 @@ export default class AdditionalChargeRepository {
 
   // =========================================
 
-  async findTableData(page = 1, limit = 10, search = "") {
+  async findTableData(page = 1, limit = 10, search = "", orderId = null) {
     const offset = (page - 1) * limit;
+
+    let whereClause = "";
+    const queryParams = [];
+    let paramIndex = 1;
+
+    if (orderId) {
+      whereClause += ` AND ac.order_id = $${paramIndex}`;
+      queryParams.push(orderId);
+      paramIndex++;
+    }
+
+    whereClause += `
+            AND (
+                $${paramIndex} = ''
+                OR LOWER(ac.charge_description) LIKE LOWER($${paramIndex + 1})
+                OR LOWER(ct.charge_type_name) LIKE LOWER($${paramIndex + 1})
+            )
+        `;
+    queryParams.push(search, `%${search}%`);
+    paramIndex += 2;
+
+    queryParams.push(limit, offset);
 
     const query = `
         SELECT
@@ -197,28 +219,26 @@ export default class AdditionalChargeRepository {
             ac.charge_amount
         FROM additional_charges ac
         LEFT JOIN charge_types ct ON ac.charge_type_id = ct.charge_type_id
-        WHERE
-            $1 = ''
-            OR LOWER(ac.charge_description) LIKE LOWER($2)
-            OR LOWER(ct.charge_type_name) LIKE LOWER($2)
+        WHERE 1=1
+        ${whereClause}
         ORDER BY ac.additional_charge_id
-        LIMIT $3
-        OFFSET $4
+        LIMIT $${paramIndex}
+        OFFSET $${paramIndex + 1}
     `;
 
-    const result = await pool.query(query, [search, `%${search}%`, limit, offset]);
+    const result = await pool.query(query, queryParams);
 
+    // Count query
+    const countParams = queryParams.slice(0, -2);
     const totalQuery = await pool.query(
         `
         SELECT COUNT(*)
         FROM additional_charges ac
         LEFT JOIN charge_types ct ON ac.charge_type_id = ct.charge_type_id
-        WHERE
-            $1 = ''
-            OR LOWER(ac.charge_description) LIKE LOWER($2)
-            OR LOWER(ct.charge_type_name) LIKE LOWER($2)
+        WHERE 1=1
+        ${whereClause}
         `,
-        [search, `%${search}%`]
+        countParams
     );
 
     const total = Number(totalQuery.rows[0].count);

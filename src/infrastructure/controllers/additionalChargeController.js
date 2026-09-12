@@ -79,8 +79,9 @@ export const getAdditionalChargesTable = async (req, res, next) => {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 9;
     const search = req.query.search || "";
+    const orderId = req.query.order_id || null;
     const getTableUseCase = new GetAdditionalChargesTable(additionalChargeRepository);
-    const result = await getTableUseCase.execute(page, limit, search);
+    const result = await getTableUseCase.execute(page, limit, search, orderId);
     res.status(200).json(result);
   } catch (err) {
     next(err);

@@ -454,6 +454,7 @@ INSERT INTO charge_types (charge_type_name) VALUES
 -- 1. Insertar todos los permisos necesarios
 INSERT INTO permissions (permission_name) VALUES 
 ('Listar Tipo de Cargo'), ('Crear Tipo de Cargo'), ('Ver Detalle de Tipo de Cargo'), ('Editar Tipo de Cargo'), ('Eliminar Tipo de Cargo'),
+('Listar Cobro Adicional'),('Crear Cobro Adicional'),('Ver Detalle de Cobro Adicional'), ('Editar Cobro Adicional'), ('Eliminar Cobro Adicional'),
 ('Listar Cliente'), ('Crear Cliente'), ('Ver Detalle de Cliente'), ('Editar Cliente'), ('Eliminar Cliente'),
 ('Listar Empleado'), ('Crear Empleado'), ('Ver Detalle de Empleado'), ('Editar Empleado'), ('Eliminar Empleado'),
 ('Listar Categoría de Maquinaria'), ('Crear Categoría de Maquinaria'), ('Ver Detalle de Categoría de Maquinaria'), ('Editar Categoría de Maquinaria'), ('Eliminar Categoría de Maquinaria'),
