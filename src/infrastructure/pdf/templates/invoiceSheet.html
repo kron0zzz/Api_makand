@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Factura de Cortes - MAKAND</title>
+
+  <style>
+    @page {
+      size: A4;
+      margin: 10mm 12mm;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 8.5pt;
+      color: #111;
+      background: #fff;
+      line-height: 1.2;
+    }
+
+    .page {
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* =========================================================
+       ENCABEZADO
+       ========================================================= */
+
+    .header {
+      text-align: center;
+      margin-bottom: 7px;
+    }
+
+    .brand {
+      font-size: 18pt;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      line-height: 1;
+    }
+
+    .subtitle {
+      margin-top: 2px;
+      font-size: 9pt;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .header-info {
+      margin-top: 2px;
+      font-size: 7.5pt;
+      font-weight: 600;
+    }
+
+    .header-line {
+      border-bottom: 1px solid #111;
+      margin-top: 5px;
+    }
+
+    /* =========================================================
+       INFORMACIÓN GENERAL
+       ========================================================= */
+
+    .general-info {
+      width: 100%;
+      margin-bottom: 7px;
+      border-collapse: collapse;
+      font-size: 7.8pt;
+    }
+
+    .general-info td {
+      padding: 2px 4px;
+      vertical-align: top;
+    }
+
+    .general-info .label {
+      font-weight: 700;
+      white-space: nowrap;
+      width: 12%;
+    }
+
+    .general-info .value {
+      width: 38%;
+    }
+
+    /* =========================================================
+       SECCIONES
+       ========================================================= */
+
+    .section {
+      margin-bottom: 8px;
+      page-break-inside: avoid;
+    }
+
+    .section-title {
+      font-size: 9pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 3px 4px;
+      border-top: 1px solid #111;
+      border-bottom: 1px solid #111;
+      margin-bottom: 4px;
+    }
+
+    /* =========================================================
+       TABLAS DE INFORMACIÓN
+       ========================================================= */
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8pt;
+    }
+
+    .data-table td {
+      padding: 2.5px 4px;
+      vertical-align: top;
+    }
+
+    .data-table .label {
+      width: 20%;
+      font-weight: 700;
+    }
+
+    .data-table .value {
+      width: 30%;
+    }
+
+    /* =========================================================
+       RANGO FACTURADO
+       ========================================================= */
+
+    .range-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8pt;
+    }
+
+    .range-table td {
+      padding: 3px 5px;
+      vertical-align: top;
+    }
+
+    .range-table .label {
+      font-weight: 700;
+      width: 20%;
+    }
+
+    /* =========================================================
+       TABLAS PRINCIPALES
+       ========================================================= */
+
+    .invoice-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 7.7pt;
+    }
+
+    .invoice-table thead {
+      display: table-header-group;
+    }
+
+    .invoice-table th {
+      font-weight: 700;
+      text-align: center;
+      padding: 3px 3px;
+      border-bottom: 1px solid #111;
+      vertical-align: middle;
+    }
+
+    .invoice-table td {
+      padding: 3px 3px;
+      vertical-align: middle;
+      border-bottom: 1px solid #d0d0d0;
+    }
+
+    .invoice-table tbody tr:last-child td {
+      border-bottom: 1px solid #111;
+    }
+
+    .invoice-table tfoot {
+      display: table-row-group;
+    }
+
+    .invoice-table tfoot td {
+      font-weight: 700;
+      padding: 3px;
+      border-bottom: 1px solid #111;
+    }
+
+    /* =========================================================
+       ALINEACIONES
+       ========================================================= */
+
+    .left-col {
+      text-align: left;
+    }
+
+    .center-col {
+      text-align: center;
+    }
+
+    .right-col,
+    .amount-col {
+      text-align: right;
+    }
+
+    .amount-col {
+      white-space: nowrap;
+    }
+
+    /* =========================================================
+       TOTALES
+       ========================================================= */
+
+    .total-row td {
+      font-weight: 700;
+      border-top: 1px solid #111;
+      border-bottom: 1px solid #111 !important;
+    }
+
+    /* =========================================================
+       RESUMEN FINANCIERO
+       ========================================================= */
+
+    .financial-summary {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8.5pt;
+      margin-top: 5px;
+    }
+
+    .financial-summary td {
+      padding: 3px 5px;
+      border-bottom: 1px solid #d0d0d0;
+    }
+
+    .financial-summary .label {
+      text-align: right;
+      font-weight: 700;
+      width: 75%;
+    }
+
+    .financial-summary .value {
+      text-align: right;
+      width: 25%;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .financial-summary .grand-total td {
+      border-top: 1px solid #111;
+      border-bottom: 2px solid #111;
+      font-size: 9.5pt;
+    }
+
+    /* =========================================================
+       TEXTO VACÍO
+       ========================================================= */
+
+    .empty {
+      padding: 5px;
+      font-style: italic;
+      color: #555;
+    }
+
+    /* =========================================================
+       FOOTER
+       ========================================================= */
+
+    .footer {
+      margin-top: 10px;
+      padding-top: 4px;
+      border-top: 1px solid #111;
+      font-size: 7pt;
+      text-align: center;
+      color: #444;
+    }
+
+    /* =========================================================
+       IMPRESIÓN
+       ========================================================= */
+
+    .section,
+    .invoice-table,
+    .data-table,
+    .range-table,
+    .financial-summary {
+      page-break-inside: avoid;
+    }
+
+    tr {
+      page-break-inside: avoid;
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="page">
+
+    <!-- =====================================================
+         ENCABEZADO
+         ===================================================== -->
+
+    <div class="header">
+
+      <div class="brand">
+        MAKAND
+      </div>
+
+      <div class="subtitle">
+        Factura de Cortes
+      </div>
+
+      <div class="header-info">
+        Documento generado automáticamente &bull;
+        {{order_creation_date}}
+      </div>
+
+      <div class="header-line"></div>
+
+    </div>
+
+
+    <!-- =====================================================
+         INFORMACIÓN GENERAL
+         ===================================================== -->
+
+    <table class="general-info">
+
+      <tr>
+        <td class="label">ID Pedido:</td>
+        <td class="value">#{{order_id}}</td>
+
+        <td class="label">Cliente:</td>
+        <td class="value">{{customer_name}}</td>
+      </tr>
+
+      <tr>
+        <td class="label">Proyecto:</td>
+        <td class="value">{{project_name}}</td>
+
+        <td class="label">Ciudad:</td>
+        <td class="value">{{project_city}}</td>
+      </tr>
+
+      <tr>
+        <td class="label">Dirección:</td>
+        <td class="value">{{project_address}}</td>
+
+        <td class="label">Frecuencia:</td>
+        <td class="value">{{cut_frequency}}</td>
+      </tr>
+
+      <tr>
+        <td class="label">Fecha Creación:</td>
+        <td class="value">{{order_creation_date}}</td>
+
+        <td class="label">Fecha Cierre:</td>
+        <td class="value">{{order_closing_date}}</td>
+      </tr>
+
+    </table>
+
+
+    <!-- =====================================================
+         RANGO FACTURADO
+         ===================================================== -->
+
+    <div class="section">
+
+      <div class="section-title">
+        Rango Facturado
+      </div>
+
+      <table class="range-table">
+
+        <tr>
+          <td class="label">Desde Corte:</td>
+          <td>
+            {{cut_start}} ({{cut_start_date}})
+          </td>
+
+          <td class="label">Hasta Corte:</td>
+          <td>
+            {{cut_end}} ({{cut_end_date}})
+          </td>
+
+          <td class="label">Total Cortes:</td>
+          <td>
+            {{total_cuts_included}}
+          </td>
+        </tr>
+
+      </table>
+
+    </div>
+
+
+    <!-- =====================================================
+         DETALLE DE CORTES
+         ===================================================== -->
+
+    <div class="section">
+
+      <div class="section-title">
+        Detalle de Cortes
+      </div>
+
+      {{#if cuts}}
+
+      <table class="invoice-table">
+
+        <thead>
+          <tr>
+            <th style="width: 7%;"># Corte</th>
+            <th style="width: 17%;">Periodo</th>
+            <th style="width: 14%;">Fecha Registro</th>
+            <th style="width: 11%;">Máquinas</th>
+            <th style="width: 11%;">Unidades</th>
+            <th style="width: 15%;">Peso (kg)</th>
+            <th style="width: 25%;">Valor Corte</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          {{#each cuts}}
+
+          <tr>
+
+            <td class="center-col">
+              {{cut_number}}
+            </td>
+
+            <td class="center-col">
+              {{period_start}} - {{period_end}}
+            </td>
+
+            <td class="center-col">
+              {{cut_date}}
+            </td>
+
+            <td class="center-col">
+              {{machinery_count}}
+            </td>
+
+            <td class="center-col">
+              {{units_count}}
+            </td>
+
+            <td class="right-col">
+              {{total_weight}}
+            </td>
+
+            <td class="amount-col">
+              {{cut_amount}}
+            </td>
+
+          </tr>
+
+          {{/each}}
+
+        </tbody>
+
+        <tfoot>
+
+          <tr class="total-row">
+
+            <td colspan="6" class="right-col">
+              TOTAL FACTURADO:
+            </td>
+
+            <td class="amount-col">
+              {{total_amount}}
+            </td>
+
+          </tr>
+
+        </tfoot>
+
+      </table>
+
+      {{else}}
+
+        <p class="empty">
+          No hay cortes en el rango seleccionado.
+        </p>
+
+      {{/if}}
+
+    </div>
+
+
+    <!-- =====================================================
+         PAGOS
+         ===================================================== -->
+
+    {{#if payments.length > 0}}
+
+    <div class="section">
+
+      <div class="section-title">
+        Pagos Registrados
+      </div>
+
+      <table class="invoice-table">
+
+        <thead>
+          <tr>
+            <th style="width: 10%;"># Pago</th>
+            <th style="width: 20%;">Fecha</th>
+            <th style="width: 20%;">Tipo</th>
+            <th style="width: 20%;">Corte Asociado</th>
+            <th style="width: 30%;">Monto</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          {{#each payments}}
+
+          <tr>
+
+            <td class="center-col">
+              {{payment_id}}
+            </td>
+
+            <td class="center-col">
+              {{payment_date}}
+            </td>
+
+            <td class="center-col">
+              {{payment_type}}
+            </td>
+
+            <td class="center-col">
+              {{cut_reference}}
+            </td>
+
+            <td class="amount-col">
+              {{payment_amount}}
+            </td>
+
+          </tr>
+
+          {{/each}}
+
+        </tbody>
+
+        <tfoot>
+
+          <tr class="total-row">
+
+            <td colspan="4" class="right-col">
+              TOTAL PAGADO:
+            </td>
+
+            <td class="amount-col">
+              {{total_paid}}
+            </td>
+
+          </tr>
+
+        </tfoot>
+
+      </table>
+
+    </div>
+
+    {{/if}}
+
+
+    <!-- =====================================================
+         COBROS ADICIONALES
+         ===================================================== -->
+
+    {{#if additional_charges.length > 0}}
+
+    <div class="section">
+
+      <div class="section-title">
+        Cobros Adicionales
+      </div>
+
+      <table class="invoice-table">
+
+        <thead>
+          <tr>
+            <th style="width: 10%;"># Cobro</th>
+            <th style="width: 25%;">Tipo</th>
+            <th style="width: 40%;">Descripción</th>
+            <th style="width: 25%;">Monto</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          {{#each additional_charges}}
+
+          <tr>
+
+            <td class="center-col">
+              {{charge_id}}
+            </td>
+
+            <td>
+              {{charge_type}}
+            </td>
+
+            <td>
+              {{charge_description}}
+            </td>
+
+            <td class="amount-col">
+              {{charge_amount}}
+            </td>
+
+          </tr>
+
+          {{/each}}
+
+        </tbody>
+
+        <tfoot>
+
+          <tr class="total-row">
+
+            <td colspan="3" class="right-col">
+              TOTAL COBROS ADICIONALES:
+            </td>
+
+            <td class="amount-col">
+              {{total_additional_charges}}
+            </td>
+
+          </tr>
+
+        </tfoot>
+
+      </table>
+
+    </div>
+
+    {{/if}}
+
+
+    <!-- =====================================================
+         RESUMEN FINANCIERO
+         ===================================================== -->
+
+    <div class="section">
+
+      <div class="section-title">
+        Resumen Financiero
+      </div>
+
+      <table class="financial-summary">
+
+        <tr>
+          <td class="label">
+            Total Facturado (Cortes):
+          </td>
+
+          <td class="value">
+            {{total_amount}}
+          </td>
+        </tr>
+
+
+        {{#if additional_charges.length > 0}}
+
+        <tr>
+          <td class="label">
+            Total Cobros Adicionales:
+          </td>
+
+          <td class="value">
+            {{total_additional_charges}}
+          </td>
+        </tr>
+
+        {{/if}}
+
+
+        <tr class="grand-total">
+
+          <td class="label">
+            GRAN TOTAL:
+          </td>
+
+          <td class="value">
+            {{grand_total}}
+          </td>
+
+        </tr>
+
+
+        {{#if payments.length > 0}}
+
+        <tr>
+
+          <td class="label">
+            Total Pagado:
+          </td>
+
+          <td class="value">
+            {{total_paid}}
+          </td>
+
+        </tr>
+
+        <tr class="grand-total">
+
+          <td class="label">
+            SALDO PENDIENTE:
+          </td>
+
+          <td class="value">
+            {{pending_balance}}
+          </td>
+
+        </tr>
+
+        {{/if}}
+
+      </table>
+
+    </div>
+
+
+    <!-- =====================================================
+         PIE
+         ===================================================== -->
+
+    <div class="footer">
+      Documento generado automáticamente por MAKAND
+      &bull;
+      {{generated_at}}
+    </div>
+
+  </div>
+
+</body>
+</html>
