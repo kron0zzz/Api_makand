@@ -9,6 +9,7 @@ import GetOrderFull from "../../application/use-cases/orders/GetOrderFull.js"
 import GetOrderWorkspace from "../../application/use-cases/orders/GetOrderWorkspace.js";
 import CancelOrder from "../../application/use-cases/orders/CancelOrder.js";
 import CloseOrder from "../../application/use-cases/orders/CloseOrder.js";
+import GetOrderInvoicePdf from "../../application/use-cases/orders/GetOrderInvoicePdf.js";
 
 import OrderDetailRepository from "../repositories/Order_detailRepository.js";
 import MachineryRepository from "../repositories/MachineryRepository.js";
@@ -246,5 +247,41 @@ export const getOrderWorkspace = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
 
+export const getOrderInvoicePdf = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { cut_start_id, cut_end_id } = req.query;
+
+    if (!cut_start_id || !cut_end_id) {
+      return res.status(400).json({ error: "Se requieren cut_start_id y cut_end_id" });
+    }
+
+    const getInvoicePdfUseCase = new GetOrderInvoicePdf(
+      orderRepository,
+      rentalCutRepository,
+      paymentRepository,
+      additionalChargeRepository
+    );
+
+    const pdfBuffer = await getInvoicePdfUseCase.execute(
+      id,
+      Number(cut_start_id),
+      Number(cut_end_id)
+    );
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `attachment; filename="factura-cortes-pedido-${id}.pdf"`);
+    res.send(pdfBuffer);
+  } catch (err) {
+    if (err.statusCode === 404) {
+      return res.status(404).json({ error: err.message });
+    }
+    if (err.statusCode === 400) {
+      return res.status(400).json({ error: err.message });
+    }
+    console.error("Error generando factura PDF:", err);
+    next(err);
+  }
 };

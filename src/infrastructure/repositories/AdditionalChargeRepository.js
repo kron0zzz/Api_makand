@@ -123,9 +123,18 @@ export default class AdditionalChargeRepository {
   ) {
 
     const query = `
-      SELECT *
-      FROM additional_charges
-      WHERE order_id = $1
+      SELECT
+        ac.additional_charge_id,
+        ac.charge_type_id,
+        ct.charge_type_name,
+        ac.order_id,
+        ac.return_id,
+        ac.charge_description,
+        ac.charge_amount
+      FROM additional_charges ac
+      LEFT JOIN charge_types ct ON ac.charge_type_id = ct.charge_type_id
+      WHERE ac.order_id = $1
+      ORDER BY ac.additional_charge_id
     `;
 
     const result = await client.query(

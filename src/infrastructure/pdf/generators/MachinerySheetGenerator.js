@@ -1,8 +1,16 @@
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 import puppeteer from "puppeteer";
 
-const TEMPLATE_PATH = path.join(new URL(".", import.meta.url).pathname, "..", "templates", "machinerySheet.html");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const TEMPLATE_PATH = path.join(
+  __dirname,
+  "..",
+  "templates",
+  "machinerySheet.html"
+);
 
 function renderTemplate(template, data) {
   let html = template;
