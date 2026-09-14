@@ -1,6 +1,6 @@
 FROM node:20-bookworm
 
-WORKDIR /app
+WORKDIR /home/app
 
 # Dependencias necesarias para ejecutar Chromium/Puppeteer
 RUN apt-get update && apt-get install -y \
@@ -24,7 +24,7 @@ RUN npm ci
 COPY . .
 
 # Puerto de la aplicación
-EXPOSE 10000
+EXPOSE 3000
 
 # Arrancar la API
-CMD ["npm", "start"]
+CMD ["node", "src/app.js"]
