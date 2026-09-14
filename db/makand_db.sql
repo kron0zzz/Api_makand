@@ -181,7 +181,7 @@ CREATE TABLE machinery_stock (
     machinery_id INT NOT NULL,
     status_id SMALLINT NOT NULL,
     -- Campos para unidades SERIALIZADAS (Motorizadas). Serán NULL para tacos/andamios.
-    serial_number VARCHAR(50) UNIQUE,
+    serial_number VARCHAR(10) UNIQUE,
     next_revision_date DATE,
     is_owned BOOLEAN NOT NULL DEFAULT TRUE,
     -- Para motorizadas siempre es 1. Para no motorizadas es la cantidad en stock (ej: 500).
