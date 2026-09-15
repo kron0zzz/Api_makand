@@ -50,9 +50,6 @@ export default class GetStockPdf {
     const lastMaintenance = maintenances[0] || null;
     const nextRevision = stock.next_revision_date || null;
 
-    let currentStatus = "Sin estado";
-    currentStatus = stock.status_name || "Sin estado";
-
     const data = {
       machinery_name: stock.machinery_name || "",
       machinery_id: stock.machinery_id,
@@ -73,7 +70,6 @@ export default class GetStockPdf {
             ? "Propio de la Empresa"
             : "Subcontratado / Externo"
           : "No especificado",
-      current_status: currentStatus,
       last_maintenance_date: lastMaintenance ? formatDate(lastMaintenance.maintenance_date) : "Sin registros",
       last_maintenance_notes: lastMaintenance?.revision_notes || "Sin notas",
       next_maintenance_date: formatDate(nextRevision),

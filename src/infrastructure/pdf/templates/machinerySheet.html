@@ -114,9 +114,30 @@
       color: #6b7280;
       text-align: center;
     }
+    .maintenance-table {
+      table-layout: fixed;
+    }
     .maintenance-table th,
     .maintenance-table td {
       font-size: 10pt;
+    }
+    .maintenance-table th:nth-child(1),
+    .maintenance-table td:nth-child(1) {
+      width: 5%;
+    }
+    .maintenance-table th:nth-child(2),
+    .maintenance-table td:nth-child(2) {
+      width: 18%;
+    }
+    .maintenance-table th:nth-child(3),
+    .maintenance-table td:nth-child(3) {
+      width: 22%;
+    }
+    .maintenance-table th:nth-child(4),
+    .maintenance-table td:nth-child(4) {
+      width: 55%;
+      word-break: break-word;
+      overflow-wrap: anywhere;
     }
     .maintenance-table th {
       background: #eff6ff;
@@ -190,16 +211,6 @@
         <tr>
           <th>Origen</th>
           <td>{{is_owned_label}}</td>
-        </tr>
-      </table>
-    </div>
-
-    <div class="section">
-      <div class="section-title">Estado Actual</div>
-      <table class="data-table">
-        <tr>
-          <th>Estado</th>
-          <td>{{current_status}}</td>
         </tr>
       </table>
     </div>

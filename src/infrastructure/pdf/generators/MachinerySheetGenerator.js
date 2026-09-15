@@ -15,11 +15,19 @@ const TEMPLATE_PATH = path.join(
 function renderTemplate(template, data) {
   let html = template;
 
-  const ifRegex = /\{\{#if\s+(\w+)\}\}([\s\S]*?)\{\{\/if\}\}/g;
-  html = html.replace(ifRegex, (match, key, block) => {
-    const value = data[key];
+  const ifRegex = /\{\{#if\s+([^}]+)\}\}([\s\S]*?)\{\{\/if\}\}/g;
+  html = html.replace(ifRegex, (match, condition, block) => {
+    let thenBlock = block;
+    let elseBlock = "";
+    const elseIndex = block.indexOf("{{else}}");
+    if (elseIndex !== -1) {
+      thenBlock = block.substring(0, elseIndex);
+      elseBlock = block.substring(elseIndex + "{{else}}".length);
+    }
+
+    const value = data[condition.trim()];
     const isEmptyArray = Array.isArray(value) && value.length === 0;
-    return value && !isEmptyArray ? block : "";
+    return value && !isEmptyArray ? thenBlock : elseBlock;
   });
 
   const eachRegex = /\{\{#each\s+(\w+)\}\}([\s\S]*?)\{\{\/each\}\}/g;

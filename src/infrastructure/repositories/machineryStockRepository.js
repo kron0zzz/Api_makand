@@ -41,9 +41,16 @@ export default class MachineryStockRepository {
 
   async findById(id, client = pool) {
     const result = await client.query(
-      `SELECT ms.*, m.machinery_name, m.is_motorized, m.weight_kg
+      `SELECT ms.*,
+              m.machinery_name,
+              m.is_motorized,
+              m.weight_kg,
+              m.sale_price,
+              m.daily_rental_price,
+              c.category_name
        FROM machinery_stock ms
        INNER JOIN machinery m ON ms.machinery_id = m.machinery_id
+       INNER JOIN machinery_categories c ON m.category_id = c.category_id
        WHERE ms.stock_id = $1`,
       [id]
     );

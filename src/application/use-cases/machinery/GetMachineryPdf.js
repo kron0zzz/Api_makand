@@ -45,13 +45,6 @@ export default class GetMachineryPdf {
     const lastMaintenance = maintenances[0] || null;
     const nextRevision = firstStock.next_revision_date || null;
 
-    let currentStatus = "Sin stock registrado";
-    if (machinery.is_motorized) {
-      currentStatus = machinery.total_stock > 0 ? "Disponible" : "No disponible";
-    } else if (stockDetails.length > 0) {
-      currentStatus = firstStock.status_name || "Sin estado";
-    }
-
     const data = {
       machinery_name: machinery.machinery_name || "",
       machinery_id: machinery.machinery_id,
@@ -71,7 +64,6 @@ export default class GetMachineryPdf {
             ? "Propio de la Empresa"
             : "Subcontratado / Externo"
           : "No especificado",
-      current_status: currentStatus,
       last_maintenance_date: lastMaintenance ? formatDate(lastMaintenance.maintenance_date) : "Sin registros",
       last_maintenance_notes: lastMaintenance?.revision_notes || "Sin notas",
       next_maintenance_date: formatDate(nextRevision),
