@@ -280,4 +280,10 @@ async create(roleData) {
     const result = await pool.query(query, [roleId]);
     return result.rows;
   }
+
+  async hasUsersWithRole(roleId) {
+    const query = `SELECT COUNT(*) FROM users WHERE role_id = $1`;
+    const result = await pool.query(query, [roleId]);
+    return parseInt(result.rows[0].count, 10) > 0;
+  }
 }

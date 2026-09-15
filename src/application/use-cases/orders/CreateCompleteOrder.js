@@ -28,11 +28,17 @@ export default class CreateCompleteOrder {
         ...orderData
       } = data;
 
+      // Validar cut_frequency
+      const validFrequencies = ['QUINCENAL', 'MENSUAL'];
+      if (!orderData.cut_frequency || !validFrequencies.includes(orderData.cut_frequency)) {
+        throw new Error('La frecuencia de cortes es obligatoria y debe ser "QUINCENAL" o "MENSUAL".');
+      }
+
       const finalOrderData = {
         ...orderData,
         user_id: user.user_id,
         order_status_id: 1,
-        cut_frequency: orderData.cut_frequency || null
+        cut_frequency: orderData.cut_frequency
       };
 
       // Validaciones de stock de maquinaria
