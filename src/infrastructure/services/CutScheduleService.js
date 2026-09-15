@@ -68,14 +68,14 @@ export default class CutScheduleService {
         if (frequency === CUT_FREQUENCY.QUINCENAL) {
           const fifteenth = new Date(year, month, 15);
 
-          if (fifteenth >= start && fifteenth <= ref) {
+          if (fifteenth > start && fifteenth <= ref) {
             expectedDates.push(new Date(fifteenth));
           }
         }
 
         const lastDay = new Date(year, month, daysInMonth);
 
-        if (lastDay >= start && lastDay <= ref) {
+        if (lastDay > start && lastDay <= ref) {
           expectedDates.push(new Date(lastDay));
         }
       }
