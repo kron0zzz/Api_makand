@@ -3,7 +3,6 @@ import cors from "cors";
 
 import chargeTypeRoutes from "../infrastructure/routes/chargeTypeRoutes.js";
 import supplierRoutes from "../infrastructure/routes/supplierRoutes.js"; 
-import vehicleRoutes from "../infrastructure/routes/vehicleRoutes.js";
 import customerRoutes from "../infrastructure/routes/customerRoutes.js";
 import positionRoutes from "../infrastructure/routes/positionRoutes.js";
 import machineryStatusRoutes from "../infrastructure/routes/machineryStatusRoutes.js";
@@ -17,7 +16,6 @@ import orderRoutes from "../infrastructure/routes/orderRoutes.js";
 import order_detailRoutes from "../infrastructure/routes/order_detailRoutes.js";
 import purchaseInvoiceRoutes from "../infrastructure/routes/purchaseInvoiceRoutes.js";
 import purchaseInvoiceDetailRoutes from "../infrastructure/routes/purchaseInvoiceDetailRoutes.js";
-import subRentalRoutes from "../infrastructure/routes/subRentalRoutes.js";
 import projectRoutes from "../infrastructure/routes/projectRoutes.js";
 import returnRoutes from "../infrastructure/routes/returnRoutes.js";
 import paymentRoutes from "../infrastructure/routes/paymentRoutes.js";
@@ -48,7 +46,6 @@ app.get("/", (req, res) => {
 // Registro de rutas
 app.use("/api/suppliers", supplierRoutes);
 app.use("/api/customers", customerRoutes);
-app.use("/api/vehicles", vehicleRoutes);
 app.use("/api/positions", positionRoutes);
 app.use("/api/machine-statuses", machineryStatusRoutes);
 app.use("/api/machine-categories", machineryCategoryRoutes); 
@@ -61,7 +58,6 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/order_details", order_detailRoutes);
 app.use("/api/purchase-invoices", purchaseInvoiceRoutes);
 app.use("/api/purchase-invoice-details", purchaseInvoiceDetailRoutes);
-app.use("/api/sub-rentals", subRentalRoutes);
 app.use("/api/projects", projectRoutes);
 app.use("/api/returns", returnRoutes);
 app.use("/api/payments", paymentRoutes);
