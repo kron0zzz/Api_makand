@@ -5,6 +5,10 @@ import UpdateMachineryStock from "../../application/use-cases/machinery_stocks/U
 import DeleteMachineryStock from "../../application/use-cases/machinery_stocks/DeleteMachineryStock.js";
 import GetMachineryStocksTable from "../../application/use-cases/machinery_stocks/GetMachineryStocksTable.js";
 import GetStockPdf from "../../application/use-cases/machinery_stocks/GetStockPdf.js";
+import GetLastSerialByMachineryId from "../../application/use-cases/machinery_stocks/GetLastSerialByMachineryId.js";
+import GetLastSerialGlobal from "../../application/use-cases/machinery_stocks/GetLastSerialGlobal.js";
+import CheckSerialsExist from "../../application/use-cases/machinery_stocks/CheckSerialsExist.js";
+import CheckSerialsExistGlobal from "../../application/use-cases/machinery_stocks/CheckSerialsExistGlobal.js";
 
 import MachineryStockRepository from "../repositories/machineryStockRepository.js";
 import MaintenanceRepositoryPrisma from "../repositories/MaintenanceRepositoryPrisma.js";
@@ -96,6 +100,50 @@ export const getMachineryStocksTable = async (req, res, next) => {
     const stocks = await getTableUseCase.execute(page, limit, search);
 
     res.status(200).json(stocks);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getLastSerialByMachineryId = async (req, res, next) => {
+  try {
+    const getLastSerialUseCase = new GetLastSerialByMachineryId(machineryStockRepository);
+    const machineryId = parseInt(req.params.machineryId, 10);
+    const result = await getLastSerialUseCase.execute(machineryId);
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const getLastSerialGlobal = async (req, res, next) => {
+  try {
+    const getLastSerialUseCase = new GetLastSerialGlobal(machineryStockRepository);
+    const result = await getLastSerialUseCase.execute();
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const checkSerials = async (req, res, next) => {
+  try {
+    const checkUseCase = new CheckSerialsExist(machineryStockRepository);
+    const machineryId = parseInt(req.params.machineryId, 10);
+    const serials = req.query.serials ? req.query.serials.split(",") : [];
+    const result = await checkUseCase.execute(machineryId, serials);
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const checkSerialsGlobal = async (req, res, next) => {
+  try {
+    const checkUseCase = new CheckSerialsExistGlobal(machineryStockRepository);
+    const serials = req.query.serials ? req.query.serials.split(",") : [];
+    const result = await checkUseCase.execute(serials);
+    res.status(200).json(result);
   } catch (err) {
     next(err);
   }
