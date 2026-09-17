@@ -83,7 +83,10 @@ export default class OrderRepository {
         p.project_city,
 
         c.customer_id,
+        c.customer_document_type,
+        c.customer_document_number,
         c.customer_name,
+        c.legal_representative,
         c.customer_phone,
 
         u.user_email
