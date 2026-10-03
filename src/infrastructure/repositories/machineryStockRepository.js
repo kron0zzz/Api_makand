@@ -298,4 +298,66 @@ export default class MachineryStockRepository {
     return result.rows[0];
 
   }
+
+
+
+  //---------------------
+  // dar de baja de maquinaria
+  //----------------------
+
+  // Maquinaria NO motorizada: se descuentan las unidades dadas de baja.
+  // Si con el descuento la cantidad queda en 0, el estado pasa a "No disponible" (4).
+  async discountStockByKill(
+    stockId,
+    quantity,
+    client = pool
+  ) {
+
+    const query = `
+      UPDATE machinery_stock
+      SET stock_quantity = stock_quantity - $2,
+          status_id = CASE WHEN stock_quantity - $2 <= 0 THEN 4 ELSE status_id END
+      WHERE stock_id = $1
+        AND stock_quantity >= $2
+        AND status_id <> 4
+      RETURNING *
+    `;
+
+    const result =
+      await client.query(
+        query,
+        [stockId, quantity]
+      );
+
+    return result.rows[0];
+
+  }
+
+
+
+  // Maquinaria motorizada: cada registro es una unidad física (cantidad 1),
+  // se marca como "No disponible" (4) y su cantidad queda en 0.
+  async setNotAvailableByKill(
+    stockId,
+    client = pool
+  ) {
+
+    const query = `
+      UPDATE machinery_stock
+      SET status_id = 4,
+          stock_quantity = 0
+      WHERE stock_id = $1
+        AND status_id <> 4
+      RETURNING *
+    `;
+
+    const result =
+      await client.query(
+        query,
+        [stockId]
+      );
+
+    return result.rows[0];
+
+  }
 }

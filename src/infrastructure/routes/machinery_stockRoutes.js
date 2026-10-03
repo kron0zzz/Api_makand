@@ -7,6 +7,7 @@ import {
   getMachineryStockById, 
   updateMachineryStock, 
   deleteMachineryStock, 
+  killMachineryStock,
   getMachineryStocksTable,
   getStockPdf,
   getLastSerialByMachineryId,
@@ -32,5 +33,8 @@ router.get("/:id/pdf", authMiddleware, authorize('Ver Detalle de Stock'), getSto
 router.get("/:id", authMiddleware, authorize('Ver Detalle de Stock'), getMachineryStockById);    
 router.put("/:id", authMiddleware, authorize('Editar Stock'), updateMachineryStock);   
 router.delete("/:id", authMiddleware, authorize('Eliminar Stock'), deleteMachineryStock);
+
+// dar de baja de maquinaria (motorizada y no motorizada)
+router.patch("/:id/kill", authMiddleware, authorize('Editar Stock'), killMachineryStock);
 
 export default router;

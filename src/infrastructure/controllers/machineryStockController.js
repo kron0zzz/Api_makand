@@ -3,6 +3,7 @@ import GetMachineryStocks from "../../application/use-cases/machinery_stocks/Get
 import GetMachineryStockById from "../../application/use-cases/machinery_stocks/GetMachineryStockById.js";
 import UpdateMachineryStock from "../../application/use-cases/machinery_stocks/UpdateMachineryStock.js";
 import DeleteMachineryStock from "../../application/use-cases/machinery_stocks/DeleteMachineryStock.js";
+import KillMachineryStock from "../../application/use-cases/machinery_stocks/KillMachineryStock.js";
 import GetMachineryStocksTable from "../../application/use-cases/machinery_stocks/GetMachineryStocksTable.js";
 import GetStockPdf from "../../application/use-cases/machinery_stocks/GetStockPdf.js";
 import GetLastSerialByMachineryId from "../../application/use-cases/machinery_stocks/GetLastSerialByMachineryId.js";
@@ -84,6 +85,22 @@ export const deleteMachineryStock = async (req, res, next) => {
     }
 
     res.status(204).send(); 
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Cambiado a killMachineryStock
+export const killMachineryStock = async (req, res, next) => {
+  try {
+    const killUseCase = new KillMachineryStock(machineryStockRepository);
+    const killedStock = await killUseCase.execute(req.params.id, req.body?.quantity);
+
+    if (!killedStock) {
+      return res.status(404).json({ error: "No se encontró el stock de maquinaria al que se le dará de baja" });
+    }
+
+    res.status(200).json(killedStock);
   } catch (err) {
     next(err);
   }
