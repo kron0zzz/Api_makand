@@ -117,8 +117,11 @@ export default class CreatePurchaseComplete {
               detail.quantity,
               client
             );
-            // Si el stock estaba ocupado, cambiar a disponible
-            if (existingStock.status_id === 3) {
+            // Si el stock estaba ocupado o no disponible, cambiar a disponible
+            if (
+              existingStock.status_id === 3 ||
+              existingStock.status_id === 4
+            ) {
               await this.machineryStockRepository.setAvailable(
                 existingStock.stock_id,
                 client

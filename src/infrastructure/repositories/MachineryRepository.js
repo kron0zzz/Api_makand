@@ -61,8 +61,27 @@ export default class MachineryRepository {
       SELECT
         m.*,
         c.category_name,
-        COALESCE(SUM(ms.stock_quantity), 0) AS total_stock,
-        COALESCE(SUM(CASE WHEN ms.status_id = 1 THEN ms.stock_quantity ELSE 0 END), 0) AS available_stock,
+        m.is_motorized,
+        COALESCE(
+          CASE
+            WHEN m.is_motorized THEN (
+              SELECT COUNT(*) FROM machinery_stock ms2 WHERE ms2.machinery_id = m.machinery_id
+            )
+            ELSE (
+              SELECT COALESCE(SUM(ms3.stock_quantity), 0) FROM machinery_stock ms3 WHERE ms3.machinery_id = m.machinery_id
+            )
+          END, 0
+        ) AS total_stock,
+        COALESCE(
+          CASE
+            WHEN m.is_motorized THEN (
+              SELECT COUNT(*) FROM machinery_stock ms4 WHERE ms4.machinery_id = m.machinery_id AND ms4.status_id = 1
+            )
+            ELSE (
+              SELECT COALESCE(SUM(ms5.stock_quantity), 0) FROM machinery_stock ms5 WHERE ms5.machinery_id = m.machinery_id AND ms5.status_id = 1
+            )
+          END, 0
+        ) AS available_stock,
         COALESCE(
           JSON_AGG(
             JSON_BUILD_OBJECT(
@@ -81,7 +100,7 @@ export default class MachineryRepository {
       LEFT JOIN machinery_stock ms ON m.machinery_id = ms.machinery_id
       LEFT JOIN machinery_status st ON ms.status_id = st.status_id
       WHERE m.machinery_id = $1
-      GROUP BY m.machinery_id, c.category_name
+      GROUP BY m.machinery_id, c.category_name, m.is_motorized
       `,
       [id]
     );
@@ -102,8 +121,26 @@ export default class MachineryRepository {
         m.daily_rental_price,
         m.weight_kg,
         c.category_name,
-        COALESCE(SUM(ms.stock_quantity), 0) AS total_stock,
-        COALESCE(SUM(CASE WHEN ms.status_id = 1 THEN ms.stock_quantity ELSE 0 END), 0) AS available_stock,
+        COALESCE(
+          CASE
+            WHEN m.is_motorized THEN (
+              SELECT COUNT(*) FROM machinery_stock ms2 WHERE ms2.machinery_id = m.machinery_id
+            )
+            ELSE (
+              SELECT COALESCE(SUM(ms3.stock_quantity), 0) FROM machinery_stock ms3 WHERE ms3.machinery_id = m.machinery_id
+            )
+          END, 0
+        ) AS total_stock,
+        COALESCE(
+          CASE
+            WHEN m.is_motorized THEN (
+              SELECT COUNT(*) FROM machinery_stock ms4 WHERE ms4.machinery_id = m.machinery_id AND ms4.status_id = 1
+            )
+            ELSE (
+              SELECT COALESCE(SUM(ms5.stock_quantity), 0) FROM machinery_stock ms5 WHERE ms5.machinery_id = m.machinery_id AND ms5.status_id = 1
+            )
+          END, 0
+        ) AS available_stock,
         COALESCE(
           JSON_AGG(
             JSON_BUILD_OBJECT(
@@ -124,7 +161,7 @@ export default class MachineryRepository {
       WHERE
           $1 = ''
           OR LOWER(m.machinery_name) LIKE LOWER($2)
-      GROUP BY m.machinery_id, c.category_name
+      GROUP BY m.machinery_id, c.category_name, m.is_motorized
       ORDER BY m.machinery_id DESC
       LIMIT $3 OFFSET $4
     `;
