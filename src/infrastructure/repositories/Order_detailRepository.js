@@ -4,18 +4,16 @@ export default class Order_detailRepository {
 
   async create(order_detailData,client = pool) {
 
-    const { order_id, stock_id, machinery_name_snapshot, quantity_to_dispatch, rental_unit_price, subtotal_weight_kg} = order_detailData;
+    const { order_id, stock_id, machinery_name_snapshot, quantity_to_dispatch, rental_unit_price, subtotal_weight_kg, supplier_name, is_subrental } = order_detailData;
 
     const query = `
-      INSERT INTO order_details ( order_id, stock_id, machinery_name_snapshot, quantity_to_dispatch, rental_unit_price, subtotal_weight_kg)
-      VALUES ($1, $2, $3, $4, $5, $6)
+      INSERT INTO order_details ( order_id, stock_id, machinery_name_snapshot, quantity_to_dispatch, rental_unit_price, subtotal_weight_kg, supplier_name, is_subrental)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
       RETURNING *
     `;
 
-    const values = [ order_id, stock_id, machinery_name_snapshot, quantity_to_dispatch, rental_unit_price, subtotal_weight_kg];
-
+    const values = [ order_id, stock_id, machinery_name_snapshot, quantity_to_dispatch, rental_unit_price, subtotal_weight_kg, supplier_name ?? null, is_subrental ?? false];
     const result = await client.query(query, values);
-
     return result.rows[0];
   }
 
@@ -53,7 +51,7 @@ export default class Order_detailRepository {
   
   async update(id, order_detailData) {
 
-    const { order_id, stock_id, machinery_name_snapshot, quantity_to_dispatch, rental_unit_price, subtotal_weight_kg } = order_detailData;
+    const { order_id, stock_id, machinery_name_snapshot, quantity_to_dispatch, rental_unit_price, subtotal_weight_kg, supplier_name, is_subrental } = order_detailData;
 
     const query = `
       UPDATE order_details
@@ -63,16 +61,15 @@ export default class Order_detailRepository {
       machinery_name_snapshot = $3, 
       quantity_to_dispatch = $4, 
       rental_unit_price = $5,
-      subtotal_weight_kg = $6
-      WHERE order_detail_id = $7
+      subtotal_weight_kg = $6,
+      supplier_name = $7,
+      is_subrental = $8
+      WHERE order_detail_id = $9
       RETURNING *
     `;
 
-    const values = [order_id, stock_id, machinery_name_snapshot, quantity_to_dispatch, rental_unit_price, subtotal_weight_kg, id];
-
-    const result =
-      await pool.query(query, values);
-
+    const values = [order_id, stock_id, machinery_name_snapshot, quantity_to_dispatch, rental_unit_price, subtotal_weight_kg, supplier_name ?? null, is_subrental ?? false, id];
+    const result = await pool.query(query, values);
     return result.rows[0];
   }
 

@@ -360,4 +360,43 @@ export default class MachineryStockRepository {
     return result.rows[0];
 
   }
+
+
+  async getSubrentalPlaceholderStock(client = pool) {
+    const findQuery = `
+      SELECT ms.* FROM machinery_stock ms
+      INNER JOIN machinery m ON ms.machinery_id = m.machinery_id
+      WHERE m.machinery_name = 'Maquinaria subalquilada' AND ms.is_owned = false
+      LIMIT 1
+    `;
+    const found = await client.query(findQuery);
+    if (found.rows[0]) return found.rows[0];
+
+    // crear categoria si no existe
+    await client.query(`INSERT INTO machinery_categories (category_name) VALUES ('Subalquiler') ON CONFLICT (category_name) DO NOTHING`);
+    const catRes = await client.query(`SELECT category_id FROM machinery_categories WHERE category_name = 'Subalquiler'`);
+    const categoryId = catRes.rows[0].category_id;
+
+    const machRes = await client.query(
+      `INSERT INTO machinery (category_id, machinery_name, machinery_description, is_motorized, sale_price, daily_rental_price, weight_kg)
+       VALUES ($1, 'Maquinaria subalquilada', 'Stock virtual para subalquileres', false, 0, 0, 0)
+       ON CONFLICT (machinery_name) DO NOTHING
+       RETURNING machinery_id`,
+      [categoryId]
+    );
+    let machineryId;
+    if (machRes.rows[0]) machineryId = machRes.rows[0].machinery_id;
+    else {
+      const m = await client.query(`SELECT machinery_id FROM machinery WHERE machinery_name = 'Maquinaria subalquilada'`);
+      machineryId = m.rows[0].machinery_id;
+    }
+
+    const stockRes = await client.query(
+      `INSERT INTO machinery_stock (machinery_id, status_id, is_owned, stock_quantity)
+       VALUES ($1, 1, false, 999999)
+       RETURNING *`,
+      [machineryId]
+    );
+    return stockRes.rows[0];
+  }
 }

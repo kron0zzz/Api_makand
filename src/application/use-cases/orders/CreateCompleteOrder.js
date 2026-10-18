@@ -41,8 +41,10 @@ export default class CreateCompleteOrder {
         cut_frequency: orderData.cut_frequency
       };
 
-      // Validaciones de stock de maquinaria
+      // Validaciones de stock de maquinaria (solo maquinaria propia)
       for (const item of details) {
+        if (item.is_subrental) continue;
+
         const stock =
           await this.machineryStockRepository.findById(
             item.stock_id,
@@ -82,7 +84,33 @@ export default class CreateCompleteOrder {
         );
 
       // Creamos los detalles de maquinaria
+      const placeholderStock = await this.machineryStockRepository.getSubrentalPlaceholderStock(client);
+
       for (const item of details) {
+        if (item.is_subrental) {
+          await this.orderDetailRepository.create(
+            {
+              order_id: order.order_id,
+              stock_id: placeholderStock.stock_id,
+              machinery_name_snapshot:
+                item.machinery_name_snapshot ?? item.machinery_name ?? 'Maquinaria subalquilada',
+              quantity_to_dispatch:
+                item.quantity_to_dispatch,
+              rental_unit_price:
+                item.rental_unit_price,
+              subtotal_weight_kg:
+                item.subtotal_weight_kg ?? (Number(item.weight_kg || 0) * Number(item.quantity_to_dispatch)),
+              supplier_name:
+                item.supplier_name ?? null,
+              is_subrental: true,
+              machinery_rental_status:
+                item.machinery_rental_status ?? true
+            },
+            client
+          );
+          continue;
+        }
+
         const stock =
           await this.machineryStockRepository.findById(
             item.stock_id,
@@ -102,7 +130,9 @@ export default class CreateCompleteOrder {
               subtotal_weight_kg:
                 Number(stock.weight_kg || 0) *
                 Number(item.quantity_to_dispatch),
-              machinery_rental_status: 
+              supplier_name: null,
+              is_subrental: false,
+              machinery_rental_status:
                 item.machinery_rental_status ?? true
             },
             client
