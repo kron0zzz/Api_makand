@@ -61,6 +61,7 @@ export const login = async (req, res) => {
     res.status(200).json(result);
 
   } catch (err) {
+    console.error("--> ERROR DETALLADO EN LOGIN:", err);
 
     res.status(401).json({
       error: err.message

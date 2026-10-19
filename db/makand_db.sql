@@ -414,7 +414,7 @@ INSERT INTO machinery_status (status_name) VALUES ('No disponible');
 INSERT INTO employees (employee_document_type, employee_document_number, employee_status, employee_first_name, employee_last_name, employee_email, employee_phone, employee_eps, position_id)
 VALUES 
 ('CC', '1025647253', TRUE, 'Juan Diego', 'Rios Restrepo', 'juanriosr7526@gmail.com', '3052264211', 'Sura', 1),
-('CC', '1020114536', TRUE, 'Sara Camila', 'Ortiz Higuita', 'sara@gmail.com', '3054081703', 'Sura', 1),
+('CC', '1020114536', TRUE, 'Sara Camila', 'Ortiz Higuita', 'saracamilaoh@gmail.com', '3054081703', 'Sura', 1),
 ('CC', '103213213', TRUE, 'Mariana', 'Figueroa Cardona', 'mariana@gmail.com', '3117384156', 'Sura', 1),
 ('CC', '999888777', TRUE, 'Usuario', 'Prueba', 'prueba@gmail.com', '3000000000', 'Sura', 1);
 
@@ -422,8 +422,8 @@ VALUES
 
 INSERT INTO users (user_email, user_password, user_status, role_id, employee_id) 
 VALUES 
-('rios@gmail.com', '$2b$10$vsvF21XmozM2o7alak9aWuZtCh8/EMNPTBR6KfxwKhQJSQ0CDtvVq', true, 1, 1000),
-('sara@gmail.com', '$2b$10$ODpcGe.lD8NqIsVFIWL1OufTzmPuICg8HzMU9ax4ROPePZLU4cLim', true, 1, 1001),
+('juanriosr7526@gmail.com', '$2b$10$vsvF21XmozM2o7alak9aWuZtCh8/EMNPTBR6KfxwKhQJSQ0CDtvVq', true, 1, 1000),
+('saracamilaoh@gmail.com', '$2b$10$ODpcGe.lD8NqIsVFIWL1OufTzmPuICg8HzMU9ax4ROPePZLU4cLim', true, 1, 1001),
 ('mariana@gmail.com', '$2b$10$sFNSRP7Jud61LREzLSlBG.t40YomUv/a4J1UJp6JOELmcQ.NKCFSC', true, 1, 1002),
 ('prueba@gmail.com', '$2b$10$wI5Y5q.Q5G3oW4qM5K.T.uey5.5v2oV5P3aKqYj2gXp9l4XQ4V.q.', true, 2, 1003);
 

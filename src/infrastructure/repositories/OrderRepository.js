@@ -340,6 +340,8 @@ export default class OrderRepository {
         od.quantity_to_dispatch,
         od.rental_unit_price,
         od.machinery_rental_status,
+        od.is_subrental,      
+        od.supplier_name,
         COALESCE(m.weight_kg, 0) * od.quantity_to_dispatch AS subtotal_weight_kg,
 
         m.is_motorized,
